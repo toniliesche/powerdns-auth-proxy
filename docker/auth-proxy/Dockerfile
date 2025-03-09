@@ -43,9 +43,9 @@ RUN apt update && apt install -y --no-install-recommends ca-certificates procps 
 RUN adduser --disabled-password --shell /usr/sbin/nologin --home /var/lib/powerdns-auth-proxy apiuser
 
 COPY --from=build-stage /tmp/powerdns-auth-proxy/gateway /usr/local/bin/powerdns-auth-proxy
-COPY docker/files/entry-point.sh /entry-point.sh
-COPY docker/files/configure.d /configure.d
-COPY docker/files/var/lib/powerdns-auth-proxy/res /var/lib/powerdns-auth-proxy/res
+COPY --from=build-stage /tmp/powerdns-auth-proxy/docker/auth-proxy/files/entry-point.sh /entry-point.sh
+COPY --from=build-stage /tmp/powerdns-auth-proxy/docker/auth-proxy/files/configure.d /configure.d
+COPY --from=build-stage /tmp/powerdns-auth-proxy/docker/auth-proxy/files/var/lib/powerdns-auth-proxy/res /var/lib/powerdns-auth-proxy/res
 
 ENTRYPOINT [ "/entry-point.sh" ]
 CMD [ "su", "apiuser", "-s", "/usr/bin/bash", "-c", "powerdns-auth-proxy --config /etc/powerdns-auth-proxy/config.yaml run" ]
