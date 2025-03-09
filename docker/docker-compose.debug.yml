@@ -1,6 +1,6 @@
 services:
   api:
-    image: tliesche/powerdns-api-gateway:develop
+    image: tliesche/powerdns-auth-proxy:develop
     environment:
       - AUTH_TYPE=${AUTH_TYPE}
       - DB_TYPE=${DB_TYPE}
