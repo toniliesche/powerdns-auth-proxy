@@ -1,0 +1,19 @@
+services:
+  mariadb:
+    image: mariadb:11.7
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_MARIADB_ROOT_PASSWORD}
+    restart: no
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+volumes:
+  mariadb-data:
+    driver: local
+
+networks:
+  default:
+    external: true
+    name: pdns-network

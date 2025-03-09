@@ -1,0 +1,43 @@
+services:
+  api:
+    image: tliesche/powerdns-api-gateway:develop
+    environment:
+      - AUTH_TYPE=${AUTH_TYPE}
+      - DB_TYPE=${DB_TYPE}
+      - DB_MYSQL_HOST=${DB_MARIADB_HOST}
+      - DB_MYSQL_PORT=${DB_MARIADB_PORT}
+      - DB_MYSQL_USER=${DB_MARIADB_GATEWAY_USER}
+      - DB_MYSQL_PASSWORD=${DB_MARIADB_GATEWAY_PASSWORD}
+      - DB_MYSQL_DATABASE=${DB_MARIADB_GATEWAY_DATABASE}
+      - ENABLE_DEBUG=true
+      - JWT_AUDIENCE=${JWT_AUDIENCE}
+      - JWT_ISSUER=${JWT_ISSUER}
+      - PDNS_API_KEY=${PDNS_API_KEY}
+      - PDNS_HOST=${PDNS_HOST}
+      - PDNS_PORT=${PDNS_PORT}
+    volumes:
+      - gateway-data:/var/lib/powerdns-auth-proxy/data
+    ports:
+      - "8080:8080"
+
+  pdns-auth:
+    image: pschiffe/pdns-mysql:4.9-alpine
+    environment:
+      - PDNS_api=yes
+      - PDNS_api_key=${PDNS_API_KEY}
+      - PDNS_webserver=yes
+      - PDNS_webserver_address=0.0.0.0
+      - PDNS_gmysql_host=${DB_MARIADB_HOST}
+      - PDNS_gmysql_port=${DB_MARIADB_PORT}
+      - PDNS_gmysql_user=${DB_MARIADB_PDNS_USER}
+      - PDNS_gmysql_password=${DB_MARIADB_PDNS_PASSWORD}
+      - PDNS_gmysql_dbname=${DB_MARIADB_PDNS_DATABASE}
+
+volumes:
+  gateway-data:
+    driver: local
+
+networks:
+  default:
+    external: true
+    name: pdns-network

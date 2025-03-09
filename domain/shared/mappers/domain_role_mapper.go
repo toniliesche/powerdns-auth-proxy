@@ -1,0 +1,39 @@
+// MIT License
+// Copyright (c) 2025 Toni Liesche
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+package mappers
+
+import (
+	"powerdns-auth-proxy/domain/shared/database/model"
+	"powerdns-auth-proxy/domain/shared/model/management"
+)
+
+type DomainRoleMapper struct {
+}
+
+func (m *DomainRoleMapper) MapDatabaseToDto(role *model.UserDomainRole) *management.DomainRole {
+	return &management.DomainRole{
+		Domain: role.Domain.FQDN,
+		Role:   role.DomainRole.Name,
+	}
+}
+
+func (m *DomainRoleMapper) MapDatabaseToDtoList(roles []*model.UserDomainRole) []*management.DomainRole {
+	dtos := make([]*management.DomainRole, 0)
+
+	for _, role := range roles {
+		dtos = append(dtos, m.MapDatabaseToDto(role))
+	}
+
+	return dtos
+}
