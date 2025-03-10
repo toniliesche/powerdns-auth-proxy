@@ -1,0 +1,582 @@
+openapi: 3.1.0
+info:
+  title: Database backed authentication proxy for PowerDNS HTTP API
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/toniliesche/powerdns-auth-proxy/refs/heads/develop/LICENSE
+  version: 1.0.0
+security:
+
+paths:
+  /admin/v1/domains:
+    get:
+      tags:
+        - Domains
+      summary: List all domains
+      responses:
+        '200':
+          description: A list of domains that are managed by the authentication proxy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainListResponse"
+    post:
+      tags:
+        - Domains
+      summary: Add a new domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainCreatePayload"
+      responses:
+        '200':
+          description: The domain was added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResponse"
+
+  /admin/v1/domains/details/{domainId}:
+    get:
+      tags:
+        - Domains
+      summary: Get details of a domain
+      parameters:
+        - $ref: "#/components/parameters/domainId"
+      responses:
+        '200':
+          description: The domain details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainDetailsResponse"
+
+  /admin/v1/domains/{domainId}:
+    delete:
+      tags:
+        - Domains
+      summary: Delete a domain
+      parameters:
+        - $ref: "#/components/parameters/domainId"
+      responses:
+        '200':
+          description: The domain was deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+
+  /admin/v1/users/{userId}/domain-roles:
+    get:
+      tags:
+        - Domain Roles
+      summary: List domain roles of a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        '200':
+          description: The domain roles of the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainRolesResponse"
+
+  /admin/v1/users/{userId}/domain-roles/grant:
+    post:
+      tags:
+        - Domain Roles
+      summary: Grant domain roles to a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainRolePayload"
+      responses:
+        '200':
+          description: The domain roles were granted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+
+  /admin/v1/users/{userId}/domain-roles/revoke:
+    post:
+      tags:
+        - Domain Roles
+      summary: Revoke domain roles from a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DomainRolePayload"
+      responses:
+        '200':
+          description: The domain roles were revoked successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+
+  /admin/v1/users/{userId}/roles:
+    get:
+      tags:
+        - Roles
+      summary: List all roles of a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        '200':
+          description: A list of roles of the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleListResponse"
+
+  /admin/v1/users/{userId}/roles/grant:
+    post:
+      tags:
+        - Roles
+      summary: Grant roles to a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePayload"
+      responses:
+        '200':
+          description: The roles were granted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+
+  /admin/v1/users/{userId}/roles/revoke:
+    post:
+      tags:
+        - Roles
+      summary: Revoke roles from a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RolePayload"
+      responses:
+        '200':
+          description: The roles were revoked successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+
+  /admin/v1/users/{userId}/sessions:
+    get:
+      tags:
+        - Sessions
+      summary: List all sessions of a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        '200':
+          description: A list of sessions of the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionListResponse"
+
+  /admin/v1/users/{userId}/sessions/logout:
+    post:
+      tags:
+        - Sessions
+      summary: Logout a user from defined sessions
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionLogoutPayload"
+      responses:
+        '200':
+          description: The user was logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+
+  /admin/v1/users:
+    get:
+      tags:
+        - Users
+      summary: List all users
+      responses:
+        '200':
+          description: A list of users that are managed by the authentication proxy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserListResponse"
+    post:
+      tags:
+        - Users
+      summary: Add a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreatePayload"
+      responses:
+        '200':
+          description: The user was added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateResponse"
+
+  /admin/v1/users/details/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Get details of a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        '200':
+          description: The user details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserDetailsResponse"
+
+  /admin/v1/users/{userId}:
+    patch:
+      tags:
+        - Users
+      summary: Update a user password
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdatePasswordPayload"
+      responses:
+        '200':
+          description: The user was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+    delete:
+      tags:
+        - Users
+      summary: Delete a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        '200':
+          description: The user was deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BaseResponse"
+
+components:
+  parameters:
+    domainId:
+      name: domainId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The database id of the domain
+
+    userId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: The database id of the user
+
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        request_id:
+          type: string
+          example: "powerdns-auth-proxy-56de6074-1767-4990-be27-8594cc323d0f"
+        message:
+          type: string
+          example: "ok"
+
+    CreateResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+
+    Domain:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        fqdn:
+          type: string
+          example: "example.com"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-01-01 12:00:00"
+
+    DomainCreatePayload:
+      type: object
+      required:
+        - fqdn
+      properties:
+        fqdn:
+          type: string
+          example: "example.com"
+
+    DomainDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        fqdn:
+          type: string
+          example: "example.com"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-01-01 10:00:00"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-01-01 12:00:00"
+
+    DomainDetailsResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/DomainDetails"
+
+    DomainListResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Domain"
+
+    DomainRole:
+      type: object
+      properties:
+        domain:
+          type: string
+          example: "example.com"
+        role:
+          type: string
+          example: "admin"
+
+    DomainRolePayload:
+      type: object
+      required:
+        - domain_roles
+      properties:
+        domain_roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/DomainRole"
+            required:
+              - domain
+              - role
+
+    DomainRolesResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/DomainRole"
+
+    Role:
+      type: object
+      properties:
+        role:
+          type: string
+          example: "admin"
+
+    RoleListResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Role"
+
+    RolePayload:
+      type: object
+      required:
+        - roles
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+            example: ["admin"]
+
+    Session:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        session_id:
+          type: string
+          example: "56de6074-1767-4990-be27-8594cc323d0f"
+        sequence_id:
+          type: integer
+          example: 1
+        expires_at:
+          type: string
+          format: date-time
+          example: "2025-01-01 12:00:00"
+
+    SessionListResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Session"
+
+    SessionLogoutPayload:
+      type: object
+      required:
+        - session_ids
+      properties:
+        session_ids:
+          type: array
+          items:
+            type: string
+          example: ["56de6074-1767-4990-be27-8594cc323d0f"]
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: "admin"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-01-01 12:00:00"
+
+    UserCreatePayload:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "admin"
+        password:
+          type: string
+          example: "password"
+
+    UserDetails:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          username:
+            type: string
+            example: "admin"
+          created_at:
+            type: string
+            format: date-time
+            example: "2025-01-01 10:00:00"
+          updated_at:
+            type: string
+            format: date-time
+            example: "2025-01-01 12:00:00"
+          user_roles:
+            type: array
+            items:
+              type: string
+            example: ["admin"]
+          domain_roles:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                type: string
+            example:
+              example.com: ["admin"]
+
+    UserDetailsResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              $ref: "#/components/schemas/UserDetails"
+
+    UserListResponse:
+      allOf:
+        - $ref: "#/components/schemas/BaseResponse"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/User"
+
+    UserUpdatePasswordPayload:
+      type: object
+      required:
+        - password
+      properties:
+          password:
+            type: string
+            example: "password"
