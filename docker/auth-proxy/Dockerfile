@@ -11,7 +11,8 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-FROM golang:1.24-bookworm AS build-stage
+ARG GOLANGVER
+FROM golang:${GOLANGVER}-bookworm AS build-stage
 
 ARG CACHEBUST
 RUN echo ${CACHEBUST} && \
@@ -28,11 +29,12 @@ RUN --mount=type=cache,target=/root/go/pkg/mod \
 FROM debian:bookworm-slim
 
 ARG BUILDVER
+ARG COMMIT
 LABEL org.opencontainers.image.authors="Toni Liesche <docker@toniliesche.de>"
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/tliesche/powerdns-auth-proxy"
 LABEL org.opencontainers.image.documentation="https://raw.githubusercontent.com/toniliesche/powerdns-auth-proxy/refs/heads/develop/README.md"
 LABEL org.opencontainers.image.source="https://github.com/toniliesche/powerdns-auth-proxy"
-LABEL org.opencontainers.image.version=${BUILDVER}
+LABEL org.opencontainers.image.version="${BUILDVER} <${COMMIT}>"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.title="PowerDNS Authentication Proxy"
 LABEL org.opencontainers.image.description="Database backed authentication proxy for PowerDNS HTTP API"

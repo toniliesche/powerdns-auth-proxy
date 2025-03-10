@@ -15,6 +15,9 @@ set-additional-versions:
 	$(eval run.build.version.major := ${build.version.major})
 	$(eval run.build.version.minor := ${build.version.major}.${build.version.minor})
 
+set-commit:
+	$(eval run.commit := $(shell git rev-parse --short HEAD))
+
 increase-%: update-% write-properties
 	@echo updated build.properties file
 
