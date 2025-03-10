@@ -20,9 +20,9 @@ import (
 
 type TokenSession struct {
 	gorm.Model
-	ExpiresAt  time.Time
-	SessionID  string `gorm:"unique,column:session_id"`
-	SequenceID uint   `gorm:"column:sequence_id"`
-	UserID     uint   `gorm:"index"`
-	User       *User
+	ExpiresAt      time.Time
+	SessionID      string `gorm:"unique,column:session_id"`
+	SequenceNumber uint   `gorm:"column:sequence_number"`
+	UserID         uint   `gorm:"index"`
+	User           *User
 }

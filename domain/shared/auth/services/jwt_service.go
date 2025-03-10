@@ -49,7 +49,7 @@ func (s *JWTService) createRefreshToken(user *dbmodel.User, session *dbmodel.Tok
 			"iss": s.issuer,
 			"jti": session.SessionID,
 			"nbf": session.UpdatedAt.Add(time.Second * -30).Unix(),
-			"sid": session.SequenceID,
+			"sid": session.SequenceNumber,
 			"sub": user.Username,
 			"tti": "refresh",
 		})
@@ -89,7 +89,7 @@ func (s *JWTService) createAccessToken(user *dbmodel.User, session *dbmodel.Toke
 			"iss": s.issuer,
 			"jti": accessTokenId.String(),
 			"nbf": session.UpdatedAt.Add(time.Second * -30).Unix(),
-			"sid": session.SequenceID,
+			"sid": session.SequenceNumber,
 			"sub": user.Username,
 			"tti": "access",
 			"udr": domainRoles,
@@ -119,10 +119,10 @@ func (s *JWTService) Login(context *gin.Context) (*model.TokenResponse, httperro
 
 	now := time.Now()
 	dbTokenSession := &dbmodel.TokenSession{
-		ExpiresAt:  now.Add(time.Hour * 24 * 30),
-		SessionID:  refreshTokenId.String(),
-		SequenceID: 1,
-		UserID:     dbUser.ID,
+		ExpiresAt:      now.Add(time.Hour * 24 * 30),
+		SessionID:      refreshTokenId.String(),
+		SequenceNumber: 1,
+		UserID:         dbUser.ID,
 	}
 
 	if err = s.sessionRepository.SaveNewTokenSession(dbTokenSession); err != nil {
@@ -160,7 +160,7 @@ func (s *JWTService) Refresh(context *gin.Context) (*model.TokenResponse, httper
 		return nil, httperrors.NewInternalServerErrorError(fmt.Errorf("failed to fetch token session: %v", err))
 	}
 
-	if float64(dbTokenSession.SequenceID) > claims["sid"].(float64) {
+	if float64(dbTokenSession.SequenceNumber) > claims["sid"].(float64) {
 		return nil, httperrors.NewUnauthorizedError(fmt.Errorf("refresh token is outdated"))
 	}
 
@@ -174,7 +174,7 @@ func (s *JWTService) Refresh(context *gin.Context) (*model.TokenResponse, httper
 	}
 
 	now := time.Now()
-	dbTokenSession.SequenceID++
+	dbTokenSession.SequenceNumber++
 	dbTokenSession.ExpiresAt = now.Add(time.Hour * 24 * 30)
 
 	refreshToken, err := s.createRefreshToken(dbUser, dbTokenSession)
@@ -199,7 +199,7 @@ func (s *JWTService) createResponse(accessToken *jwt.Token, refreshToken *jwt.To
 		return nil, httperrors.NewInternalServerErrorError(fmt.Errorf("failed to sign refresh token: %v", err))
 	}
 
-	return &model.TokenResponse{AccessToken: accessTokenString, RefreshToken: refreshTokenString, SessionID: session.SessionID, SequenceNumber: session.SequenceID}, nil
+	return &model.TokenResponse{AccessToken: accessTokenString, RefreshToken: refreshTokenString, SessionID: session.SessionID, SequenceNumber: session.SequenceNumber}, nil
 }
 
 func (s *JWTService) parseToken(tokenString string) (jwt.MapClaims, error) {
