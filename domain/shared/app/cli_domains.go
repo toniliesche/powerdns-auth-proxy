@@ -31,7 +31,7 @@ func RunCliDomainList(context *cli.Context) error {
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID", "FQDN", "Last update"})
+	table.SetHeader([]string{"ID", "Fqdn", "Last update"})
 
 	domainList, err := domainService.ListDomains()
 	if err != nil {
@@ -39,7 +39,7 @@ func RunCliDomainList(context *cli.Context) error {
 	}
 
 	for _, domain := range domainList {
-		table.Append([]string{strconv.Itoa(int(domain.ID)), domain.FQDN, domain.UpdatedAt})
+		table.Append([]string{strconv.Itoa(int(domain.ID)), domain.Fqdn, domain.UpdatedAt})
 	}
 
 	table.Render()
@@ -57,7 +57,7 @@ func RunCliDomainAdd(context *cli.Context) error {
 		return err
 	}
 
-	payload := &management.DomainCreatePayload{FQDN: context.Args().Get(0)}
+	payload := &management.DomainCreatePayload{Fqdn: context.Args().Get(0)}
 	if _, err = domainService.CreateDomain(payload); err != nil {
 		return fmt.Errorf("could not create domain: %w", err)
 	}

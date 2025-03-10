@@ -47,7 +47,7 @@ func RunApi(context *cli.Context) error {
 		return fmt.Errorf("an error occured while running the api gateway: %w", err)
 	}
 
-	fmt.Println("Api gateway stopped")
+	fmt.Println("API gateway stopped")
 
 	return nil
 }

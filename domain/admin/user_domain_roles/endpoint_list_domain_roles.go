@@ -24,7 +24,7 @@ func (c *UserDomainRolesController) listDomainRoles(context *gin.Context) {
 		return
 	}
 
-	userRoles, err := c.userDomainRoleService.ListRolesForUserByID(userId)
+	userRoles, err := c.userDomainRoleService.ListDomainRolesForUserByUserId(userId)
 	if err != nil {
 		c.HandleError(context, err)
 		return

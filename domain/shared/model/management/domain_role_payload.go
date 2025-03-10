@@ -23,13 +23,17 @@ type UserDomainRolePayload struct {
 }
 
 func (p *UserDomainRolePayload) Verify() errors.HTTPError {
-	if len(p.DomainRoles) == 0 {
-		return errors.NewBadRequestError(fmt.Errorf("roles is required"))
+	if p.DomainRoles == nil {
+		return errors.NewBadRequestError(fmt.Errorf("domain_roles is required"))
 	}
 
-	for _, role := range p.DomainRoles {
+	if len(p.DomainRoles) == 0 {
+		return errors.NewBadRequestError(fmt.Errorf("domain_roles must contain at least one item"))
+	}
+
+	for index, role := range p.DomainRoles {
 		if err := role.Verify(); err != nil {
-			return errors.NewBadRequestError(err)
+			return errors.NewBadRequestError(fmt.Errorf("domain_roles[%d]: %w", index, err))
 		}
 	}
 

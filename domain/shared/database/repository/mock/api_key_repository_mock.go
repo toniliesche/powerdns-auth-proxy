@@ -18,16 +18,16 @@ import (
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
 )
 
-type APIKeyRepositoryMock struct {
-	keys    map[string]*model.APIKey
+type ApiKeyRepositoryMock struct {
+	keys    map[string]*model.ApiKey
 	counter uint
 }
 
-func (r *APIKeyRepositoryMock) FindAPIKeysByUser(id uint) ([]*model.APIKey, error) {
-	var apiKeys []*model.APIKey
+func (r *ApiKeyRepositoryMock) FindApiKeysByUserId(userId uint) ([]*model.ApiKey, error) {
+	var apiKeys []*model.ApiKey
 
 	for _, apiKey := range r.keys {
-		if apiKey.User.ID == id {
+		if apiKey.User.ID == userId {
 			apiKeys = append(apiKeys, apiKey)
 		}
 	}
@@ -35,25 +35,25 @@ func (r *APIKeyRepositoryMock) FindAPIKeysByUser(id uint) ([]*model.APIKey, erro
 	return apiKeys, nil
 }
 
-func (r *APIKeyRepositoryMock) SaveNewAPIKey(apiKey *model.APIKey) error {
-	if r.CheckExistenceByAPIKey(apiKey.APIKey) {
+func (r *ApiKeyRepositoryMock) SaveNewApiKey(apiKey *model.ApiKey) error {
+	if r.CheckExistenceByApiKey(apiKey.ApiKey) {
 		return errors2.NewItemAlreadyExistsError("api key already exists")
 	}
 
 	apiKey.ID = r.counter
-	r.keys[apiKey.APIKey] = apiKey
+	r.keys[apiKey.ApiKey] = apiKey
 	r.counter++
 
 	return nil
 }
 
-func (r *APIKeyRepositoryMock) CheckExistenceByAPIKey(key string) bool {
+func (r *ApiKeyRepositoryMock) CheckExistenceByApiKey(key string) bool {
 	_, found := r.keys[key]
 
 	return found
 }
 
-func (r *APIKeyRepositoryMock) FetchAPIKey(key string) (*model.APIKey, error) {
+func (r *ApiKeyRepositoryMock) FetchApiKey(key string) (*model.ApiKey, error) {
 	apiKey, found := r.keys[key]
 	if !found {
 		return nil, errors2.NewItemNotFoundError("api key not found")
@@ -62,8 +62,8 @@ func (r *APIKeyRepositoryMock) FetchAPIKey(key string) (*model.APIKey, error) {
 	return apiKey, nil
 }
 
-func (r *APIKeyRepositoryMock) DeleteAPIKey(key string) error {
-	if !r.CheckExistenceByAPIKey(key) {
+func (r *ApiKeyRepositoryMock) DeleteApiKey(key string) error {
+	if !r.CheckExistenceByApiKey(key) {
 		return errors2.NewItemNotFoundError("api key not found")
 	}
 
@@ -72,9 +72,9 @@ func (r *APIKeyRepositoryMock) DeleteAPIKey(key string) error {
 	return nil
 }
 
-func ProvideAPIKeyRepositoryMock() (*APIKeyRepositoryMock, error) {
-	return &APIKeyRepositoryMock{
-		keys:    make(map[string]*model.APIKey),
+func ProvideApiKeyRepositoryMock() (*ApiKeyRepositoryMock, error) {
+	return &ApiKeyRepositoryMock{
+		keys:    make(map[string]*model.ApiKey),
 		counter: 1,
 	}, nil
 }

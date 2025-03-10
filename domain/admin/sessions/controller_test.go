@@ -71,7 +71,7 @@ func getController(registry *test.Registry, withData bool) (*sessions.SessionsCo
 			return nil, err
 		}
 
-		err = test.RepositoryCreateTestSession(container, registry)
+		err = test.RepositoryCreateTestTokenSession(container, registry)
 		if err != nil {
 			return nil, err
 		}

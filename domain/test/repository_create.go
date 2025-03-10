@@ -20,14 +20,14 @@ import (
 )
 
 func RepositoryCreateTestDomain(container *basics.InjectionContainer, registry *Registry) error {
-	dbDomain := &model.Domain{FQDN: DomainFQDN}
+	dbDomain := &model.Domain{Fqdn: DomainFqdn}
 	err := container.DomainRepository.SaveNewDomain(dbDomain)
 	if err != nil {
 		return err
 	}
 
 	registry.Set("domainId", fmt.Sprintf("%d", dbDomain.ID))
-	registry.Set("domainFQDN", dbDomain.FQDN)
+	registry.Set("domainFqdn", dbDomain.Fqdn)
 
 	return nil
 }
@@ -73,13 +73,27 @@ func RepositoryCreateTestUser(container *basics.InjectionContainer, registry *Re
 	return nil
 }
 
-func RepositoryCreateTestSession(container *basics.InjectionContainer, registry *Registry) error {
+func RepositoryCreateTestTokenSession(container *basics.InjectionContainer, registry *Registry) error {
+	if container.UserRepository == nil {
+		return fmt.Errorf("could not create test user session: user repository could not be resolved")
+	}
+
+	if container.SessionRepository == nil {
+		return fmt.Errorf("could not create test user session: session repository could not be resolved")
+	}
+
+	dbUser, err := container.UserRepository.FetchUserById(registry.GetUint("userId"))
+	if err != nil {
+		return fmt.Errorf("could not create test user session: %w", err)
+	}
+
 	dbTokenSession := &model.TokenSession{
-		UserID:    registry.GetUint("userId"),
+		User:      dbUser,
+		UserID:    dbUser.ID,
 		SessionID: TokenSession,
 	}
 
-	err := container.SessionRepository.SaveNewTokenSession(dbTokenSession)
+	err = container.SessionRepository.SaveNewTokenSession(dbTokenSession)
 	if err != nil {
 		return err
 	}
@@ -90,66 +104,124 @@ func RepositoryCreateTestSession(container *basics.InjectionContainer, registry 
 	return nil
 }
 
-func RepositoryCreateTestAPIKey(container *basics.InjectionContainer, registry *Registry) error {
-	dbAPIKey := &model.APIKey{
-		APIKey: APIKey,
-		UserID: registry.GetUint("userId"),
+func RepositoryCreateTestApiKey(container *basics.InjectionContainer, registry *Registry) error {
+	if container.UserRepository == nil {
+		return fmt.Errorf("could not create test api key: user repository could not be resolved")
 	}
 
-	err := container.APIKeyRepository.SaveNewAPIKey(dbAPIKey)
+	if container.ApiKeyRepository == nil {
+		return fmt.Errorf("could not create test api key: api key repository could not be resolved")
+	}
+
+	dbUser, err := container.UserRepository.FetchUserById(registry.GetUint("userId"))
+	if err != nil {
+		return fmt.Errorf("could not create test api key: %w", err)
+	}
+
+	dbApiKey := &model.ApiKey{
+		ApiKey: ApiKey,
+		UserID: dbUser.ID,
+		User:   dbUser,
+	}
+
+	err = container.ApiKeyRepository.SaveNewApiKey(dbApiKey)
 	if err != nil {
 		return err
 	}
 
-	registry.Set("apiKey", dbAPIKey.APIKey)
-	registry.Set("apiKeyId", fmt.Sprintf("%d", dbAPIKey.ID))
-
-	return nil
-}
-
-func RepositoryCreateTestTokenSession(container *basics.InjectionContainer, registry *Registry) error {
-	tokenSession := &model.TokenSession{
-		UserID:    registry.GetUint("userId"),
-		SessionID: TokenSession,
-	}
-
-	err := container.SessionRepository.SaveNewTokenSession(tokenSession)
-	if err != nil {
-		return err
-	}
-
-	registry.Set("tokenSession", tokenSession.SessionID)
-	registry.Set("tokenSessionId", fmt.Sprintf("%d", tokenSession.ID))
+	registry.Set("apiKey", dbApiKey.ApiKey)
+	registry.Set("apiKeyId", fmt.Sprintf("%d", dbApiKey.ID))
 
 	return nil
 }
 
 func RepositoryCreateTestUserDomainRole(container *basics.InjectionContainer, registry *Registry) error {
-	dbUserDomainRole := &model.UserDomainRole{
-		UserID:       registry.GetUint("userId"),
-		DomainID:     registry.GetUint("domainId"),
-		Domain:       &model.Domain{FQDN: "example.com"},
-		DomainRoleID: registry.GetUint("domainRoleId"),
+	if container.UserRepository == nil {
+		return fmt.Errorf("could not create test user domain role: user repository could not be resolved")
 	}
 
-	err := container.UserDomainRoleRepository.SaveNewUserDomainRole(dbUserDomainRole)
+	if container.DomainRepository == nil {
+		return fmt.Errorf("could not create test user domain role: domain repository could not be resolved")
+	}
+
+	if container.DomainRoleRepository == nil {
+		return fmt.Errorf("could not create test user domain role: domain role repository could not be resolved")
+	}
+
+	if container.UserDomainRoleRepository == nil {
+		return fmt.Errorf("could not create test user domain role: user domain role repository could not be resolved")
+	}
+
+	dbUser, err := container.UserRepository.FetchUserById(registry.GetUint("userId"))
+	if err != nil {
+		return fmt.Errorf("could not create test user domain role: %w", err)
+	}
+
+	dbDomain, err := container.DomainRepository.FetchDomainById(registry.GetUint("domainId"))
+	if err != nil {
+		return fmt.Errorf("could not create test user domain role: %w", err)
+	}
+
+	dbDomainRole, err := container.DomainRoleRepository.FetchDomainRoleByName(DomainRoleName)
+	if err != nil {
+		return fmt.Errorf("could not create test user domain role: %w", err)
+	}
+
+	dbUserDomainRole := &model.UserDomainRole{
+		UserID:       dbUser.ID,
+		User:         dbUser,
+		DomainID:     dbDomain.ID,
+		Domain:       dbDomain,
+		DomainRoleID: dbDomainRole.ID,
+		DomainRole:   dbDomainRole,
+	}
+
+	err = container.UserDomainRoleRepository.SaveNewUserDomainRole(dbUserDomainRole)
 	if err != nil {
 		return err
 	}
+
+	dbUser.UserDomainRoles = append(dbUser.UserDomainRoles, dbUserDomainRole)
 
 	return nil
 }
 
 func RepositoryCreateTestUserRole(container *basics.InjectionContainer, registry *Registry) error {
-	dbUserRole := &model.UserRole{
-		UserID: registry.GetUint("userId"),
-		RoleID: registry.GetUint("roleId"),
+	if container.UserRepository == nil {
+		return fmt.Errorf("could not create test user role: user repository could not be resolved")
 	}
 
-	err := container.UserRoleRepository.SaveNewUserRole(dbUserRole)
+	if container.RoleRepository == nil {
+		return fmt.Errorf("could not create test user role: role repository could not be resolved")
+	}
+
+	if container.UserRoleRepository == nil {
+		return fmt.Errorf("could not create test user role: user role repository could not be resolved")
+	}
+
+	dbUser, err := container.UserRepository.FetchUserById(registry.GetUint("userId"))
+	if err != nil {
+		return fmt.Errorf("could not create test user role: %w", err)
+	}
+
+	dbRole, err := container.RoleRepository.FetchRoleById(registry.GetUint("roleId"))
+	if err != nil {
+		return fmt.Errorf("could not create test user role: %w", err)
+	}
+
+	dbUserRole := &model.UserRole{
+		UserID: dbUser.ID,
+		User:   dbUser,
+		RoleID: dbRole.ID,
+		Role:   dbRole,
+	}
+
+	err = container.UserRoleRepository.SaveNewUserRole(dbUserRole)
 	if err != nil {
 		return err
 	}
+
+	dbUser.UserRoles = append(dbUser.UserRoles, dbUserRole)
 
 	return nil
 }

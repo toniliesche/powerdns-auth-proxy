@@ -18,6 +18,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"powerdns-auth-proxy/domain/admin/domains"
+	"powerdns-auth-proxy/domain/admin/services/database"
+	"powerdns-auth-proxy/domain/shared/basics"
+	"powerdns-auth-proxy/domain/shared/controller"
 	"powerdns-auth-proxy/domain/shared/model/management"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"powerdns-auth-proxy/domain/test"
@@ -26,12 +29,12 @@ import (
 
 func TestConfigureRoutes(t *testing.T) {
 	router := gin.New()
-	controller, err := getController(false)
+	domainController, err := getController(false)
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestConfigureRoutes: %s", err)) {
 		return
 	}
 
-	controller.ConfigureGroupRoutes(router.Group("/api"))
+	domainController.ConfigureGroupRoutes(router.Group("/api"))
 
 	if !assert.Equal(t, 4, len(router.Routes()), "There should be 4 routes configured") {
 		return
@@ -39,39 +42,68 @@ func TestConfigureRoutes(t *testing.T) {
 }
 
 func TestCallListDomainsEndpoint(t *testing.T) {
-	controller, err := getController(true)
+	domainController, err := getController(true)
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallListDomainsEndpoint: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/admin", "/admin/v1/domains", "GET", 200)
+	test.RunRequest(t, domainController, "/admin", "/admin/v1/domains", "GET", 200)
 }
 
 func TestCallCreateDomainEndpoint(t *testing.T) {
-	controller, err := getController(false)
+	domainController, err := getController(false)
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallCreateDomainEndpoint: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/admin", "/admin/v1/domains", "POST", 200, &management.DomainCreatePayload{FQDN: "testdomain.com"})
+	test.RunRequest(t, domainController, "/admin", "/admin/v1/domains", "POST", 200, &management.DomainCreatePayload{Fqdn: "testdomain.com"})
 }
 
 func TestCallGetDomainEndpoint(t *testing.T) {
-	controller, err := getController(true)
+	domainController, err := getController(true)
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallGetDomainEndpoint: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/admin", "/admin/v1/domains/details/1", "GET", 200)
+	test.RunRequest(t, domainController, "/admin", "/admin/v1/domains/details/1", "GET", 200)
 }
 
 func TestCallDeleteDomainEndpoint(t *testing.T) {
-	controller, err := getController(true)
+	domainController, err := getController(true)
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallGetDomainEndpoint: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/admin", "/admin/v1/domains/1", "DELETE", 200)
+	test.RunRequest(t, domainController, "/admin", "/admin/v1/domains/1", "DELETE", 200)
+}
+
+func TestProvideDomainControllerFailsOnMissingBaseController(t *testing.T) {
+	container := &basics.InjectionContainer{}
+
+	domainController, err := domains.ProvideDomainController(container)
+	assert.Error(t, err, "provide domain controller method should return an error")
+	assert.Equal(t, "domains controller could not be created: base controller could not be resolved", err.Error())
+	assert.Nil(t, domainController, "provide domain controller method should not return a controller")
+}
+
+func TestProvideDomainControllerFailsOnMissingDomainService(t *testing.T) {
+	container := &basics.InjectionContainer{}
+	container.BaseController = &controller.BaseController{}
+
+	domainController, err := domains.ProvideDomainController(container)
+	assert.Error(t, err, "provide domain controller method should return an error")
+	assert.Equal(t, "domains controller could not be created: domain service could not be resolved", err.Error())
+	assert.Nil(t, domainController, "provide domain controller method should not return a controller")
+}
+
+func TestProvideDomainControllerSucceeds(t *testing.T) {
+	container := &basics.InjectionContainer{}
+	container.BaseController = &controller.BaseController{}
+	container.DomainService = &database.DomainService{}
+
+	domainController, err := domains.ProvideDomainController(container)
+	assert.NoError(t, err, "provide domain controller method should succeed")
+	assert.NotNil(t, domainController, "provide domain controller method should return a controller")
 }
 
 func getController(create bool) (*domains.DomainController, error) {
@@ -81,7 +113,7 @@ func getController(create bool) (*domains.DomainController, error) {
 	}
 
 	if create {
-		payload := &management.DomainCreatePayload{FQDN: "testdomain.com"}
+		payload := &management.DomainCreatePayload{Fqdn: "testdomain.com"}
 		_, err := container.DomainService.CreateDomain(payload)
 		if err != nil {
 			return nil, err

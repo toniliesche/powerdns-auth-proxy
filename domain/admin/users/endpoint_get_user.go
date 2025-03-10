@@ -24,7 +24,7 @@ func (c *UserController) getUser(context *gin.Context) {
 		return
 	}
 
-	user, err := c.userService.GetUserByID(userId)
+	user, err := c.userService.GetUserById(userId)
 	if err != nil {
 		c.HandleError(context, err)
 		return

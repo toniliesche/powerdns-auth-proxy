@@ -20,12 +20,12 @@ import (
 	"powerdns-auth-proxy/domain/shared/security"
 )
 
-type APIKeyService struct {
-	apiKeyRepository interfaces2.APIKeyRepositoryInterface
+type ApiKeyService struct {
+	apiKeyRepository interfaces2.ApiKeyRepositoryInterface
 	userRepository   interfaces2.UserRepositoryInterface
 }
 
-func (s *APIKeyService) Create(username string) (*model.APIKey, error) {
+func (s *ApiKeyService) Create(username string) (*model.ApiKey, error) {
 	user, err := s.userRepository.FetchUser(username)
 	if err != nil {
 		return nil, err
@@ -37,35 +37,35 @@ func (s *APIKeyService) Create(username string) (*model.APIKey, error) {
 		return nil, err
 	}
 
-	dbApiKey := &model.APIKey{
+	dbApiKey := &model.ApiKey{
 		Identifier: security.GenerateRandomString(12, security.CharsetAlphaNumeric),
-		APIKey:     hash,
+		ApiKey:     hash,
 		UserID:     user.ID,
 		User:       user,
 	}
 
-	if err := s.apiKeyRepository.SaveNewAPIKey(dbApiKey); err != nil {
+	if err := s.apiKeyRepository.SaveNewApiKey(dbApiKey); err != nil {
 		return nil, err
 	}
 
 	return dbApiKey, nil
 }
 
-func (s *APIKeyService) Delete(apiKeyId string) error {
-	return s.apiKeyRepository.DeleteAPIKey(apiKeyId)
+func (s *ApiKeyService) Delete(apiKeyId string) error {
+	return s.apiKeyRepository.DeleteApiKey(apiKeyId)
 }
 
-func (s *APIKeyService) List(username string) ([]*model.APIKey, error) {
+func (s *ApiKeyService) List(username string) ([]*model.ApiKey, error) {
 	user, err := s.userRepository.FetchUser(username)
 	if err != nil {
 		return nil, err
 	}
 
-	return s.apiKeyRepository.FindAPIKeysByUser(user.ID)
+	return s.apiKeyRepository.FindApiKeysByUserId(user.ID)
 }
 
-func ProvideAPIKeyService(container *basics.InjectionContainer) (*APIKeyService, error) {
-	if container.APIKeyRepository == nil {
+func ProvideApiKeyService(container *basics.InjectionContainer) (*ApiKeyService, error) {
+	if container.ApiKeyRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide api key service: api key repository could not be resolved")
 	}
 
@@ -73,5 +73,5 @@ func ProvideAPIKeyService(container *basics.InjectionContainer) (*APIKeyService,
 		return nil, basics.NewMissingDependencyError("could not provide api key service: user repository could not be resolved")
 	}
 
-	return &APIKeyService{apiKeyRepository: container.APIKeyRepository, userRepository: container.UserRepository}, nil
+	return &ApiKeyService{apiKeyRepository: container.ApiKeyRepository, userRepository: container.UserRepository}, nil
 }

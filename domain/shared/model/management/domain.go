@@ -15,7 +15,7 @@ package management
 
 type Domain struct {
 	ID        uint   `json:"id"`
-	FQDN      string `json:"fqdn"`
+	Fqdn      string `json:"fqdn"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 }

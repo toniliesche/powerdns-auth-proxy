@@ -14,7 +14,7 @@
 package importer_test
 
 const (
-	DomainFQDN     = "example.com"
+	DomainFqdn     = "example.com"
 	DomainRoleName = "testdomainrole"
 	RoleName       = "testrole"
 	UserUsername   = "testuser"

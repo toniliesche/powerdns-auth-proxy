@@ -24,7 +24,7 @@ func (c *UserRolesController) listUserRoles(context *gin.Context) {
 		return
 	}
 
-	userRoles, err := c.roleService.ListRolesForUserByID(userId)
+	userRoles, err := c.roleService.ListRolesForUserByUserId(userId)
 	if err != nil {
 		c.HandleError(context, err)
 		return

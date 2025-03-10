@@ -111,7 +111,7 @@ func TestCorrectMockUserWillBeFetched(t *testing.T) {
 	}
 }
 
-func TestUserCanBeFetchedByAPIKey(t *testing.T) {
+func TestUserCanBeFetchedByApiKey(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
 	repo := ProvideTestUserRepository(registry, t, true)
@@ -120,7 +120,7 @@ func TestUserCanBeFetchedByAPIKey(t *testing.T) {
 		return
 	}
 
-	user, err := repo.FetchUserByAPIKey(test.APIKey)
+	user, err := repo.FetchUserByApiKey(test.ApiKey)
 
 	if !assert.NoError(t, err, "failed to fetch user") {
 		return
@@ -135,7 +135,7 @@ func TestUserCanBeFetchedByAPIKey(t *testing.T) {
 	}
 }
 
-func TestCorrectMockUserWillBeFetchedByAPIKey(t *testing.T) {
+func TestCorrectMockUserWillBeFetchedByApiKey(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
 	repo := ProvideTestUserRepository(registry, t, true)
@@ -144,7 +144,7 @@ func TestCorrectMockUserWillBeFetchedByAPIKey(t *testing.T) {
 		return
 	}
 
-	user, err := repo.FetchUserByAPIKey(test.NonExistingAPIKey)
+	user, err := repo.FetchUserByApiKey(test.NonExistingApiKey)
 
 	if !assert.Error(t, err, "expected error to be returned") {
 		return
@@ -189,7 +189,7 @@ func ProvideTestUserRepository(registry *test.Registry, t *testing.T, init bool)
 			return nil
 		}
 
-		err = test.RepositoryCreateTestAPIKey(container, registry)
+		err = test.RepositoryCreateTestApiKey(container, registry)
 		if !assert.NoError(t, err, "failed to create test api key") {
 			return nil
 		}

@@ -24,7 +24,7 @@ import (
 
 type UserRepository struct {
 	database         *gorm.DB
-	apiKeyRepository interfaces.APIKeyRepositoryInterface
+	apiKeyRepository interfaces.ApiKeyRepositoryInterface
 }
 
 func (r *UserRepository) SaveNewUser(user *model.User) error {
@@ -66,12 +66,12 @@ func (r *UserRepository) FetchUser(username string) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) FetchUserByAPIKey(apiKey string) (*model.User, error) {
+func (r *UserRepository) FetchUserByApiKey(apiKey string) (*model.User, error) {
 	var user model.User
-	var dbApiKey *model.APIKey
+	var dbApiKey *model.ApiKey
 	var err error
 
-	if dbApiKey, err = r.apiKeyRepository.FetchAPIKey(apiKey); err != nil {
+	if dbApiKey, err = r.apiKeyRepository.FetchApiKey(apiKey); err != nil {
 		return nil, err
 	}
 
@@ -96,7 +96,7 @@ func (r *UserRepository) FetchUserByAPIKey(apiKey string) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) FetchUserByID(id uint) (*model.User, error) {
+func (r *UserRepository) FetchUserById(id uint) (*model.User, error) {
 	var user model.User
 	result := r.database.
 		Preload("UserRoles").
@@ -142,8 +142,8 @@ func (r *UserRepository) DeleteUser(username string) error {
 	return r.database.Where("id = ?", user.ID).Delete(&model.User{}).Error
 }
 
-func (r *UserRepository) DeleteUserByID(id uint) error {
-	user, err := r.FetchUserByID(id)
+func (r *UserRepository) DeleteUserById(id uint) error {
+	user, err := r.FetchUserById(id)
 	if err != nil {
 		return err
 	}
@@ -195,9 +195,9 @@ func ProvideUserRepository(container *basics.InjectionContainer) (*UserRepositor
 		return nil, basics.NewMissingDependencyError("could not provide user repository: database client could not be resolved")
 	}
 
-	if container.APIKeyRepository == nil {
+	if container.ApiKeyRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide user repository: api key repository could not be resolved")
 	}
 
-	return &UserRepository{database: container.DB, apiKeyRepository: container.APIKeyRepository}, nil
+	return &UserRepository{database: container.DB, apiKeyRepository: container.ApiKeyRepository}, nil
 }

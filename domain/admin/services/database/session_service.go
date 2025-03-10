@@ -27,7 +27,7 @@ type SessionService struct {
 }
 
 func (s SessionService) ListUserSessions(userId uint) ([]*management.SessionMinimal, error) {
-	dbSessions, err := s.sessionRepository.FindTokenSessionsByUser(userId)
+	dbSessions, err := s.sessionRepository.FindTokenSessionsByUserId(userId)
 	if err != nil {
 		return nil, err
 	}

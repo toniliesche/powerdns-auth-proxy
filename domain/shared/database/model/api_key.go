@@ -18,11 +18,11 @@ import (
 	"time"
 )
 
-type APIKey struct {
+type ApiKey struct {
 	gorm.Model
 	LastUsed   *time.Time
 	Identifier string `gorm:"unique"`
-	APIKey     string `gorm:"column:api_key"`
+	ApiKey     string `gorm:"column:api_key"`
 	UserID     uint   `gorm:"index"`
 	User       *User
 }

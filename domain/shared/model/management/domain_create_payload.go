@@ -20,11 +20,11 @@ import (
 )
 
 type DomainCreatePayload struct {
-	FQDN string `json:"fqdn"`
+	Fqdn string `json:"fqdn"`
 }
 
 func (p *DomainCreatePayload) Verify() errors.HTTPError {
-	if strings.TrimSpace(p.FQDN) == "" {
+	if strings.TrimSpace(p.Fqdn) == "" {
 		return errors.NewBadRequestError(fmt.Errorf("fqdn is required"))
 	}
 

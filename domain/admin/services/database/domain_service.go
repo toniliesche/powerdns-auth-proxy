@@ -44,8 +44,8 @@ func (s *DomainService) ListDomains() ([]*management.DomainMinimal, error) {
 	return s.mapper.MapDatabaseToMinimalDtoList(dbDomains), nil
 }
 
-func (s *DomainService) GetDomainByID(id uint) (*management.Domain, error) {
-	dbDomain, err := s.domainRepository.FetchDomainByID(id)
+func (s *DomainService) GetDomainById(id uint) (*management.Domain, error) {
+	dbDomain, err := s.domainRepository.FetchDomainById(id)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +57,8 @@ func (s *DomainService) DeleteDomain(fqdn string) error {
 	return s.domainRepository.DeleteDomain(fqdn)
 }
 
-func (s *DomainService) DeleteDomainByID(id uint) error {
-	return s.domainRepository.DeleteDomainByID(id)
+func (s *DomainService) DeleteDomainById(id uint) error {
+	return s.domainRepository.DeleteDomainById(id)
 }
 
 func ProvideDomainService(container *basics.InjectionContainer) (*DomainService, error) {

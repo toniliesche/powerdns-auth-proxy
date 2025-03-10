@@ -36,7 +36,7 @@ func (c *UserController) deleteUser(context *gin.Context) {
 		return
 	}
 
-	if err := c.userService.DeleteUserByID(userId); err != nil {
+	if err := c.userService.DeleteUserById(userId); err != nil {
 		c.HandleError(context, err)
 		return
 	}

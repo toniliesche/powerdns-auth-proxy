@@ -23,7 +23,7 @@ type DomainRoleMapper struct {
 
 func (m *DomainRoleMapper) MapDatabaseToDto(role *model.UserDomainRole) *management.DomainRole {
 	return &management.DomainRole{
-		Domain: role.Domain.FQDN,
+		Domain: role.Domain.Fqdn,
 		Role:   role.DomainRole.Name,
 	}
 }

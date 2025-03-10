@@ -33,7 +33,7 @@ func (m *UserMapper) FromDatabase(user *dbmodel.User) (*model.User, error) {
 
 	for _, domainRole := range user.UserDomainRoles {
 		domainRoles = append(domainRoles, &model.UserDomainRole{
-			Domain: domainRole.Domain.FQDN,
+			Domain: domainRole.Domain.Fqdn,
 			Role:   domainRole.DomainRole.Name,
 		})
 	}

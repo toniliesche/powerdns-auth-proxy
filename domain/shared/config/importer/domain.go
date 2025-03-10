@@ -16,12 +16,12 @@ package importer
 import "fmt"
 
 type Domain struct {
-	FQDN    string `yaml:"fqdn"`
+	Fqdn    string `yaml:"fqdn"`
 	Deleted bool   `yaml:"deleted"`
 }
 
 func (d *Domain) Validate() error {
-	if d.FQDN == "" {
+	if d.Fqdn == "" {
 		return fmt.Errorf("fqdn is required")
 	}
 

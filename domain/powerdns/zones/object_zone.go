@@ -29,8 +29,8 @@ type Zone struct {
 	NSEC3Narrow      bool     `json:"nsec3narrow"`
 	Presigned        bool     `json:"presigned"`
 	SOAEdit          string   `json:"soa_edit"`
-	SOAEditAPI       string   `json:"soa_edit_api"`
-	APIRectify       bool     `json:"api_rectify"`
+	SOAEditApi       string   `json:"soa_edit_api"`
+	ApiRectify       bool     `json:"api_rectify"`
 	Zone             string   `json:"zone"`
 	Catalog          string   `json:"catalog"`
 	Account          string   `json:"account"`

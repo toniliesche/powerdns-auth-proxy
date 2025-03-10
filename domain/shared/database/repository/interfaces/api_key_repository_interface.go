@@ -15,10 +15,10 @@ package interfaces
 
 import "powerdns-auth-proxy/domain/shared/database/model"
 
-type APIKeyRepositoryInterface interface {
-	SaveNewAPIKey(apiKey *model.APIKey) error
-	CheckExistenceByAPIKey(key string) bool
-	FetchAPIKey(key string) (*model.APIKey, error)
-	FindAPIKeysByUser(id uint) ([]*model.APIKey, error)
-	DeleteAPIKey(key string) error
+type ApiKeyRepositoryInterface interface {
+	SaveNewApiKey(apiKey *model.ApiKey) error
+	CheckExistenceByApiKey(key string) bool
+	FetchApiKey(key string) (*model.ApiKey, error)
+	FindApiKeysByUserId(userId uint) ([]*model.ApiKey, error)
+	DeleteApiKey(key string) error
 }

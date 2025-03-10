@@ -21,7 +21,7 @@ import (
 )
 
 func TestCreateKey(t *testing.T) {
-	apiKeyService, err := setupAPIKeyService()
+	apiKeyService, err := setupApiKeyService()
 	if !assert.NoError(t, err, "failed to setup api key service") {
 		return
 	}
@@ -36,7 +36,7 @@ func TestCreateKey(t *testing.T) {
 	}
 }
 
-func setupAPIKeyService() (interfaces.APIKeyServiceInterface, error) {
+func setupApiKeyService() (interfaces.ApiKeyServiceInterface, error) {
 	container := getContainer("api_key")
 
 	dbUser := &model.User{
@@ -47,5 +47,5 @@ func setupAPIKeyService() (interfaces.APIKeyServiceInterface, error) {
 		return nil, err
 	}
 
-	return container.APIKeyService, nil
+	return container.ApiKeyService, nil
 }

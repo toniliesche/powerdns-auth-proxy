@@ -40,8 +40,8 @@ func (s *LoginService) LoginByCredentials(username string, password string) (*mo
 	return dbUser, nil
 }
 
-func (s *LoginService) LoginByAPIKey(apiKey string) (*model.User, error) {
-	return s.userRepository.FetchUserByAPIKey(apiKey)
+func (s *LoginService) LoginByApiKey(apiKey string) (*model.User, error) {
+	return s.userRepository.FetchUserByApiKey(apiKey)
 }
 
 func (s *LoginService) LoginByUsername(username string) (*model.User, error) {

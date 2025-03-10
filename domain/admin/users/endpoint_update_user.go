@@ -42,7 +42,7 @@ func (c *UserController) updateUser(context *gin.Context) {
 		return
 	}
 
-	err = c.userService.UpdateUserPasswordByID(userId, payload.Password)
+	err = c.userService.UpdateUserPasswordById(userId, payload.Password)
 	if err != nil {
 		c.HandleError(context, err)
 		return

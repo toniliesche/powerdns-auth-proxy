@@ -43,8 +43,8 @@ func (s *UserRoleService) ListRolesForUser(username string) ([]*management.UserR
 	return s.mapper.MapDatabaseToDtoList(dbUserRoles), nil
 }
 
-func (s *UserRoleService) ListRolesForUserByID(id uint) ([]*management.UserRoleMinimal, error) {
-	user, err := s.userRepository.FetchUserByID(id)
+func (s *UserRoleService) ListRolesForUserByUserId(userId uint) ([]*management.UserRoleMinimal, error) {
+	user, err := s.userRepository.FetchUserById(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -55,6 +55,22 @@ func (s *UserRoleService) ListRolesForUserByID(id uint) ([]*management.UserRoleM
 	}
 
 	return s.mapper.MapDatabaseToDtoList(dbUserRoles), nil
+}
+
+func (s *UserRoleService) GrantRolesToUser(userId uint, roles []string) error {
+	user, err := s.userRepository.FetchUserById(userId)
+	if err != nil {
+		return err
+	}
+
+	for _, roleName := range roles {
+		err = s.GrantRoleToUser(user.Username, roleName)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (s *UserRoleService) GrantRoleToUser(username string, roleName string) error {
@@ -78,6 +94,22 @@ func (s *UserRoleService) GrantRoleToUser(username string, roleName string) erro
 	return s.userRoleRepository.SaveNewUserRole(&userRole)
 }
 
+func (s *UserRoleService) RevokeRolesFromUser(userId uint, roles []string) error {
+	user, err := s.userRepository.FetchUserById(userId)
+	if err != nil {
+		return err
+	}
+
+	for _, roleName := range roles {
+		err = s.RevokeRoleFromUser(user.Username, roleName)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (s *UserRoleService) RevokeRoleFromUser(username string, roleName string) error {
 	user, err := s.userRepository.FetchUser(username)
 	if err != nil {
@@ -95,60 +127,6 @@ func (s *UserRoleService) RevokeRoleFromUser(username string, roleName string) e
 	}
 
 	return s.userRoleRepository.DeleteUserRole(&userRole)
-}
-
-func (s *UserRoleService) GrantRolesToUser(userId uint, roles []string) error {
-	user, err := s.userRepository.FetchUserByID(userId)
-	if err != nil {
-		return err
-	}
-
-	for _, roleName := range roles {
-		role, err := s.roleRepository.FetchRoleByName(roleName)
-		if err != nil {
-			return err
-		}
-
-		userRole := model.UserRole{
-			UserID: user.ID,
-			User:   user,
-			RoleID: role.ID,
-			Role:   role,
-		}
-
-		err = s.userRoleRepository.SaveNewUserRole(&userRole)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (s *UserRoleService) RevokeRolesFromUser(userId uint, roles []string) error {
-	user, err := s.userRepository.FetchUserByID(userId)
-	if err != nil {
-		return err
-	}
-
-	for _, roleName := range roles {
-		role, err := s.roleRepository.FetchRoleByName(roleName)
-		if err != nil {
-			return err
-		}
-
-		userRole := model.UserRole{
-			UserID: user.ID,
-			RoleID: role.ID,
-		}
-
-		err = s.userRoleRepository.DeleteUserRole(&userRole)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
 
 func ProvideUserRoleService(container *basics.InjectionContainer) (*UserRoleService, error) {

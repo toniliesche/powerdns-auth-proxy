@@ -24,7 +24,7 @@ func (c *DomainController) deleteDomain(context *gin.Context) {
 		return
 	}
 
-	if err := c.domainService.DeleteDomainByID(domainId); err != nil {
+	if err := c.domainService.DeleteDomainById(domainId); err != nil {
 		c.HandleError(context, err)
 		return
 	}

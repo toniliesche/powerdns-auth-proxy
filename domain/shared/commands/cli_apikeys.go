@@ -18,40 +18,40 @@ import (
 	"powerdns-auth-proxy/domain/shared/app"
 )
 
-func getCliAPIKeyCommand() *cli.Command {
+func getCliApiKeyCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "api-key",
 		Usage: "manage api keys of the api gateway",
 		Subcommands: []*cli.Command{
-			getCliAPIKeyListCommand(),
-			getCliAPIKeyAddCommand(),
-			getCliAPIKeyDeleteCommand(),
+			getCliApiKeyListCommand(),
+			getCliApiKeyAddCommand(),
+			getCliApiKeyDeleteCommand(),
 		},
 	}
 }
 
-func getCliAPIKeyAddCommand() *cli.Command {
+func getCliApiKeyAddCommand() *cli.Command {
 	return &cli.Command{
 		Name:      "add",
 		Usage:     "generate a new api key for user",
-		Action:    app.RunCliAPIKeyAdd,
+		Action:    app.RunCliApiKeyAdd,
 		ArgsUsage: " <username>",
 	}
 }
 
-func getCliAPIKeyListCommand() *cli.Command {
+func getCliApiKeyListCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "list",
 		Usage:  "list all api keys",
-		Action: app.RunCliAPIKeyList,
+		Action: app.RunCliApiKeyList,
 	}
 }
 
-func getCliAPIKeyDeleteCommand() *cli.Command {
+func getCliApiKeyDeleteCommand() *cli.Command {
 	return &cli.Command{
 		Name:      "delete",
 		Usage:     "delete a api key",
-		Action:    app.RunCliAPIKeyDelete,
+		Action:    app.RunCliApiKeyDelete,
 		ArgsUsage: " <id>",
 	}
 }

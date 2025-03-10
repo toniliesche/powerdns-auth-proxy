@@ -35,7 +35,7 @@ type PowerDNSConfig struct {
 	Host   string `yaml:"host"`
 	Port   int    `yaml:"port"`
 	SSL    bool   `yaml:"ssl"`
-	APIKey string `yaml:"api_key"`
+	ApiKey string `yaml:"api_key"`
 }
 
 func ProvideApplicationConfig(context *cli.Context) (*Config, error) {

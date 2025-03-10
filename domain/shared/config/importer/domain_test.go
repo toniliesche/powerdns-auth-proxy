@@ -21,7 +21,7 @@ import (
 
 func TestDomainValidation(t *testing.T) {
 	domain := &importer.Domain{
-		FQDN: DomainFQDN,
+		Fqdn: DomainFqdn,
 	}
 
 	if !assert.Nil(t, domain.Validate(), "should not return error when fqdn is not empty") {

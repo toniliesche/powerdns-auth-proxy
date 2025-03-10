@@ -29,7 +29,7 @@ type ForwardService struct {
 
 func (s *ForwardService) ForwardRequest(request *http.Request) (*http.Response, error) {
 	request.Header.Del("Authorization")
-	request.Header.Add("X-API-Key", s.apiKey)
+	request.Header.Add("X-Api-Key", s.apiKey)
 
 	request.Host = s.basePath
 
@@ -73,7 +73,7 @@ func ProvideForwardService(container *basics.InjectionContainer) (*ForwardServic
 	return &ForwardService{
 		basePath: basePath,
 		proto:    proto,
-		apiKey:   powerDNSConfig.APIKey,
+		apiKey:   powerDNSConfig.ApiKey,
 		client:   &http.Client{},
 	}, nil
 }

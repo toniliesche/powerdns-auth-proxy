@@ -21,20 +21,20 @@ import (
 	"powerdns-auth-proxy/domain/shared/interfaces"
 )
 
-type APIKeyRequestAuthenticator struct {
+type ApiKeyRequestAuthenticator struct {
 	userMapper   *UserMapper
 	loginService interfaces.LoginServiceInterface
 }
 
-func (a *APIKeyRequestAuthenticator) Authenticate(context *gin.Context) (*model.User, error) {
+func (a *ApiKeyRequestAuthenticator) Authenticate(context *gin.Context) (*model.User, error) {
 	request := context.Request
-	apiKey := request.Header.Get("X-API-KEY")
+	apiKey := request.Header.Get("X-API_KEY")
 
 	if apiKey == "" {
 		return nil, fmt.Errorf("missing api key header")
 	}
 
-	dbUser, err := a.loginService.LoginByAPIKey(apiKey)
+	dbUser, err := a.loginService.LoginByApiKey(apiKey)
 	if err != nil {
 		return nil, err
 	}
@@ -42,10 +42,10 @@ func (a *APIKeyRequestAuthenticator) Authenticate(context *gin.Context) (*model.
 	return a.userMapper.FromDatabase(dbUser)
 }
 
-func ProvideAPIKeyRequestAuthenticator(container *basics.InjectionContainer) (interfaces.RequestAuthenticatorInterface, error) {
+func ProvideApiKeyRequestAuthenticator(container *basics.InjectionContainer) (interfaces.RequestAuthenticatorInterface, error) {
 	if container.LoginService == nil {
 		return nil, basics.NewMissingDependencyError("could not provide api key request authenticator: login service could not be resolved")
 	}
 
-	return &APIKeyRequestAuthenticator{loginService: container.LoginService, userMapper: &UserMapper{}}, nil
+	return &ApiKeyRequestAuthenticator{loginService: container.LoginService, userMapper: &UserMapper{}}, nil
 }

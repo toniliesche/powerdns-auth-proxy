@@ -64,7 +64,7 @@ func TestGetNonExistingGlobalRole(t *testing.T) {
 func TestCheckForDomainRole(t *testing.T) {
 	user := GetTestUser()
 
-	if !assert.True(t, user.HasDomainRole(DomainFQDN, DomainRoleName), "domain role not detected") {
+	if !assert.True(t, user.HasDomainRole(DomainFqdn, DomainRoleName), "domain role not detected") {
 		return
 	}
 }
@@ -76,14 +76,14 @@ func TestCheckForNonExistingDomainRole(t *testing.T) {
 		return
 	}
 
-	if !assert.False(t, user.HasDomainRole(DomainRoleName, NonExistingDomainFQDN), "non-existing domain role issue not detected") {
+	if !assert.False(t, user.HasDomainRole(DomainRoleName, NonExistingDomainFqdn), "non-existing domain role issue not detected") {
 		return
 	}
 }
 
 func TestGetDomainRole(t *testing.T) {
 	user := GetTestUser()
-	domainRole, err := user.GetDomainRole(DomainFQDN, DomainRoleName)
+	domainRole, err := user.GetDomainRole(DomainFqdn, DomainRoleName)
 
 	if !assert.NoError(t, err, "failed to get domain role") {
 		return
@@ -96,7 +96,7 @@ func TestGetDomainRole(t *testing.T) {
 
 func TestGetNonExistingDomainRole(t *testing.T) {
 	user := GetTestUser()
-	domainRole, err := user.GetDomainRole(NonExistingDomainFQDN, DomainRoleName)
+	domainRole, err := user.GetDomainRole(NonExistingDomainFqdn, DomainRoleName)
 
 	if !assert.Error(t, err, "non-existing domain role issue not detected") {
 		return
@@ -106,7 +106,7 @@ func TestGetNonExistingDomainRole(t *testing.T) {
 		return
 	}
 
-	domainRole, err = user.GetDomainRole(DomainFQDN, NonExistingDomainRoleName)
+	domainRole, err = user.GetDomainRole(DomainFqdn, NonExistingDomainRoleName)
 
 	if !assert.Error(t, err, "non-existing domain role issue not detected") {
 		return
@@ -125,7 +125,7 @@ func GetTestUser() *model.User {
 					Name: DomainRoleName,
 				},
 				Domain: &model.Domain{
-					FQDN: DomainFQDN,
+					Fqdn: DomainFqdn,
 				},
 			},
 		},

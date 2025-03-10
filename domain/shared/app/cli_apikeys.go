@@ -23,12 +23,12 @@ import (
 	"strconv"
 )
 
-func RunCliAPIKeyAdd(context *cli.Context) error {
+func RunCliApiKeyAdd(context *cli.Context) error {
 	if context.Args().Len() == 0 {
 		return fmt.Errorf("missing arguments: <username>")
 	}
 
-	apiKeyService, err := getAPIKeyService(context)
+	apiKeyService, err := getApiKeyService(context)
 	if err != nil {
 		return err
 	}
@@ -38,17 +38,17 @@ func RunCliAPIKeyAdd(context *cli.Context) error {
 		return fmt.Errorf("could not generate api key: %w", err)
 	}
 
-	fmt.Printf("API key successfully generated for user: %s [user: %s, identifier: %s]\n", apiKey.APIKey, context.Args().Get(0), apiKey.Identifier)
+	fmt.Printf("API key successfully generated for user: %s [user: %s, identifier: %s]\n", apiKey.ApiKey, context.Args().Get(0), apiKey.Identifier)
 
 	return nil
 }
 
-func RunCliAPIKeyList(context *cli.Context) error {
+func RunCliApiKeyList(context *cli.Context) error {
 	if context.Args().Len() == 0 {
 		return fmt.Errorf("missing arguments: <username>")
 	}
 
-	apiKeyService, err := getAPIKeyService(context)
+	apiKeyService, err := getApiKeyService(context)
 	if err != nil {
 		return err
 	}
@@ -75,12 +75,12 @@ func RunCliAPIKeyList(context *cli.Context) error {
 	return nil
 }
 
-func RunCliAPIKeyDelete(context *cli.Context) error {
+func RunCliApiKeyDelete(context *cli.Context) error {
 	if context.Args().Len() == 0 {
 		return fmt.Errorf("missing arguments: <id>")
 	}
 
-	apiKeyService, err := getAPIKeyService(context)
+	apiKeyService, err := getApiKeyService(context)
 	if err != nil {
 		return err
 	}
@@ -95,11 +95,11 @@ func RunCliAPIKeyDelete(context *cli.Context) error {
 	return nil
 }
 
-func getAPIKeyService(context *cli.Context) (interfaces.APIKeyServiceInterface, error) {
+func getApiKeyService(context *cli.Context) (interfaces.ApiKeyServiceInterface, error) {
 	container, err := setup.InitContainerCli(context)
 	if err != nil {
 		return nil, err
 	}
 
-	return container.APIKeyService, nil
+	return container.ApiKeyService, nil
 }

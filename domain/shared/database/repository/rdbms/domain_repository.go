@@ -29,14 +29,14 @@ func (r *DomainRepository) SaveNewDomain(domain *model.Domain) error {
 	return r.database.Create(domain).Error
 }
 
-func (r *DomainRepository) CheckExistenceByFQDN(fqdn string) bool {
+func (r *DomainRepository) CheckExistenceByFqdn(fqdn string) bool {
 	var count int64
 	r.database.Model(&model.Domain{}).Where("fqdn = ?", fqdn).Count(&count)
 
 	return count > 0
 }
 
-func (r *DomainRepository) FetchDomainByID(id uint) (*model.Domain, error) {
+func (r *DomainRepository) FetchDomainById(id uint) (*model.Domain, error) {
 	var domainModel model.Domain
 
 	result := r.database.
@@ -55,7 +55,7 @@ func (r *DomainRepository) FetchDomainByID(id uint) (*model.Domain, error) {
 	return &domainModel, nil
 }
 
-func (r *DomainRepository) FetchDomainByFQDN(fqdn string) (*model.Domain, error) {
+func (r *DomainRepository) FetchDomainByFqdn(fqdn string) (*model.Domain, error) {
 	var domainModel model.Domain
 
 	result := r.database.
@@ -89,12 +89,12 @@ func (r *DomainRepository) FindAll() ([]*model.Domain, error) {
 }
 
 func (r *DomainRepository) DeleteDomain(fqdn string) error {
-	domain, err := r.FetchDomainByFQDN(fqdn)
+	domain, err := r.FetchDomainByFqdn(fqdn)
 	if err != nil {
 		return err
 	}
 
-	newFqdn := fmt.Sprintf("%s#deleted-%d", domain.FQDN, domain.ID)
+	newFqdn := fmt.Sprintf("%s#deleted-%d", domain.Fqdn, domain.ID)
 	err = r.database.Model(&model.Domain{}).Where("id = ?", domain.ID).Update("fqdn", newFqdn).Error
 	if err != nil {
 		return err
@@ -103,13 +103,13 @@ func (r *DomainRepository) DeleteDomain(fqdn string) error {
 	return r.database.Where("id = ?", domain.ID).Delete(&model.Domain{}).Error
 }
 
-func (r *DomainRepository) DeleteDomainByID(id uint) error {
-	domain, err := r.FetchDomainByID(id)
+func (r *DomainRepository) DeleteDomainById(id uint) error {
+	domain, err := r.FetchDomainById(id)
 	if err != nil {
 		return err
 	}
 
-	newFqdn := fmt.Sprintf("%s#deleted-%d", domain.FQDN, domain.ID)
+	newFqdn := fmt.Sprintf("%s#deleted-%d", domain.Fqdn, domain.ID)
 	err = r.database.Model(&model.Domain{}).Where("id = ?", domain.ID).Update("fqdn", newFqdn).Error
 	if err != nil {
 		return err

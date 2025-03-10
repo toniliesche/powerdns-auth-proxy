@@ -24,7 +24,7 @@ func (c *DomainController) getDomain(context *gin.Context) {
 		return
 	}
 
-	domain, err := c.domainService.GetDomainByID(domainId)
+	domain, err := c.domainService.GetDomainById(domainId)
 	if err != nil {
 		c.HandleError(context, err)
 		return

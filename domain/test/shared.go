@@ -14,11 +14,11 @@
 package test
 
 const (
-	APIKey                    = "testapikey"
-	DomainFQDN                = "example.com"
+	ApiKey                    = "testapikey"
+	DomainFqdn                = "example.com"
 	DomainRoleName            = "testdomainrole"
-	NonExistingAPIKey         = "non-existing-apikey"
-	NonExistingDomainFQDN     = "non-existing-domain.com"
+	NonExistingApiKey         = "non-existing-apikey"
+	NonExistingDomainFqdn     = "non-existing-domain.com"
 	NonExistingDomainRoleName = "non-existing-domainrole"
 	NonExistingRoleName       = "non-existing-role"
 	NonExistingTokenSession   = "non-existing-tokensession"

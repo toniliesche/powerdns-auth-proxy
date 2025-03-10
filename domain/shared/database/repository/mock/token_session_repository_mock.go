@@ -35,11 +35,11 @@ func (r *TokenSessionRepositoryMock) SaveNewTokenSession(tokenSession *model.Tok
 	return nil
 }
 
-func (r *TokenSessionRepositoryMock) FindTokenSessionsByUser(id uint) ([]*model.TokenSession, error) {
+func (r *TokenSessionRepositoryMock) FindTokenSessionsByUserId(userId uint) ([]*model.TokenSession, error) {
 	tokenSessions := make([]*model.TokenSession, 0)
 
 	for _, tokenSession := range r.tokenSessions {
-		if tokenSession.UserID == id {
+		if tokenSession.UserID == userId {
 			tokenSessions = append(tokenSessions, tokenSession)
 		}
 	}

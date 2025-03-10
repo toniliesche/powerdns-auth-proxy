@@ -20,13 +20,13 @@ import (
 	"testing"
 )
 
-func TestAPIKeyAuthSucceeds(t *testing.T) {
+func TestApiKeyAuthSucceeds(t *testing.T) {
 	container := getContainer("api_key")
 
 	authenticator := container.Authenticator
 	context, _ := gin.CreateTestContext(&httptest.ResponseRecorder{})
 	context.Request = httptest.NewRequest("GET", "/test", nil)
-	context.Request.Header.Set("X-API-KEY", "testapikey")
+	context.Request.Header.Set("X-API_KEY", "testapikey")
 
 	user, err := authenticator.Authenticate(context)
 
@@ -43,7 +43,7 @@ func TestAPIKeyAuthSucceeds(t *testing.T) {
 	}
 }
 
-func TestAPIKeyAuthFailsOnMissingHeader(t *testing.T) {
+func TestApiKeyAuthFailsOnMissingHeader(t *testing.T) {
 	container := getContainer("api_key")
 
 	context, _ := gin.CreateTestContext(&httptest.ResponseRecorder{})
@@ -60,12 +60,12 @@ func TestAPIKeyAuthFailsOnMissingHeader(t *testing.T) {
 	}
 }
 
-func TestAPIKeyAuthFailsOnWrongAPIKey(t *testing.T) {
+func TestApiKeyAuthFailsOnWrongApiKey(t *testing.T) {
 	container := getContainer("api_key")
 
 	context, _ := gin.CreateTestContext(&httptest.ResponseRecorder{})
 	context.Request = httptest.NewRequest("GET", "/test", nil)
-	context.Request.Header.Set("X-API-KEY", "wrongapikey")
+	context.Request.Header.Set("X-API_KEY", "wrongapikey")
 
 	user, err := container.Authenticator.Authenticate(context)
 

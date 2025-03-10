@@ -28,12 +28,12 @@ func (r *TokenSessionRepository) SaveNewTokenSession(tokenSession *model.TokenSe
 	return r.database.Create(tokenSession).Error
 }
 
-func (r *TokenSessionRepository) FindTokenSessionsByUser(id uint) ([]*model.TokenSession, error) {
+func (r *TokenSessionRepository) FindTokenSessionsByUserId(userId uint) ([]*model.TokenSession, error) {
 	var tokenSessions []*model.TokenSession
 
 	result := r.database.
 		Model(&model.TokenSession{}).
-		Where("user_id = ?", id).
+		Where("user_id = ?", userId).
 		Find(&tokenSessions)
 
 	if result.Error != nil {

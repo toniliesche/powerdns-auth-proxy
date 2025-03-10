@@ -34,7 +34,7 @@ func RunCliDomainRoleList(context *cli.Context) error {
 		return err
 	}
 
-	_, err = roleService.ListDomainRolesForUser(context.Args().Get(1), context.Args().Get(0))
+	_, err = roleService.ListDomainRolesForUserPerDomain(context.Args().Get(1), context.Args().Get(0))
 
 	return err
 }

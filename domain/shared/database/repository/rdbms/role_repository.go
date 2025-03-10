@@ -47,6 +47,25 @@ func (r *RoleRepository) CheckExistenceByName(name string) bool {
 	return count > 0
 }
 
+func (r *RoleRepository) FetchRoleById(roleId uint) (*model.Role, error) {
+	var role model.Role
+
+	result := r.database.
+		Model(&role).
+		Where("id = ?", roleId).
+		Scan(&role)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, errors.NewItemNotFoundError("role not found")
+	}
+
+	return &role, nil
+}
+
 func (r *RoleRepository) FetchRoleByName(name string) (*model.Role, error) {
 	var role model.Role
 

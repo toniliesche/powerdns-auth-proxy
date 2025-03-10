@@ -15,8 +15,8 @@ package interfaces
 
 import "powerdns-auth-proxy/domain/shared/database/model"
 
-type APIKeyServiceInterface interface {
-	Create(username string) (*model.APIKey, error)
+type ApiKeyServiceInterface interface {
+	Create(username string) (*model.ApiKey, error)
 	Delete(apiKeyId string) error
-	List(username string) ([]*model.APIKey, error)
+	List(username string) ([]*model.ApiKey, error)
 }

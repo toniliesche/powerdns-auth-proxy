@@ -34,13 +34,17 @@ func (p *UserRolePayload) ContainsAdminRole() bool {
 }
 
 func (p *UserRolePayload) Verify() errors.HTTPError {
-	if len(p.Roles) == 0 {
+	if p.Roles == nil {
 		return errors.NewBadRequestError(fmt.Errorf("roles is required"))
 	}
 
-	for _, role := range p.Roles {
+	if len(p.Roles) == 0 {
+		return errors.NewBadRequestError(fmt.Errorf("roles must contain at least one item"))
+	}
+
+	for index, role := range p.Roles {
 		if strings.TrimSpace(role) == "" {
-			return errors.NewBadRequestError(fmt.Errorf("role cannot be empty"))
+			return errors.NewBadRequestError(fmt.Errorf("roles[%d]: role cannot be empty", index))
 		}
 	}
 

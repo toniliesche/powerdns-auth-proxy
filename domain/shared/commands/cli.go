@@ -22,7 +22,7 @@ func ProvideCliCommand() *cli.Command {
 		Name:  "cli",
 		Usage: "run the cli component",
 		Subcommands: []*cli.Command{
-			getCliAPIKeyCommand(),
+			getCliApiKeyCommand(),
 			getCliDomainCommand(),
 			getCliDomainRoleCommand(),
 			getCliUserCommand(),

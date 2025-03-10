@@ -21,7 +21,7 @@ import (
 
 func TestUserDomainRoleValidation(t *testing.T) {
 	userDomainRole := &importer.UserDomainRole{
-		Domain: DomainFQDN,
+		Domain: DomainFqdn,
 		Role:   DomainRoleName,
 	}
 
@@ -30,7 +30,7 @@ func TestUserDomainRoleValidation(t *testing.T) {
 	}
 
 	userDomainRole = &importer.UserDomainRole{
-		Domain: DomainFQDN,
+		Domain: DomainFqdn,
 	}
 
 	if !assert.NotNil(t, userDomainRole.Validate(), "should return error when role is empty") {

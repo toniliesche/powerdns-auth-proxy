@@ -24,13 +24,17 @@ type SessionLogoutPayload struct {
 }
 
 func (p *SessionLogoutPayload) Verify() errors.HTTPError {
-	if len(p.SessionIDs) == 0 {
+	if p.SessionIDs == nil {
 		return errors.NewBadRequestError(fmt.Errorf("session_ids is required"))
 	}
 
-	for _, sessionID := range p.SessionIDs {
+	if len(p.SessionIDs) == 0 {
+		return errors.NewBadRequestError(fmt.Errorf("session_ids must contain at least one item"))
+	}
+
+	for index, sessionID := range p.SessionIDs {
 		if strings.TrimSpace(sessionID) == "" {
-			return errors.NewBadRequestError(fmt.Errorf("session_id cannot be empty"))
+			return errors.NewBadRequestError(fmt.Errorf("session_ids[%d]: session id cannot be empty", index))
 		}
 	}
 

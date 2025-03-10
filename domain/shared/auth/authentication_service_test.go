@@ -167,9 +167,9 @@ func getAuthenticationService() (interfaces.AuthenticationServiceInterface, erro
 	user := &dbmodel.User{
 		Username: "user",
 		Password: "$2a$10$0yI64XAHi8q2SVZ.yuGpYeEu2Ufsyz0VgjvBRy5TknrQ9j4glrRQq",
-		APIKeys: []*dbmodel.APIKey{
+		ApiKeys: []*dbmodel.ApiKey{
 			{
-				APIKey: "testapikey",
+				ApiKey: "testapikey",
 			},
 		},
 		UserRoles: []*dbmodel.UserRole{

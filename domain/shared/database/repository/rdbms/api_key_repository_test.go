@@ -22,56 +22,56 @@ import (
 	"testing"
 )
 
-func TestAPIKeyCanBeSaved(t *testing.T) {
+func TestApiKeyCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestAPIKeyRepository(registry, t, false)
+	repo := ProvideTestApiKeyRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
 	}
 
-	err = repo.SaveNewAPIKey(&model.APIKey{UserID: registry.GetUint("userId"), APIKey: test.APIKey})
+	err = repo.SaveNewApiKey(&model.ApiKey{UserID: registry.GetUint("userId"), ApiKey: test.ApiKey})
 
 	if !assert.NoError(t, err, "failed to save new api key") {
 		return
 	}
 }
 
-func TestAPIKeyCanBeFetched(t *testing.T) {
+func TestApiKeyCanBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestAPIKeyRepository(registry, t, true)
+	repo := ProvideTestApiKeyRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
 	}
 
-	apiKey, err := repo.FetchAPIKey(test.APIKey)
+	apiKey, err := repo.FetchApiKey(test.ApiKey)
 
 	if !assert.NoError(t, err, "failed to fetch api key") {
 		return
 	}
 
-	if !assert.IsType(t, &model.APIKey{}, apiKey) {
+	if !assert.IsType(t, &model.ApiKey{}, apiKey) {
 		return
 	}
 
-	if !assert.Equal(t, test.APIKey, apiKey.APIKey) {
+	if !assert.Equal(t, test.ApiKey, apiKey.ApiKey) {
 		return
 	}
 }
 
-func TestCorrectAPIKeyWillBeFetched(t *testing.T) {
+func TestCorrectApiKeyWillBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestAPIKeyRepository(registry, t, true)
+	repo := ProvideTestApiKeyRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
 	}
 
-	apiKey, err := repo.FetchAPIKey(test.NonExistingAPIKey)
+	apiKey, err := repo.FetchApiKey(test.NonExistingApiKey)
 
 	if !assert.Error(t, err, "expected error to be returned") {
 		return
@@ -82,29 +82,29 @@ func TestCorrectAPIKeyWillBeFetched(t *testing.T) {
 	}
 }
 
-func TestAPIKeyCanBeDeleted(t *testing.T) {
+func TestApiKeyCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestAPIKeyRepository(registry, t, true)
+	repo := ProvideTestApiKeyRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
 	}
 
-	err = repo.DeleteAPIKey(test.APIKey)
+	err = repo.DeleteApiKey(test.ApiKey)
 
 	if !assert.NoError(t, err, "failed to delete api key") {
 		return
 	}
 
-	found := repo.CheckExistenceByAPIKey(test.APIKey)
+	found := repo.CheckExistenceByApiKey(test.ApiKey)
 
 	if !assert.False(t, found, "expected api key to not exist") {
 		return
 	}
 }
 
-func ProvideTestAPIKeyRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.APIKeyRepositoryInterface {
+func ProvideTestApiKeyRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.ApiKeyRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{RunDatabaseMigrations: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil
@@ -116,11 +116,11 @@ func ProvideTestAPIKeyRepository(registry *test.Registry, t *testing.T, withData
 	}
 
 	if withData {
-		err = test.RepositoryCreateTestAPIKey(container, registry)
+		err = test.RepositoryCreateTestApiKey(container, registry)
 		if !assert.NoError(t, err, "failed to create test api key") {
 			return nil
 		}
 	}
 
-	return container.APIKeyRepository
+	return container.ApiKeyRepository
 }

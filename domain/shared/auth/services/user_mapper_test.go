@@ -39,7 +39,7 @@ func TestMapDatabaseUserToUser(t *testing.T) {
 		UserDomainRoles: []*dbmodel.UserDomainRole{
 			{
 				Domain: &dbmodel.Domain{
-					FQDN: "example.com",
+					Fqdn: "example.com",
 				},
 				DomainRole: &dbmodel.DomainRole{
 					Name: "admin",

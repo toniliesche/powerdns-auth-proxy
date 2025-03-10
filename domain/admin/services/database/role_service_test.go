@@ -16,6 +16,8 @@ package database_test
 import (
 	"github.com/stretchr/testify/assert"
 	"powerdns-auth-proxy/domain/admin/services/database"
+	"powerdns-auth-proxy/domain/shared/basics"
+	"powerdns-auth-proxy/domain/shared/database/repository/rdbms"
 	"powerdns-auth-proxy/domain/shared/model/management"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"powerdns-auth-proxy/domain/test"
@@ -24,7 +26,7 @@ import (
 
 func TestCreateRole(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestRoleService(registry, false)
+	service, err := getRoleService(registry, false)
 	if err != nil {
 		t.Error(err)
 		return
@@ -42,7 +44,7 @@ func TestCreateRole(t *testing.T) {
 
 func TestListRoles(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestRoleService(registry, true)
+	service, err := getRoleService(registry, true)
 	if err != nil {
 		t.Error(err)
 		return
@@ -61,7 +63,7 @@ func TestListRoles(t *testing.T) {
 
 func TestDeleteRole(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestRoleService(registry, true)
+	service, err := getRoleService(registry, true)
 	if err != nil {
 		t.Error(err)
 		return
@@ -73,7 +75,24 @@ func TestDeleteRole(t *testing.T) {
 	}
 }
 
-func ProvideTestRoleService(registry *test.Registry, withData bool) (*database.RoleService, error) {
+func TestProvideRoleServiceFailsOnMissingRoleRepository(t *testing.T) {
+	container := &basics.InjectionContainer{}
+
+	_, err := database.ProvideRoleService(container)
+	assert.Error(t, err, "provide role service should return an error")
+	assert.Equal(t, "could not provide role service: role repository could not be resolved", err.Error())
+}
+
+func TestProvideRoleServiceSucceeds(t *testing.T) {
+	container := &basics.InjectionContainer{}
+	container.RoleRepository = &rdbms.RoleRepository{}
+
+	service, err := database.ProvideRoleService(container)
+	assert.NoError(t, err, "provide role service should not return an error")
+	assert.NotNil(t, service, "provide role service should return a service")
+}
+
+func getRoleService(registry *test.Registry, withData bool) (*database.RoleService, error) {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if err != nil {
 		return nil, err

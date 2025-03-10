@@ -17,7 +17,7 @@ import "powerdns-auth-proxy/domain/shared/database/model"
 
 type TokenSessionRepositoryInterface interface {
 	SaveNewTokenSession(tokenSession *model.TokenSession) error
-	FindTokenSessionsByUser(id uint) ([]*model.TokenSession, error)
+	FindTokenSessionsByUserId(userId uint) ([]*model.TokenSession, error)
 	FetchTokenSession(sessionID string) (*model.TokenSession, error)
 	DeleteTokenSession(sessionID string) error
 	UpdateTokenSession(session *model.TokenSession) error

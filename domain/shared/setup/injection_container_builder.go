@@ -236,7 +236,7 @@ func (b *InjectionContainerBuilder) initDbRepositories(container *basics.Injecti
 		return err
 	}
 
-	if container.APIKeyRepository, err = rdbms.ProvideAPIKeyRepository(container); err != nil {
+	if container.ApiKeyRepository, err = rdbms.ProvideApiKeyRepository(container); err != nil {
 		return err
 	}
 
@@ -265,7 +265,7 @@ func (b *InjectionContainerBuilder) initDbRepositories(container *basics.Injecti
 
 func (b *InjectionContainerBuilder) initMockRepositories(container *basics.InjectionContainer) error {
 	var err error
-	if container.APIKeyRepository, err = mock.ProvideAPIKeyRepositoryMock(); err != nil {
+	if container.ApiKeyRepository, err = mock.ProvideApiKeyRepositoryMock(); err != nil {
 		return err
 	}
 
@@ -303,7 +303,7 @@ func (b *InjectionContainerBuilder) initMockRepositories(container *basics.Injec
 func (b *InjectionContainerBuilder) initDataServices(container *basics.InjectionContainer) error {
 	var err error
 
-	if container.APIKeyService, err = services.ProvideAPIKeyService(container); err != nil {
+	if container.ApiKeyService, err = services.ProvideApiKeyService(container); err != nil {
 		return err
 	}
 
@@ -340,7 +340,7 @@ func (b *InjectionContainerBuilder) initAuthenticator(container *basics.Injectio
 
 	switch container.Config.AuthType {
 	case "api_key":
-		service, err = services.ProvideAPIKeyRequestAuthenticator(container)
+		service, err = services.ProvideApiKeyRequestAuthenticator(container)
 	case "basic_auth":
 		service, err = services.ProvideBasicAuthenticator(container)
 	case "client_cert":
@@ -456,7 +456,7 @@ func (b *InjectionContainerBuilder) provideMockConfig(testconfig *TestConfig) *c
 			PublicKey: "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAECUN/L7Mv8fFgUxzoqfUwxtO3x8LD\n/GhNRj7SI+f9p2PVgpE2owvyA22o/4gvYXUNVF0rU+PQGX23/SMV2+hY2g==\n-----END PUBLIC KEY-----",
 		},
 		PowerDNS: &config.PowerDNSConfig{
-			APIKey: "test",
+			ApiKey: "test",
 			Host:   "127.0.0.1",
 			Port:   8081,
 		},

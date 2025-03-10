@@ -19,7 +19,7 @@ import (
 
 type UserRoleServiceInterface interface {
 	ListRolesForUser(username string) ([]*management.UserRoleMinimal, error)
-	ListRolesForUserByID(id uint) ([]*management.UserRoleMinimal, error)
+	ListRolesForUserByUserId(userId uint) ([]*management.UserRoleMinimal, error)
 	GrantRoleToUser(username string, roleName string) error
 	RevokeRoleFromUser(username string, roleName string) error
 	GrantRolesToUser(userId uint, roles []string) error

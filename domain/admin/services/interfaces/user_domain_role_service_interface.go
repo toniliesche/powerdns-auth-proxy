@@ -18,10 +18,12 @@ import (
 )
 
 type UserDomainRoleServiceInterface interface {
-	ListDomainRolesForUser(fqdn string, username string) ([]*management.DomainRole, error)
+	ListDomainRolesForUser(username string) ([]*management.DomainRole, error)
+	ListDomainRolesForUserPerDomain(fqdn string, username string) ([]*management.DomainRole, error)
+	ListDomainRolesForUserByUserId(userId uint) ([]*management.DomainRole, error)
+	ListDomainRolesForUserByUserIdPerDomain(fqdn string, userId uint) ([]*management.DomainRole, error)
 	GrantDomainRoleToUser(fqdn string, username string, roleName string) error
 	RevokeDomainRoleFromUser(fqdn string, username string, roleName string) error
-	GrantDomainRolesToUser(id uint, roles []*management.DomainRole) error
-	RevokeDomainRolesFromUser(id uint, roles []*management.DomainRole) error
-	ListRolesForUserByID(id uint) ([]*management.DomainRole, error)
+	GrantDomainRolesToUser(userId uint, roles []*management.DomainRole) error
+	RevokeDomainRolesFromUser(userId uint, roles []*management.DomainRole) error
 }

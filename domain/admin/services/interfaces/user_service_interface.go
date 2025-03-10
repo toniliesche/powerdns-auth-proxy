@@ -22,8 +22,9 @@ type UserServiceInterface interface {
 	ListUsers() ([]*management.UserMinimal, error)
 	ListUsersComplete() ([]*management.User, error)
 	CheckIsAdminUser(userId uint) (bool, error)
-	GetUserByID(userId uint) (*management.User, error)
+	GetUser(username string) (*management.User, error)
+	GetUserById(userId uint) (*management.User, error)
 	DeleteUser(username string) error
-	DeleteUserByID(userId uint) error
-	UpdateUserPasswordByID(userId uint, password string) error
+	DeleteUserById(userId uint) error
+	UpdateUserPasswordById(userId uint, password string) error
 }

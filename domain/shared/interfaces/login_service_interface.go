@@ -20,6 +20,6 @@ import (
 
 type LoginServiceInterface interface {
 	LoginByCredentials(username string, password string) (*model.User, errors2.HTTPError)
-	LoginByAPIKey(apiKey string) (*model.User, error)
+	LoginByApiKey(apiKey string) (*model.User, error)
 	LoginByUsername(username string) (*model.User, error)
 }

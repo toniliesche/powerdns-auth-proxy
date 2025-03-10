@@ -53,7 +53,7 @@ func (s *MigrationService) RunMigrations() error {
 		return err
 	}
 
-	if err = s.database.AutoMigrate(&model.APIKey{}); err != nil {
+	if err = s.database.AutoMigrate(&model.ApiKey{}); err != nil {
 		return err
 	}
 
@@ -135,23 +135,23 @@ func (s *MigrationService) RunDomainImport(config *config.DBImportConfig) error 
 		var err error
 
 		if domain.Deleted {
-			if err = s.domainRepository.DeleteDomain(domain.FQDN); err != nil {
-				return fmt.Errorf("failed to delete domain %s: %w", domain.FQDN, err)
+			if err = s.domainRepository.DeleteDomain(domain.Fqdn); err != nil {
+				return fmt.Errorf("failed to delete domain %s: %w", domain.Fqdn, err)
 			}
 
 			continue
 		}
 
-		if s.domainRepository.CheckExistenceByFQDN(domain.FQDN) {
+		if s.domainRepository.CheckExistenceByFqdn(domain.Fqdn) {
 			continue
 		}
 
 		newDomain := &model.Domain{
-			FQDN: domain.FQDN,
+			Fqdn: domain.Fqdn,
 		}
 
 		if err = s.domainRepository.SaveNewDomain(newDomain); err != nil {
-			return fmt.Errorf("failed to save domain %s: %w", domain.FQDN, err)
+			return fmt.Errorf("failed to save domain %s: %w", domain.Fqdn, err)
 		}
 	}
 
@@ -258,7 +258,7 @@ func (s *MigrationService) RunUserDomainRoleImport(dbUser *model.User, user *imp
 			}
 
 			var dbDomain *model.Domain
-			if dbDomain, err = s.domainRepository.FetchDomainByFQDN(domainRole.Domain); err != nil {
+			if dbDomain, err = s.domainRepository.FetchDomainByFqdn(domainRole.Domain); err != nil {
 				return fmt.Errorf("failed to fetch domain %s: %w", domainRole.Domain, err)
 			}
 

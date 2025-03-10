@@ -25,8 +25,8 @@ type InjectionContainer struct {
 	Config             *config.Config
 	DB                 *gorm.DB
 	AdminAuthenticator sharedinterfaces.RequestAuthenticatorInterface
-	APIKeyRepository   interfaces2.APIKeyRepositoryInterface
-	APIKeyService      sharedinterfaces.APIKeyServiceInterface
+	ApiKeyRepository   interfaces2.ApiKeyRepositoryInterface
+	ApiKeyService      sharedinterfaces.ApiKeyServiceInterface
 	Authenticator      sharedinterfaces.RequestAuthenticatorInterface
 	AuthService        sharedinterfaces.AuthenticationServiceInterface
 

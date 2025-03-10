@@ -31,7 +31,7 @@ func TestUserDomainRoleCanBeSaved(t *testing.T) {
 		return
 	}
 
-	err = repo.SaveNewUserDomainRole(&model.UserDomainRole{UserID: registry.GetUint("userId"), DomainID: registry.GetUint("domainId"), Domain: &model.Domain{FQDN: test.DomainFQDN}, DomainRoleID: registry.GetUint("domainRoleId")})
+	err = repo.SaveNewUserDomainRole(&model.UserDomainRole{UserID: registry.GetUint("userId"), DomainID: registry.GetUint("domainId"), Domain: &model.Domain{Fqdn: test.DomainFqdn}, DomainRoleID: registry.GetUint("domainRoleId")})
 
 	if !assert.NoError(t, err, "failed to save new user domain role") {
 		return
@@ -47,7 +47,7 @@ func TestUserDomainRoleCanBeDeleted(t *testing.T) {
 		return
 	}
 
-	err = repo.DeleteUserDomainRole(&model.UserDomainRole{UserID: registry.GetUint("userId"), DomainID: registry.GetUint("domainId"), Domain: &model.Domain{FQDN: test.DomainFQDN}, DomainRoleID: registry.GetUint("domainRoleId")})
+	err = repo.DeleteUserDomainRole(&model.UserDomainRole{UserID: registry.GetUint("userId"), DomainID: registry.GetUint("domainId"), Domain: &model.Domain{Fqdn: test.DomainFqdn}, DomainRoleID: registry.GetUint("domainRoleId")})
 
 	if !assert.NoError(t, err, "failed to delete user domain role") {
 		return

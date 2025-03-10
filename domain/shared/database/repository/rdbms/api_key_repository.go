@@ -20,16 +20,16 @@ import (
 	"powerdns-auth-proxy/domain/shared/database/repository/errors"
 )
 
-type APIKeyRepository struct {
+type ApiKeyRepository struct {
 	database *gorm.DB
 }
 
-func (r *APIKeyRepository) FindAPIKeysByUser(id uint) ([]*model.APIKey, error) {
-	var apiKeys []*model.APIKey
+func (r *ApiKeyRepository) FindApiKeysByUserId(userId uint) ([]*model.ApiKey, error) {
+	var apiKeys []*model.ApiKey
 
 	result := r.database.
 		Preload("User").
-		Where("user_id = ?", id).
+		Where("user_id = ?", userId).
 		Find(&apiKeys)
 
 	if result.Error != nil {
@@ -39,19 +39,19 @@ func (r *APIKeyRepository) FindAPIKeysByUser(id uint) ([]*model.APIKey, error) {
 	return apiKeys, nil
 }
 
-func (r *APIKeyRepository) SaveNewAPIKey(apiKey *model.APIKey) error {
+func (r *ApiKeyRepository) SaveNewApiKey(apiKey *model.ApiKey) error {
 	return r.database.Create(apiKey).Error
 }
 
-func (r *APIKeyRepository) CheckExistenceByAPIKey(key string) bool {
+func (r *ApiKeyRepository) CheckExistenceByApiKey(key string) bool {
 	var count int64
-	r.database.Model(&model.APIKey{}).Where("api_key = ?", key).Count(&count)
+	r.database.Model(&model.ApiKey{}).Where("api_key = ?", key).Count(&count)
 
 	return count > 0
 }
 
-func (r *APIKeyRepository) FetchAPIKey(key string) (*model.APIKey, error) {
-	var apiKey model.APIKey
+func (r *ApiKeyRepository) FetchApiKey(key string) (*model.ApiKey, error) {
+	var apiKey model.ApiKey
 
 	result := r.database.
 		Model(&apiKey).
@@ -69,14 +69,14 @@ func (r *APIKeyRepository) FetchAPIKey(key string) (*model.APIKey, error) {
 	return &apiKey, nil
 }
 
-func (r *APIKeyRepository) DeleteAPIKey(key string) error {
-	return r.database.Delete(&model.APIKey{}, "api_key = ?", key).Error
+func (r *ApiKeyRepository) DeleteApiKey(key string) error {
+	return r.database.Delete(&model.ApiKey{}, "api_key = ?", key).Error
 }
 
-func ProvideAPIKeyRepository(container *basics.InjectionContainer) (*APIKeyRepository, error) {
+func ProvideApiKeyRepository(container *basics.InjectionContainer) (*ApiKeyRepository, error) {
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide api key repository: database client could not be resolved")
 	}
 
-	return &APIKeyRepository{database: container.DB}, nil
+	return &ApiKeyRepository{database: container.DB}, nil
 }

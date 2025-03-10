@@ -16,6 +16,8 @@ package database_test
 import (
 	"github.com/stretchr/testify/assert"
 	"powerdns-auth-proxy/domain/admin/services/database"
+	"powerdns-auth-proxy/domain/shared/basics"
+	"powerdns-auth-proxy/domain/shared/database/repository/rdbms"
 	"powerdns-auth-proxy/domain/shared/model/management"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"powerdns-auth-proxy/domain/test"
@@ -24,14 +26,14 @@ import (
 
 func TestCreateDomain(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestDomainService(registry, false)
+	service, err := getDomainService(registry, false)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
 	payload := &management.DomainCreatePayload{
-		FQDN: test.DomainFQDN,
+		Fqdn: test.DomainFqdn,
 	}
 
 	_, err = service.CreateDomain(payload)
@@ -42,13 +44,13 @@ func TestCreateDomain(t *testing.T) {
 
 func TestGetDomainById(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestDomainService(registry, true)
+	service, err := getDomainService(registry, true)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	_, err = service.GetDomainByID(registry.GetUint("domainId"))
+	_, err = service.GetDomainById(registry.GetUint("domainId"))
 	if !assert.NoError(t, err, "failed to get domain by ID") {
 		return
 	}
@@ -56,7 +58,7 @@ func TestGetDomainById(t *testing.T) {
 
 func TestListDomains(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestDomainService(registry, true)
+	service, err := getDomainService(registry, true)
 	if err != nil {
 		t.Error(err)
 		return
@@ -74,33 +76,50 @@ func TestListDomains(t *testing.T) {
 
 func TestDeleteDomainById(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestDomainService(registry, true)
+	service, err := getDomainService(registry, true)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	err = service.DeleteDomainByID(registry.GetUint("domainId"))
+	err = service.DeleteDomainById(registry.GetUint("domainId"))
 	if !assert.NoError(t, err, "failed to delete domain by ID") {
 		return
 	}
 }
 
-func TestDeleteDomainByFQDN(t *testing.T) {
+func TestDeleteDomainByFqdn(t *testing.T) {
 	registry := test.NewRegistry()
-	service, err := ProvideTestDomainService(registry, true)
+	service, err := getDomainService(registry, true)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	err = service.DeleteDomain(test.DomainFQDN)
-	if !assert.NoError(t, err, "failed to delete domain by FQDN") {
+	err = service.DeleteDomain(test.DomainFqdn)
+	if !assert.NoError(t, err, "failed to delete domain by Fqdn") {
 		return
 	}
 }
 
-func ProvideTestDomainService(registry *test.Registry, withData bool) (*database.DomainService, error) {
+func TestProvideDomainServiceFailsOnMissingDomainRepository(t *testing.T) {
+	container := &basics.InjectionContainer{}
+
+	_, err := database.ProvideDomainService(container)
+	assert.Error(t, err, "provide domain service method should return an error")
+	assert.Equal(t, "could not provide domain service: domain repository could not be resolved", err.Error())
+}
+
+func TestProvideDomainServiceSucceeds(t *testing.T) {
+	container := &basics.InjectionContainer{}
+	container.DomainRepository = &rdbms.DomainRepository{}
+
+	service, err := database.ProvideDomainService(container)
+	assert.NoError(t, err, "provide domain service method should succeed")
+	assert.NotNil(t, service, "provide domain service method should return a service")
+}
+
+func getDomainService(registry *test.Registry, withData bool) (*database.DomainService, error) {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if err != nil {
 		return nil, err

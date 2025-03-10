@@ -29,11 +29,11 @@ func (m *UserMapper) MapDatabaseToDto(user *model.User) *management.User {
 
 	domainRoles := make(map[string][]string, len(user.UserDomainRoles))
 	for _, domainRole := range user.UserDomainRoles {
-		if _, ok := domainRoles[domainRole.Domain.FQDN]; !ok {
-			domainRoles[domainRole.Domain.FQDN] = make([]string, 0)
+		if _, ok := domainRoles[domainRole.Domain.Fqdn]; !ok {
+			domainRoles[domainRole.Domain.Fqdn] = make([]string, 0)
 		}
 
-		domainRoles[domainRole.Domain.FQDN] = append(domainRoles[domainRole.Domain.FQDN], domainRole.DomainRole.Name)
+		domainRoles[domainRole.Domain.Fqdn] = append(domainRoles[domainRole.Domain.Fqdn], domainRole.DomainRole.Name)
 	}
 
 	return &management.User{

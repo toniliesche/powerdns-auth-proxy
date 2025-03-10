@@ -22,7 +22,7 @@ type User struct {
 	gorm.Model
 	Username        string `gorm:"unique"`
 	Password        string
-	APIKeys         []*APIKey
+	ApiKeys         []*ApiKey
 	UserRoles       []*UserRole
 	UserDomainRoles []*UserDomainRole
 }
@@ -49,7 +49,7 @@ func (u *User) GetGlobalRole(roleName string) (*UserRole, error) {
 
 func (u *User) HasDomainRole(domain string, role string) bool {
 	for _, domainRole := range u.UserDomainRoles {
-		if domainRole.Domain.FQDN == domain && domainRole.DomainRole.Name == role {
+		if domainRole.Domain.Fqdn == domain && domainRole.DomainRole.Name == role {
 			return true
 		}
 	}
@@ -59,7 +59,7 @@ func (u *User) HasDomainRole(domain string, role string) bool {
 
 func (u *User) GetDomainRole(domain string, role string) (*UserDomainRole, error) {
 	for _, domainRole := range u.UserDomainRoles {
-		if domainRole.Domain.FQDN == domain && domainRole.DomainRole.Name == role {
+		if domainRole.Domain.Fqdn == domain && domainRole.DomainRole.Name == role {
 			return domainRole, nil
 		}
 	}

@@ -20,9 +20,9 @@ type UserRepositoryInterface interface {
 	UpdateUser(user *model.User) error
 	CheckExistenceByUsername(username string) bool
 	FetchUser(username string) (*model.User, error)
-	FetchUserByAPIKey(apiKey string) (*model.User, error)
-	FetchUserByID(id uint) (*model.User, error)
+	FetchUserByApiKey(apiKey string) (*model.User, error)
+	FetchUserById(id uint) (*model.User, error)
 	DeleteUser(username string) error
-	DeleteUserByID(id uint) error
+	DeleteUserById(id uint) error
 	FindAll(advanced bool) ([]*model.User, error)
 }

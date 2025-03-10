@@ -15,6 +15,6 @@ package management
 
 type DomainMinimal struct {
 	ID        uint   `json:"id"`
-	FQDN      string `json:"fqdn"`
+	Fqdn      string `json:"fqdn"`
 	UpdatedAt string `json:"updated_at"`
 }

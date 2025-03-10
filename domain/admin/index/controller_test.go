@@ -21,6 +21,8 @@ import (
 	basehttp "net/http"
 	"net/http/httptest"
 	"powerdns-auth-proxy/domain/admin/index"
+	"powerdns-auth-proxy/domain/shared/basics"
+	"powerdns-auth-proxy/domain/shared/controller"
 	"powerdns-auth-proxy/domain/shared/model"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"testing"
@@ -28,12 +30,12 @@ import (
 
 func TestCallNotFound(t *testing.T) {
 	router := gin.New()
-	controller, err := getController()
+	indexController, err := getController()
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallNotFound: %s", err)) {
 		return
 	}
 
-	controller.ConfigureEngineRoutes(router)
+	indexController.ConfigureEngineRoutes(router)
 
 	w := httptest.NewRecorder()
 	req, _ := basehttp.NewRequest("GET", "/api/v1/servers/localhost/cache/flush", nil)
@@ -59,6 +61,24 @@ func TestCallNotFound(t *testing.T) {
 	if !assert.Equal(t, "path '/api/v1/servers/localhost/cache/flush' not found", response.AdvancedMessage, "Error should be 'path '/api/v1/servers/localhost/cache/flush' not found'") {
 		return
 	}
+}
+
+func TestProvideIndexControllerFailsOnMissingBaseController(t *testing.T) {
+	container := &basics.InjectionContainer{}
+
+	indexController, err := index.ProvideIndexController(container)
+	assert.Error(t, err, "provide index controller method should return an error")
+	assert.Equal(t, "index controller could not be created: base controller could not be resolved", err.Error())
+	assert.Nil(t, indexController, "provide index controller method should not return a controller")
+}
+
+func TestProvideIndexControllerSucceeds(t *testing.T) {
+	container := &basics.InjectionContainer{}
+	container.BaseController = &controller.BaseController{}
+
+	indexController, err := index.ProvideIndexController(container)
+	assert.NoError(t, err, "provide index controller method should succeed")
+	assert.NotNil(t, indexController, "provide index controller method should return a controller")
 }
 
 func getController() (*index.IndexController, error) {

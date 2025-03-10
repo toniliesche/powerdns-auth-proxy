@@ -24,7 +24,7 @@ type UserDomainRoleRepositoryMock struct {
 }
 
 func (r *UserDomainRoleRepositoryMock) SaveNewUserDomainRole(role *model.UserDomainRole) error {
-	domainKey := role.Domain.FQDN
+	domainKey := role.Domain.Fqdn
 	if _, found := r.userDomainRoles[domainKey]; !found {
 		r.userDomainRoles[domainKey] = make(map[string]*model.UserDomainRole)
 	}
@@ -40,7 +40,7 @@ func (r *UserDomainRoleRepositoryMock) SaveNewUserDomainRole(role *model.UserDom
 }
 
 func (r *UserDomainRoleRepositoryMock) DeleteUserDomainRole(role *model.UserDomainRole) error {
-	domainKey := role.Domain.FQDN
+	domainKey := role.Domain.Fqdn
 	if _, found := r.userDomainRoles[domainKey]; !found {
 		return errors2.NewItemNotFoundError("User domain role not found")
 	}
@@ -58,11 +58,11 @@ func (r *UserDomainRoleRepositoryMock) DeleteUserDomainRole(role *model.UserDoma
 func (r *UserDomainRoleRepositoryMock) FindDomainRolesForUserAndDomain(user *model.User, domain *model.Domain) ([]*model.UserDomainRole, error) {
 	roles := make([]*model.UserDomainRole, 0)
 
-	if _, found := r.userDomainRoles[domain.FQDN]; !found {
+	if _, found := r.userDomainRoles[domain.Fqdn]; !found {
 		return roles, nil
 	}
 
-	for _, role := range r.userDomainRoles[domain.FQDN] {
+	for _, role := range r.userDomainRoles[domain.Fqdn] {
 		if role.UserID == user.ID {
 			roles = append(roles, role)
 		}

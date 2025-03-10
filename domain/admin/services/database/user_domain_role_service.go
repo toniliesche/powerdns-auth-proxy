@@ -29,8 +29,8 @@ type UserDomainRoleService struct {
 	mapper                   *mappers.DomainRoleMapper
 }
 
-func (s *UserDomainRoleService) ListRolesForUserByID(id uint) ([]*management.DomainRole, error) {
-	user, err := s.userRepository.FetchUserByID(id)
+func (s *UserDomainRoleService) ListDomainRolesForUserByUserId(userId uint) ([]*management.DomainRole, error) {
+	user, err := s.userRepository.FetchUserById(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -43,78 +43,41 @@ func (s *UserDomainRoleService) ListRolesForUserByID(id uint) ([]*management.Dom
 	return s.mapper.MapDatabaseToDtoList(dbDomainRoles), nil
 }
 
-func (s *UserDomainRoleService) GrantDomainRolesToUser(id uint, roles []*management.DomainRole) error {
-	user, err := s.userRepository.FetchUserByID(id)
+func (s *UserDomainRoleService) ListDomainRolesForUser(username string) ([]*management.DomainRole, error) {
+	user, err := s.userRepository.FetchUser(username)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	for _, domainRole := range roles {
-		domain, err := s.domainRepository.FetchDomainByFQDN(domainRole.Domain)
-		if err != nil {
-			return err
-		}
-
-		domainRole, err := s.domainRoleRepository.FetchDomainRoleByName(domainRole.Role)
-		if err != nil {
-			return err
-		}
-
-		userDomainRole := model.UserDomainRole{
-			UserID:       id,
-			User:         user,
-			DomainID:     domain.ID,
-			Domain:       domain,
-			DomainRoleID: domainRole.ID,
-			DomainRole:   domainRole,
-		}
-
-		err = s.userDomainRoleRepository.SaveNewUserDomainRole(&userDomainRole)
-		if err != nil {
-			return err
-		}
+	dbDomainRoles, err := s.userDomainRoleRepository.FindDomainRolesForUser(user)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	return s.mapper.MapDatabaseToDtoList(dbDomainRoles), nil
 }
 
-func (s *UserDomainRoleService) RevokeDomainRolesFromUser(id uint, roles []*management.DomainRole) error {
-	user, err := s.userRepository.FetchUserByID(id)
+func (s *UserDomainRoleService) ListDomainRolesForUserByUserIdPerDomain(fqdn string, userId uint) ([]*management.DomainRole, error) {
+	domain, err := s.domainRepository.FetchDomainByFqdn(fqdn)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	for _, domainRole := range roles {
-		domain, err := s.domainRepository.FetchDomainByFQDN(domainRole.Domain)
-		if err != nil {
-			return err
-		}
-
-		domainRole, err := s.domainRoleRepository.FetchDomainRoleByName(domainRole.Role)
-		if err != nil {
-			return err
-		}
-
-		userDomainRole := model.UserDomainRole{
-			UserID:       id,
-			User:         user,
-			DomainID:     domain.ID,
-			Domain:       domain,
-			DomainRoleID: domainRole.ID,
-			DomainRole:   domainRole,
-		}
-
-		err = s.userDomainRoleRepository.DeleteUserDomainRole(&userDomainRole)
-		if err != nil {
-			return err
-		}
+	user, err := s.userRepository.FetchUserById(userId)
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	dbDomainRoles, err := s.userDomainRoleRepository.FindDomainRolesForUserAndDomain(user, domain)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.mapper.MapDatabaseToDtoList(dbDomainRoles), nil
 }
 
-func (s *UserDomainRoleService) ListDomainRolesForUser(fqdn string, username string) ([]*management.DomainRole, error) {
-	domain, err := s.domainRepository.FetchDomainByFQDN(fqdn)
+func (s *UserDomainRoleService) ListDomainRolesForUserPerDomain(fqdn string, username string) ([]*management.DomainRole, error) {
+	domain, err := s.domainRepository.FetchDomainByFqdn(fqdn)
 	if err != nil {
 		return nil, err
 	}
@@ -132,8 +95,24 @@ func (s *UserDomainRoleService) ListDomainRolesForUser(fqdn string, username str
 	return s.mapper.MapDatabaseToDtoList(dbDomainRoles), nil
 }
 
+func (s *UserDomainRoleService) GrantDomainRolesToUser(userId uint, roles []*management.DomainRole) error {
+	user, err := s.userRepository.FetchUserById(userId)
+	if err != nil {
+		return err
+	}
+
+	for _, domainRole := range roles {
+		err = s.GrantDomainRoleToUser(domainRole.Domain, user.Username, domainRole.Role)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (s *UserDomainRoleService) GrantDomainRoleToUser(fqdn string, username string, roleName string) error {
-	domain, err := s.domainRepository.FetchDomainByFQDN(fqdn)
+	domain, err := s.domainRepository.FetchDomainByFqdn(fqdn)
 	if err != nil {
 		return err
 	}
@@ -160,8 +139,24 @@ func (s *UserDomainRoleService) GrantDomainRoleToUser(fqdn string, username stri
 	return s.userDomainRoleRepository.SaveNewUserDomainRole(&userDomainRole)
 }
 
+func (s *UserDomainRoleService) RevokeDomainRolesFromUser(userId uint, roles []*management.DomainRole) error {
+	user, err := s.userRepository.FetchUserById(userId)
+	if err != nil {
+		return err
+	}
+
+	for _, domainRole := range roles {
+		err = s.RevokeDomainRoleFromUser(domainRole.Domain, user.Username, domainRole.Role)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (s *UserDomainRoleService) RevokeDomainRoleFromUser(fqdn string, username string, roleName string) error {
-	domain, err := s.domainRepository.FetchDomainByFQDN(fqdn)
+	domain, err := s.domainRepository.FetchDomainByFqdn(fqdn)
 	if err != nil {
 		return err
 	}

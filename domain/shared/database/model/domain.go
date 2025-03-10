@@ -17,5 +17,5 @@ import "gorm.io/gorm"
 
 type Domain struct {
 	gorm.Model
-	FQDN string `gorm:"unique"`
+	Fqdn string `gorm:"unique"`
 }

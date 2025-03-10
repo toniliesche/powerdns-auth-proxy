@@ -31,7 +31,7 @@ func TestDomainCanBeSaved(t *testing.T) {
 		return
 	}
 
-	err = repo.SaveNewDomain(&model.Domain{FQDN: test.DomainFQDN})
+	err = repo.SaveNewDomain(&model.Domain{Fqdn: test.DomainFqdn})
 
 	if !assert.NoError(t, err, "failed to save new domain") {
 		return
@@ -46,7 +46,7 @@ func TestDomainExistenceCanBeChecked(t *testing.T) {
 		return
 	}
 
-	found := repo.CheckExistenceByFQDN(test.DomainFQDN)
+	found := repo.CheckExistenceByFqdn(test.DomainFqdn)
 
 	if !assert.True(t, found, "expected domain to exist") {
 		return
@@ -61,14 +61,14 @@ func TestDomainNonExistenceCanBeChecked(t *testing.T) {
 		return
 	}
 
-	found := repo.CheckExistenceByFQDN(test.NonExistingDomainFQDN)
+	found := repo.CheckExistenceByFqdn(test.NonExistingDomainFqdn)
 
 	if !assert.False(t, found, "expected domain to not exist") {
 		return
 	}
 }
 
-func TestDomainCanBeFetchedByFQDN(t *testing.T) {
+func TestDomainCanBeFetchedByFqdn(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
 	repo := ProvideTestDomainRepository(registry, t, true)
@@ -77,7 +77,7 @@ func TestDomainCanBeFetchedByFQDN(t *testing.T) {
 		return
 	}
 
-	domain, err := repo.FetchDomainByFQDN(test.DomainFQDN)
+	domain, err := repo.FetchDomainByFqdn(test.DomainFqdn)
 
 	if !assert.NoError(t, err, "failed to fetch domain") {
 		return
@@ -87,7 +87,7 @@ func TestDomainCanBeFetchedByFQDN(t *testing.T) {
 		return
 	}
 
-	if !assert.Equal(t, test.DomainFQDN, domain.FQDN, "expected domain to have correct FQDN") {
+	if !assert.Equal(t, test.DomainFqdn, domain.Fqdn, "expected domain to have correct Fqdn") {
 		return
 	}
 }
@@ -101,7 +101,7 @@ func TestCorrectDomainWillBeFetched(t *testing.T) {
 		return
 	}
 
-	domain, err := repo.FetchDomainByFQDN(test.NonExistingDomainFQDN)
+	domain, err := repo.FetchDomainByFqdn(test.NonExistingDomainFqdn)
 
 	if !assert.NotNilf(t, err, "expected error to be returned") {
 		return
@@ -121,13 +121,13 @@ func TestDomainCanBeDeleted(t *testing.T) {
 		return
 	}
 
-	err = repo.DeleteDomain(test.DomainFQDN)
+	err = repo.DeleteDomain(test.DomainFqdn)
 
 	if !assert.NoError(t, err, "failed to delete domain") {
 		return
 	}
 
-	found := repo.CheckExistenceByFQDN(test.DomainFQDN)
+	found := repo.CheckExistenceByFqdn(test.DomainFqdn)
 
 	if !assert.False(t, found, "expected domain to not exist") {
 		return

@@ -20,7 +20,7 @@ import (
 type DomainServiceInterface interface {
 	CreateDomain(payload *management.DomainCreatePayload) (uint, error)
 	ListDomains() ([]*management.DomainMinimal, error)
-	GetDomainByID(id uint) (*management.Domain, error)
+	GetDomainById(id uint) (*management.Domain, error)
 	DeleteDomain(domainname string) error
-	DeleteDomainByID(id uint) error
+	DeleteDomainById(id uint) error
 }

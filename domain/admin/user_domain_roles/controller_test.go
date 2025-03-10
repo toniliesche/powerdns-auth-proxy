@@ -59,7 +59,7 @@ func TestCallGrantUserDomainRoleEndpoint(t *testing.T) {
 	payload := &management.UserDomainRolePayload{
 		DomainRoles: []*management.DomainRole{
 			{
-				Domain: test.DomainFQDN,
+				Domain: test.DomainFqdn,
 				Role:   test.DomainRoleName,
 			},
 		},
@@ -77,7 +77,7 @@ func TestCallRevokeUserDomainRoleEndpoint(t *testing.T) {
 	payload := &management.UserDomainRolePayload{
 		DomainRoles: []*management.DomainRole{
 			{
-				Domain: test.DomainFQDN,
+				Domain: test.DomainFqdn,
 				Role:   test.DomainRoleName,
 			},
 		},

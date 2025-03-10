@@ -54,10 +54,10 @@ func (r *UserRepositoryMock) FetchUser(username string) (*model.User, error) {
 	return user, nil
 }
 
-func (r *UserRepositoryMock) FetchUserByAPIKey(apiKey string) (*model.User, error) {
+func (r *UserRepositoryMock) FetchUserByApiKey(apiKey string) (*model.User, error) {
 	for _, user := range r.users {
-		for _, key := range user.APIKeys {
-			if key.APIKey == apiKey {
+		for _, key := range user.ApiKeys {
+			if key.ApiKey == apiKey {
 				return user, nil
 			}
 		}
@@ -66,7 +66,7 @@ func (r *UserRepositoryMock) FetchUserByAPIKey(apiKey string) (*model.User, erro
 	return nil, errors2.NewItemNotFoundError("user not found")
 }
 
-func (r *UserRepositoryMock) FetchUserByID(id uint) (*model.User, error) {
+func (r *UserRepositoryMock) FetchUserById(id uint) (*model.User, error) {
 	for _, user := range r.users {
 		if user.ID == id {
 			return user, nil
@@ -96,7 +96,7 @@ func (r *UserRepositoryMock) DeleteUser(username string) error {
 	return nil
 }
 
-func (r *UserRepositoryMock) DeleteUserByID(id uint) error {
+func (r *UserRepositoryMock) DeleteUserById(id uint) error {
 	for username, user := range r.users {
 		if user.ID == id {
 			delete(r.users, username)

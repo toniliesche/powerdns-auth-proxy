@@ -24,24 +24,24 @@ type DomainRepositoryMock struct {
 }
 
 func (r *DomainRepositoryMock) SaveNewDomain(domain *model.Domain) error {
-	if r.CheckExistenceByFQDN(domain.FQDN) {
+	if r.CheckExistenceByFqdn(domain.Fqdn) {
 		return errors2.NewItemAlreadyExistsError("domain already exists")
 	}
 
 	domain.ID = r.counter
-	r.domains[domain.FQDN] = domain
+	r.domains[domain.Fqdn] = domain
 	r.counter++
 
 	return nil
 }
 
-func (r *DomainRepositoryMock) CheckExistenceByFQDN(fqdn string) bool {
+func (r *DomainRepositoryMock) CheckExistenceByFqdn(fqdn string) bool {
 	_, found := r.domains[fqdn]
 
 	return found
 }
 
-func (r *DomainRepositoryMock) FetchDomainByID(id uint) (*model.Domain, error) {
+func (r *DomainRepositoryMock) FetchDomainById(id uint) (*model.Domain, error) {
 	for _, domain := range r.domains {
 		if domain.ID == id {
 			return domain, nil
@@ -51,7 +51,7 @@ func (r *DomainRepositoryMock) FetchDomainByID(id uint) (*model.Domain, error) {
 	return nil, errors2.NewItemNotFoundError("domain not found")
 }
 
-func (r *DomainRepositoryMock) FetchDomainByFQDN(fqdn string) (*model.Domain, error) {
+func (r *DomainRepositoryMock) FetchDomainByFqdn(fqdn string) (*model.Domain, error) {
 	domain, found := r.domains[fqdn]
 	if !found {
 		return nil, errors2.NewItemNotFoundError("domain not found")
@@ -70,7 +70,7 @@ func (r *DomainRepositoryMock) FindAll() ([]*model.Domain, error) {
 }
 
 func (r *DomainRepositoryMock) DeleteDomain(fqdn string) error {
-	if !r.CheckExistenceByFQDN(fqdn) {
+	if !r.CheckExistenceByFqdn(fqdn) {
 		return errors2.NewItemNotFoundError("domain not found")
 	}
 
@@ -79,10 +79,10 @@ func (r *DomainRepositoryMock) DeleteDomain(fqdn string) error {
 	return nil
 }
 
-func (r *DomainRepositoryMock) DeleteDomainByID(id uint) error {
+func (r *DomainRepositoryMock) DeleteDomainById(id uint) error {
 	for _, domain := range r.domains {
 		if domain.ID == id {
-			delete(r.domains, domain.FQDN)
+			delete(r.domains, domain.Fqdn)
 			return nil
 		}
 	}

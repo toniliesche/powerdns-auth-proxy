@@ -80,7 +80,7 @@ func TestUserValidationForUserDomainRoles(t *testing.T) {
 		Password: UserPassword,
 		UserDomainRoles: []*importer.UserDomainRole{
 			{
-				Domain: DomainFQDN,
+				Domain: DomainFqdn,
 			},
 		},
 	}
@@ -135,7 +135,7 @@ func TestUserDetectionForDomainRoles(t *testing.T) {
 		Password: UserPassword,
 		UserDomainRoles: []*importer.UserDomainRole{
 			{
-				Domain: DomainFQDN,
+				Domain: DomainFqdn,
 				Role:   DomainRoleName,
 			},
 		},

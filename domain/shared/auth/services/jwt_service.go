@@ -73,11 +73,11 @@ func (s *JWTService) createAccessToken(user *dbmodel.User, session *dbmodel.Toke
 			continue
 		}
 
-		if _, ok := domainRoles[dbDomainRole.Domain.FQDN]; !ok {
-			domainRoles[dbDomainRole.Domain.FQDN] = make([]string, 0)
+		if _, ok := domainRoles[dbDomainRole.Domain.Fqdn]; !ok {
+			domainRoles[dbDomainRole.Domain.Fqdn] = make([]string, 0)
 		}
 
-		domainRoles[dbDomainRole.Domain.FQDN] = append(domainRoles[dbDomainRole.Domain.FQDN], dbDomainRole.DomainRole.Name)
+		domainRoles[dbDomainRole.Domain.Fqdn] = append(domainRoles[dbDomainRole.Domain.Fqdn], dbDomainRole.DomainRole.Name)
 	}
 
 	accessTokenId := uuid.New()

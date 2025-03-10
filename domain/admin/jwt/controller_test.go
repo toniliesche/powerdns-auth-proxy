@@ -19,6 +19,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"powerdns-auth-proxy/domain/admin/jwt"
 	"powerdns-auth-proxy/domain/shared/auth/model"
+	"powerdns-auth-proxy/domain/shared/basics"
+	"powerdns-auth-proxy/domain/shared/controller"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"powerdns-auth-proxy/domain/test"
 	"testing"
@@ -26,12 +28,12 @@ import (
 
 func TestConfigureRoutes(t *testing.T) {
 	router := gin.New()
-	controller, err := getController()
+	jwtController, err := getController()
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestConfigureRoutes: %s", err)) {
 		return
 	}
 
-	controller.ConfigureEngineRoutes(router)
+	jwtController.ConfigureEngineRoutes(router)
 
 	if !assert.Equal(t, 2, len(router.Routes()), "There should be 5 route configured") {
 		return
@@ -39,21 +41,39 @@ func TestConfigureRoutes(t *testing.T) {
 }
 
 func TestCallLogin(t *testing.T) {
-	controller, err := getController()
+	jwtController, err := getController()
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallLogin: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/api", "/auth/login", "POST", 200, &model.LoginPayload{Username: "user", Password: "password"})
+	test.RunRequest(t, jwtController, "/api", "/auth/login", "POST", 200, &model.LoginPayload{Username: "user", Password: "password"})
 }
 
 func TestCallRefresh(t *testing.T) {
-	controller, err := getController()
+	jwtController, err := getController()
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallRefresh: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/api", "/auth/refresh", "POST", 200, &model.RefreshPayload{RefreshToken: "token"})
+	test.RunRequest(t, jwtController, "/api", "/auth/refresh", "POST", 200, &model.RefreshPayload{RefreshToken: "token"})
+}
+
+func TestProvideJwtControllerFailsOnMissingBaseController(t *testing.T) {
+	container := &basics.InjectionContainer{}
+
+	jwtController, err := jwt.ProvideJwtController(container)
+	assert.Error(t, err, "provide jwt controller method should return an error")
+	assert.Equal(t, "jwt controller could not be created: base controller could not be resolved", err.Error())
+	assert.Nil(t, jwtController, "provide jwt controller method should not return a controller")
+}
+
+func TestProvideJwtControllerSucceeds(t *testing.T) {
+	container := &basics.InjectionContainer{}
+	container.BaseController = &controller.BaseController{}
+
+	jwtController, err := jwt.ProvideJwtController(container)
+	assert.NoError(t, err, "provide jwt controller method should succeed")
+	assert.NotNil(t, jwtController, "provide jwt controller method should return a controller")
 }
 
 func getController() (*jwt.JWTController, error) {

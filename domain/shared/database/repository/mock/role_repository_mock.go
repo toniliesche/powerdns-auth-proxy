@@ -51,6 +51,16 @@ func (r *RoleRepositoryMock) CheckExistenceByName(name string) bool {
 	return found
 }
 
+func (r *RoleRepositoryMock) FetchRoleById(roleId uint) (*model.Role, error) {
+	for _, role := range r.roles {
+		if role.ID == roleId {
+			return role, nil
+		}
+	}
+
+	return nil, errors2.NewItemNotFoundError("role not found")
+}
+
 func (r *RoleRepositoryMock) FetchRoleByName(name string) (*model.Role, error) {
 	role, found := r.roles[name]
 	if !found {

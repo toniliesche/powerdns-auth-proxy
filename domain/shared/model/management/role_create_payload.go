@@ -13,6 +13,19 @@
 
 package management
 
+import (
+	"fmt"
+	"powerdns-auth-proxy/domain/shared/http/errors"
+)
+
 type RoleCreatePayload struct {
 	Name string `json:"name"`
+}
+
+func (p *RoleCreatePayload) Verify() errors.HTTPError {
+	if p.Name == "" {
+		return errors.NewBadRequestError(fmt.Errorf("name is required"))
+	}
+
+	return nil
 }

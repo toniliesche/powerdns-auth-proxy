@@ -19,6 +19,7 @@ type RoleRepositoryInterface interface {
 	SaveNewRole(role *model.Role) error
 	CheckExistenceByName(name string) bool
 	FetchRoleByName(name string) (*model.Role, error)
+	FetchRoleById(roleId uint) (*model.Role, error)
 	FetchAllRoles() ([]*model.Role, error)
 	DeleteRoleByName(name string) error
 }

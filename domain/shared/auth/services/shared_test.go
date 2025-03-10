@@ -25,9 +25,9 @@ func getContainer(authenticationType string) *basics.InjectionContainer {
 	container.UserRepository.SaveNewUser(&model.User{
 		Username: "user",
 		Password: "$2a$10$0yI64XAHi8q2SVZ.yuGpYeEu2Ufsyz0VgjvBRy5TknrQ9j4glrRQq",
-		APIKeys: []*model.APIKey{
+		ApiKeys: []*model.ApiKey{
 			{
-				APIKey: "testapikey",
+				ApiKey: "testapikey",
 			},
 		},
 	})

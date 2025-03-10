@@ -24,7 +24,7 @@ type DomainMapper struct {
 func (m *DomainMapper) MapDatabaseToMinimalDto(domain *model.Domain) *management.DomainMinimal {
 	return &management.DomainMinimal{
 		ID:        domain.ID,
-		FQDN:      domain.FQDN,
+		Fqdn:      domain.Fqdn,
 		UpdatedAt: domain.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 }
@@ -42,7 +42,7 @@ func (m *DomainMapper) MapDatabaseToMinimalDtoList(domains []*model.Domain) []*m
 func (m *DomainMapper) MapDatabaseToDto(domain *model.Domain) *management.Domain {
 	return &management.Domain{
 		ID:        domain.ID,
-		FQDN:      domain.FQDN,
+		Fqdn:      domain.Fqdn,
 		CreatedAt: domain.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: domain.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
@@ -60,6 +60,6 @@ func (m *DomainMapper) MapDatabaseToDtoList(domains []*model.Domain) []*manageme
 
 func (m *DomainMapper) MapCreatePayloadToDb(domain *management.DomainCreatePayload) *model.Domain {
 	return &model.Domain{
-		FQDN: domain.FQDN,
+		Fqdn: domain.Fqdn,
 	}
 }

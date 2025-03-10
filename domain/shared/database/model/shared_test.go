@@ -14,9 +14,9 @@
 package model_test
 
 const (
-	DomainFQDN                = "example.com"
+	DomainFqdn                = "example.com"
 	DomainRoleName            = "testdomainrole"
-	NonExistingDomainFQDN     = "non-existing-domain.com"
+	NonExistingDomainFqdn     = "non-existing-domain.com"
 	NonExistingDomainRoleName = "non-existing-domainrole"
 	NonExistingRoleName       = "non-existing"
 	RoleName                  = "admin"

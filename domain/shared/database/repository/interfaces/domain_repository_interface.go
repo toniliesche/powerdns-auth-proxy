@@ -17,10 +17,10 @@ import "powerdns-auth-proxy/domain/shared/database/model"
 
 type DomainRepositoryInterface interface {
 	SaveNewDomain(domain *model.Domain) error
-	CheckExistenceByFQDN(fqdn string) bool
-	FetchDomainByID(id uint) (*model.Domain, error)
-	FetchDomainByFQDN(fqdn string) (*model.Domain, error)
+	CheckExistenceByFqdn(fqdn string) bool
+	FetchDomainById(id uint) (*model.Domain, error)
+	FetchDomainByFqdn(fqdn string) (*model.Domain, error)
 	FindAll() ([]*model.Domain, error)
 	DeleteDomain(fqdn string) error
-	DeleteDomainByID(id uint) error
+	DeleteDomainById(id uint) error
 }

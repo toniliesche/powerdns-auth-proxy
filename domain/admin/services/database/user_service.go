@@ -65,7 +65,7 @@ func (s *UserService) ListUsersComplete() ([]*management.User, error) {
 }
 
 func (s *UserService) CheckIsAdminUser(userId uint) (bool, error) {
-	user, err := s.userRepository.FetchUserByID(userId)
+	user, err := s.userRepository.FetchUserById(userId)
 	if err != nil {
 		return false, err
 	}
@@ -73,8 +73,17 @@ func (s *UserService) CheckIsAdminUser(userId uint) (bool, error) {
 	return user.IsAdminUser(), nil
 }
 
-func (s *UserService) GetUserByID(userId uint) (*management.User, error) {
-	dbUser, err := s.userRepository.FetchUserByID(userId)
+func (s *UserService) GetUser(username string) (*management.User, error) {
+	dbUser, err := s.userRepository.FetchUser(username)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.mapper.MapDatabaseToDto(dbUser), nil
+}
+
+func (s *UserService) GetUserById(userId uint) (*management.User, error) {
+	dbUser, err := s.userRepository.FetchUserById(userId)
 	if err != nil {
 		return nil, err
 	}
@@ -86,12 +95,12 @@ func (s *UserService) DeleteUser(username string) error {
 	return s.userRepository.DeleteUser(username)
 }
 
-func (s *UserService) DeleteUserByID(userId uint) error {
-	return s.userRepository.DeleteUserByID(userId)
+func (s *UserService) DeleteUserById(userId uint) error {
+	return s.userRepository.DeleteUserById(userId)
 }
 
-func (s *UserService) UpdateUserPasswordByID(userId uint, password string) error {
-	user, err := s.userRepository.FetchUserByID(userId)
+func (s *UserService) UpdateUserPasswordById(userId uint, password string) error {
+	user, err := s.userRepository.FetchUserById(userId)
 	if err != nil {
 		return err
 	}
