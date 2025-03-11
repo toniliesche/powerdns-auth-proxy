@@ -14,6 +14,7 @@
 package rdbms
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
@@ -70,7 +71,18 @@ func (r *ApiKeyRepository) FetchApiKey(key string) (*model.ApiKey, error) {
 }
 
 func (r *ApiKeyRepository) DeleteApiKey(key string) error {
-	return r.database.Delete(&model.ApiKey{}, "api_key = ?", key).Error
+	apiKey, err := r.FetchApiKey(key)
+	if err != nil {
+		return err
+	}
+
+	newIdentifier := fmt.Sprintf("%s#deleted-%d", apiKey.Identifier, apiKey.ID)
+	err = r.database.Model(&model.ApiKey{}).Where("id = ?", apiKey.ID).Update("identifier", newIdentifier).Error
+	if err != nil {
+		return err
+	}
+
+	return r.database.Where("id = ?", apiKey.ID).Delete(&model.ApiKey{}).Error
 }
 
 func ProvideApiKeyRepository(container *basics.InjectionContainer) (*ApiKeyRepository, error) {
