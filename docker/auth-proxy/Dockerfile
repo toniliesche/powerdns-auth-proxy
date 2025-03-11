@@ -21,7 +21,7 @@ RUN echo ${CACHEBUST} && \
 WORKDIR /tmp/powerdns-auth-proxy
 
 ARG BUILDVER
-RUN --mount=type=cache,target=/root/go/pkg/mod \
+RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     git checkout ${BUILDVER} && \
     make build
