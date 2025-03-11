@@ -62,6 +62,16 @@ func (r *ApiKeyRepositoryMock) FetchApiKey(key string) (*model.ApiKey, error) {
 	return apiKey, nil
 }
 
+func (r *ApiKeyRepositoryMock) FetchApiKeyByIdentifier(identifier string) (*model.ApiKey, error) {
+	for _, apiKey := range r.keys {
+		if apiKey.Identifier == identifier {
+			return apiKey, nil
+		}
+	}
+
+	return nil, errors2.NewItemNotFoundError("api key not found")
+}
+
 func (r *ApiKeyRepositoryMock) DeleteApiKey(key string) error {
 	if !r.CheckExistenceByApiKey(key) {
 		return errors2.NewItemNotFoundError("api key not found")

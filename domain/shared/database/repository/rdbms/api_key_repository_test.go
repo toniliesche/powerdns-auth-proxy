@@ -62,6 +62,30 @@ func TestApiKeyCanBeFetched(t *testing.T) {
 	}
 }
 
+func TestApiKeyCanBeFetchedByIdentifier(t *testing.T) {
+	var err error
+	registry := test.NewRegistry()
+	repo := ProvideTestApiKeyRepository(registry, t, true)
+
+	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
+		return
+	}
+
+	apiKey, err := repo.FetchApiKeyByIdentifier(test.ApiKeyIdentifier)
+
+	if !assert.NoError(t, err, "failed to fetch api key by identifier") {
+		return
+	}
+
+	if !assert.IsType(t, &model.ApiKey{}, apiKey) {
+		return
+	}
+
+	if !assert.Equal(t, test.ApiKeyIdentifier, apiKey.Identifier) {
+		return
+	}
+}
+
 func TestCorrectApiKeyWillBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()

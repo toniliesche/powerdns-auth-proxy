@@ -19,6 +19,7 @@ type ApiKeyRepositoryInterface interface {
 	SaveNewApiKey(apiKey *model.ApiKey) error
 	CheckExistenceByApiKey(key string) bool
 	FetchApiKey(key string) (*model.ApiKey, error)
+	FetchApiKeyByIdentifier(identifier string) (*model.ApiKey, error)
 	FindApiKeysByUserId(userId uint) ([]*model.ApiKey, error)
 	DeleteApiKey(key string) error
 }

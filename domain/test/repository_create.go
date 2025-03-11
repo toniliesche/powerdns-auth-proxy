@@ -119,9 +119,10 @@ func RepositoryCreateTestApiKey(container *basics.InjectionContainer, registry *
 	}
 
 	dbApiKey := &model.ApiKey{
-		ApiKey: ApiKey,
-		UserId: dbUser.ID,
-		User:   dbUser,
+		ApiKey:     ApiKey,
+		Identifier: ApiKeyIdentifier,
+		UserId:     dbUser.ID,
+		User:       dbUser,
 	}
 
 	err = container.ApiKeyRepository.SaveNewApiKey(dbApiKey)
@@ -131,6 +132,7 @@ func RepositoryCreateTestApiKey(container *basics.InjectionContainer, registry *
 
 	registry.Set("apiKey", dbApiKey.ApiKey)
 	registry.Set("apiKeyId", fmt.Sprintf("%d", dbApiKey.ID))
+	registry.Set("apiKeyIdentifier", dbApiKey.Identifier)
 
 	return nil
 }

@@ -285,7 +285,7 @@ func (b *InjectionContainerBuilder) initMockRepositories(container *basics.Injec
 		return err
 	}
 
-	if container.UserDomainRoleRepository, err = mock.ProvideUserDomainRoleRepositoryMock(); err != nil {
+	if container.UserDomainRoleRepository, err = mock.ProvideUserDomainRoleRepositoryMock(container); err != nil {
 		return err
 	}
 

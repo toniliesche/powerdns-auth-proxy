@@ -15,16 +15,24 @@ package mock
 
 import (
 	"fmt"
+	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
+	"powerdns-auth-proxy/domain/shared/database/repository/interfaces"
 )
 
 type UserDomainRoleRepositoryMock struct {
-	userDomainRoles map[string]map[string]*model.UserDomainRole
+	userDomainRoles  map[string]map[string]*model.UserDomainRole
+	domainRepository interfaces.DomainRepositoryInterface
 }
 
 func (r *UserDomainRoleRepositoryMock) SaveNewUserDomainRole(role *model.UserDomainRole) error {
-	domainKey := role.Domain.Fqdn
+	domain, err := r.domainRepository.FetchDomainById(role.DomainId)
+	if err != nil {
+		return err
+	}
+
+	domainKey := domain.Fqdn
 	if _, found := r.userDomainRoles[domainKey]; !found {
 		r.userDomainRoles[domainKey] = make(map[string]*model.UserDomainRole)
 	}
@@ -40,7 +48,12 @@ func (r *UserDomainRoleRepositoryMock) SaveNewUserDomainRole(role *model.UserDom
 }
 
 func (r *UserDomainRoleRepositoryMock) DeleteUserDomainRole(role *model.UserDomainRole) error {
-	domainKey := role.Domain.Fqdn
+	domain, err := r.domainRepository.FetchDomainById(role.DomainId)
+	if err != nil {
+		return err
+	}
+
+	domainKey := domain.Fqdn
 	if _, found := r.userDomainRoles[domainKey]; !found {
 		return errors2.NewItemNotFoundError("User domain role not found")
 	}
@@ -85,8 +98,13 @@ func (r *UserDomainRoleRepositoryMock) FindDomainRolesForUser(user *model.User) 
 	return roles, nil
 }
 
-func ProvideUserDomainRoleRepositoryMock() (*UserDomainRoleRepositoryMock, error) {
+func ProvideUserDomainRoleRepositoryMock(container *basics.InjectionContainer) (*UserDomainRoleRepositoryMock, error) {
+	if container.DomainRepository == nil {
+		return nil, fmt.Errorf("could not provide user domain role repository mock: domain repository could not be resolved")
+	}
+
 	return &UserDomainRoleRepositoryMock{
-		userDomainRoles: make(map[string]map[string]*model.UserDomainRole),
+		domainRepository: container.DomainRepository,
+		userDomainRoles:  make(map[string]map[string]*model.UserDomainRole),
 	}, nil
 }

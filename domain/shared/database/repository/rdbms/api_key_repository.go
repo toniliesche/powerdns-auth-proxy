@@ -70,6 +70,25 @@ func (r *ApiKeyRepository) FetchApiKey(key string) (*model.ApiKey, error) {
 	return &apiKey, nil
 }
 
+func (r *ApiKeyRepository) FetchApiKeyByIdentifier(identifier string) (*model.ApiKey, error) {
+	var apiKey model.ApiKey
+
+	result := r.database.
+		Model(&apiKey).
+		Where("identifier = ?", identifier).
+		Scan(&apiKey)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, errors.NewItemNotFoundError("api key not found")
+	}
+
+	return &apiKey, nil
+}
+
 func (r *ApiKeyRepository) DeleteApiKey(key string) error {
 	apiKey, err := r.FetchApiKey(key)
 	if err != nil {

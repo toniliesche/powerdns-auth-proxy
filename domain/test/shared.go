@@ -15,6 +15,7 @@ package test
 
 const (
 	ApiKey                    = "testapikey"
+	ApiKeyIdentifier          = "testapikeyidentifier"
 	DomainFqdn                = "example.com"
 	DomainRoleName            = "testdomainrole"
 	NonExistingApiKey         = "non-existing-apikey"
