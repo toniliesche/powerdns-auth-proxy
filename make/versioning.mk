@@ -6,10 +6,10 @@ set-version-release: set-additional-versions
 	$(eval run.build.version := ${build.version.major}.${build.version.minor}.${build.version.bugfix})
 
 set-version-rc: set-version-release
-	$(eval run.build.version := ${run.build.version}-rc${build.version.candidate})
 	$(eval run.build.version.rc := ${run.build.version}-rc)
 	$(eval run.build.version.rc.minor := ${run.build.version.minor}-rc)
 	$(eval run.build.version.rc.major := ${run.build.version.major}-rc)
+	$(eval run.build.version := ${run.build.version}-rc${build.version.candidate})
 
 set-version-patch: set-additional-versions
 	$(eval run.build.version := ${build.version.major}.${build.version.minor}.${build.version.bugfix}.${build.version.patch})
