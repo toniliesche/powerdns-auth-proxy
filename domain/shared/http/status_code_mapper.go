@@ -87,7 +87,7 @@ func (m *StatusCodeMapper) mapPgError(pgError *pgconn.PgError) int {
 	fmt.Println(pgError.Code)
 
 	switch pgError.Code {
-	case "42601":
+	case "23505", "42601":
 		return nethttp.StatusConflict
 	default:
 		return nethttp.StatusInternalServerError
