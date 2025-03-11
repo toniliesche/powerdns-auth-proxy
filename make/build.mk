@@ -1,3 +1,5 @@
+GOLANGVER=1.24.1
+
 .PHONY: build
 build:
 	go build -o build/powerdns-auth-proxy main/main.go
@@ -13,7 +15,7 @@ build-docker-rc: set-version-rc set-commit
 		-t tliesche/powerdns-auth-proxy:$(run.commit) \
 		-t tliesche/powerdns-auth-proxy:$(run.build.version) \
 		$(if $(PUSH),--push,--no-cache --progress=plain) \
- 		docker/auth-proxy
+		docker/auth-proxy
 
 build-docker-%: set-version-% set-commit
 	docker buildx build \

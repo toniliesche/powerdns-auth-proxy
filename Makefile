@@ -11,8 +11,6 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-GOLANGVER=1.24.1
-
 ifneq ("$(wildcard $(CURDIR)/build.properties)","")
 	include $(CURDIR)/build.properties
 endif
