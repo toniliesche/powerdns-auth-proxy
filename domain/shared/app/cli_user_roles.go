@@ -15,7 +15,9 @@ package app
 
 import (
 	"fmt"
+	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli/v2"
+	"os"
 	"powerdns-auth-proxy/domain/admin/services/interfaces"
 	"powerdns-auth-proxy/domain/shared/setup"
 )
@@ -30,9 +32,21 @@ func RunCliUserRoleList(context *cli.Context) error {
 		return err
 	}
 
-	_, err = roleService.ListRolesForUser(context.Args().Get(0))
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Role"})
 
-	return err
+	roleList, err := roleService.ListRolesForUser(context.Args().Get(0))
+	if err != nil {
+		return fmt.Errorf("could not list roles for user: %w", err)
+	}
+
+	for _, role := range roleList {
+		table.Append([]string{role.Role})
+	}
+
+	table.Render()
+
+	return nil
 }
 
 func RunCliUserRoleAdd(context *cli.Context) error {

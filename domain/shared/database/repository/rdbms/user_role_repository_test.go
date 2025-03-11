@@ -31,7 +31,7 @@ func TestUserRoleCanBeSaved(t *testing.T) {
 		return
 	}
 
-	err = repo.SaveNewUserRole(&model.UserRole{UserID: registry.GetUint("userId"), RoleID: registry.GetUint("roleId")})
+	err = repo.SaveNewUserRole(&model.UserRole{UserId: registry.GetUint("userId"), RoleId: registry.GetUint("roleId")})
 
 	if !assert.NoError(t, err, "failed to save new user role") {
 		return
@@ -47,7 +47,7 @@ func TestUserRoleCanBeDeleted(t *testing.T) {
 		return
 	}
 
-	err = repo.DeleteUserRole(&model.UserRole{UserID: registry.GetUint("userId"), RoleID: registry.GetUint("roleId")})
+	err = repo.DeleteUserRole(&model.UserRole{UserId: registry.GetUint("userId"), RoleId: registry.GetUint("roleId")})
 
 	if !assert.NoError(t, err, "failed to delete user role") {
 		return

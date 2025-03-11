@@ -24,7 +24,7 @@ func (c *SessionsController) logoutUserSession(context *gin.Context) {
 		return
 	}
 
-	err := c.sessionService.LogoutUserSession(payload.SessionIDs)
+	err := c.sessionService.LogoutUserSession(payload.SessionIds)
 	if err != nil {
 		c.HandleError(context, err)
 		return

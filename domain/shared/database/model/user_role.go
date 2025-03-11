@@ -14,8 +14,8 @@
 package model
 
 type UserRole struct {
-	RoleID uint `gorm:"uniqueIndex:idx_user_role"`
+	RoleId uint `gorm:"uniqueIndex:idx_user_role"`
 	Role   *Role
-	UserID uint `gorm:"uniqueIndex:idx_user_role"`
+	UserId uint `gorm:"uniqueIndex:idx_user_role"`
 	User   *User
 }

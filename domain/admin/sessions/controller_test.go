@@ -56,7 +56,7 @@ func TestCallLogoutSessionEndpoint(t *testing.T) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/admin", "/admin/v1/users/1/sessions/logout", "POST", 200, &management.SessionLogoutPayload{SessionIDs: []string{registry.Get("tokenSession")}})
+	test.RunRequest(t, controller, "/admin", "/admin/v1/users/1/sessions/logout", "POST", 200, &management.SessionLogoutPayload{SessionIds: []string{registry.Get("tokenSession")}})
 }
 
 func getController(registry *test.Registry, withData bool) (*sessions.SessionsController, error) {

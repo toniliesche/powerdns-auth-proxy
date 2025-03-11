@@ -29,7 +29,7 @@ func (r *UserDomainRoleRepositoryMock) SaveNewUserDomainRole(role *model.UserDom
 		r.userDomainRoles[domainKey] = make(map[string]*model.UserDomainRole)
 	}
 
-	key := fmt.Sprintf("%d-%d", role.UserID, role.DomainRoleID)
+	key := fmt.Sprintf("%d-%d", role.UserId, role.DomainRoleId)
 	if _, found := r.userDomainRoles[domainKey][key]; found {
 		return errors2.NewItemAlreadyExistsError("User domain role already exists")
 	}
@@ -45,7 +45,7 @@ func (r *UserDomainRoleRepositoryMock) DeleteUserDomainRole(role *model.UserDoma
 		return errors2.NewItemNotFoundError("User domain role not found")
 	}
 
-	key := fmt.Sprintf("%d-%d", role.UserID, role.DomainRoleID)
+	key := fmt.Sprintf("%d-%d", role.UserId, role.DomainRoleId)
 	if _, found := r.userDomainRoles[domainKey][key]; !found {
 		return errors2.NewItemNotFoundError("User domain role not found")
 	}
@@ -63,7 +63,7 @@ func (r *UserDomainRoleRepositoryMock) FindDomainRolesForUserAndDomain(user *mod
 	}
 
 	for _, role := range r.userDomainRoles[domain.Fqdn] {
-		if role.UserID == user.ID {
+		if role.UserId == user.ID {
 			roles = append(roles, role)
 		}
 	}
@@ -76,7 +76,7 @@ func (r *UserDomainRoleRepositoryMock) FindDomainRolesForUser(user *model.User) 
 
 	for _, domainRoles := range r.userDomainRoles {
 		for _, role := range domainRoles {
-			if role.UserID == user.ID {
+			if role.UserId == user.ID {
 				roles = append(roles, role)
 			}
 		}

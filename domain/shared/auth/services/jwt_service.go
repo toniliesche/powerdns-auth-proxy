@@ -47,7 +47,7 @@ func (s *JWTService) createRefreshToken(user *dbmodel.User, session *dbmodel.Tok
 			"aud": s.audience,
 			"exp": session.ExpiresAt.Unix(),
 			"iss": s.issuer,
-			"jti": session.SessionID,
+			"jti": session.SessionId,
 			"nbf": session.UpdatedAt.Add(time.Second * -30).Unix(),
 			"sid": session.SequenceNumber,
 			"sub": user.Username,
@@ -85,7 +85,7 @@ func (s *JWTService) createAccessToken(user *dbmodel.User, session *dbmodel.Toke
 		jwt.MapClaims{
 			"aud": s.audience,
 			"exp": session.UpdatedAt.Add(time.Minute * 30).Unix(),
-			"iid": session.SessionID,
+			"iid": session.SessionId,
 			"iss": s.issuer,
 			"jti": accessTokenId.String(),
 			"nbf": session.UpdatedAt.Add(time.Second * -30).Unix(),
@@ -120,9 +120,9 @@ func (s *JWTService) Login(context *gin.Context) (*model.TokenResponse, httperro
 	now := time.Now()
 	dbTokenSession := &dbmodel.TokenSession{
 		ExpiresAt:      now.Add(time.Hour * 24 * 30),
-		SessionID:      refreshTokenId.String(),
+		SessionId:      refreshTokenId.String(),
 		SequenceNumber: 1,
-		UserID:         dbUser.ID,
+		UserId:         dbUser.ID,
 	}
 
 	if err = s.sessionRepository.SaveNewTokenSession(dbTokenSession); err != nil {
@@ -199,7 +199,7 @@ func (s *JWTService) createResponse(accessToken *jwt.Token, refreshToken *jwt.To
 		return nil, httperrors.NewInternalServerErrorError(fmt.Errorf("failed to sign refresh token: %v", err))
 	}
 
-	return &model.TokenResponse{AccessToken: accessTokenString, RefreshToken: refreshTokenString, SessionID: session.SessionID, SequenceNumber: session.SequenceNumber}, nil
+	return &model.TokenResponse{AccessToken: accessTokenString, RefreshToken: refreshTokenString, SessionId: session.SessionId, SequenceNumber: session.SequenceNumber}, nil
 }
 
 func (s *JWTService) parseToken(tokenString string) (jwt.MapClaims, error) {

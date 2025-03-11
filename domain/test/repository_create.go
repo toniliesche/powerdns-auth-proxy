@@ -89,8 +89,8 @@ func RepositoryCreateTestTokenSession(container *basics.InjectionContainer, regi
 
 	dbTokenSession := &model.TokenSession{
 		User:      dbUser,
-		UserID:    dbUser.ID,
-		SessionID: TokenSession,
+		UserId:    dbUser.ID,
+		SessionId: TokenSession,
 	}
 
 	err = container.SessionRepository.SaveNewTokenSession(dbTokenSession)
@@ -99,7 +99,7 @@ func RepositoryCreateTestTokenSession(container *basics.InjectionContainer, regi
 	}
 
 	registry.Set("tokenSessionId", fmt.Sprintf("%d", dbTokenSession.ID))
-	registry.Set("tokenSession", dbTokenSession.SessionID)
+	registry.Set("tokenSession", dbTokenSession.SessionId)
 
 	return nil
 }
@@ -120,7 +120,7 @@ func RepositoryCreateTestApiKey(container *basics.InjectionContainer, registry *
 
 	dbApiKey := &model.ApiKey{
 		ApiKey: ApiKey,
-		UserID: dbUser.ID,
+		UserId: dbUser.ID,
 		User:   dbUser,
 	}
 
@@ -168,11 +168,11 @@ func RepositoryCreateTestUserDomainRole(container *basics.InjectionContainer, re
 	}
 
 	dbUserDomainRole := &model.UserDomainRole{
-		UserID:       dbUser.ID,
+		UserId:       dbUser.ID,
 		User:         dbUser,
-		DomainID:     dbDomain.ID,
+		DomainId:     dbDomain.ID,
 		Domain:       dbDomain,
-		DomainRoleID: dbDomainRole.ID,
+		DomainRoleId: dbDomainRole.ID,
 		DomainRole:   dbDomainRole,
 	}
 
@@ -210,9 +210,9 @@ func RepositoryCreateTestUserRole(container *basics.InjectionContainer, registry
 	}
 
 	dbUserRole := &model.UserRole{
-		UserID: dbUser.ID,
+		UserId: dbUser.ID,
 		User:   dbUser,
-		RoleID: dbRole.ID,
+		RoleId: dbRole.ID,
 		Role:   dbRole,
 	}
 

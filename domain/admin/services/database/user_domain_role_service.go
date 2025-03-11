@@ -128,15 +128,21 @@ func (s *UserDomainRoleService) GrantDomainRoleToUser(fqdn string, username stri
 	}
 
 	userDomainRole := model.UserDomainRole{
-		UserID:       user.ID,
-		User:         user,
-		DomainID:     domain.ID,
-		Domain:       domain,
-		DomainRoleID: domainRole.ID,
-		DomainRole:   domainRole,
+		UserId:       user.ID,
+		DomainId:     domain.ID,
+		DomainRoleId: domainRole.ID,
 	}
 
-	return s.userDomainRoleRepository.SaveNewUserDomainRole(&userDomainRole)
+	err = s.userDomainRoleRepository.SaveNewUserDomainRole(&userDomainRole)
+	if err != nil {
+		return err
+	}
+
+	userDomainRole.User = user
+	userDomainRole.Domain = domain
+	userDomainRole.DomainRole = domainRole
+
+	return nil
 }
 
 func (s *UserDomainRoleService) RevokeDomainRolesFromUser(userId uint, roles []*management.DomainRole) error {
@@ -172,11 +178,11 @@ func (s *UserDomainRoleService) RevokeDomainRoleFromUser(fqdn string, username s
 	}
 
 	userDomainRole := model.UserDomainRole{
-		UserID:       user.ID,
+		UserId:       user.ID,
 		User:         user,
-		DomainID:     domain.ID,
+		DomainId:     domain.ID,
 		Domain:       domain,
-		DomainRoleID: domainRole.ID,
+		DomainRoleId: domainRole.ID,
 		DomainRole:   domainRole,
 	}
 

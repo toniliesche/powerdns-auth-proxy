@@ -19,9 +19,9 @@ import (
 	"testing"
 )
 
-func TestVerifySessionLogoutPayloadFailsOnMissingSessionIDsList(t *testing.T) {
+func TestVerifySessionLogoutPayloadFailsOnMissingSessionIdsList(t *testing.T) {
 	payload := &management.SessionLogoutPayload{
-		SessionIDs: nil,
+		SessionIds: nil,
 	}
 
 	err := payload.Verify()
@@ -29,9 +29,9 @@ func TestVerifySessionLogoutPayloadFailsOnMissingSessionIDsList(t *testing.T) {
 	assert.Equal(t, err.Error(), "session_ids is required")
 }
 
-func TestVerifySessionLogoutPayloadFailsOnEmptySessionIDsList(t *testing.T) {
+func TestVerifySessionLogoutPayloadFailsOnEmptySessionIdsList(t *testing.T) {
 	payload := &management.SessionLogoutPayload{
-		SessionIDs: []string{},
+		SessionIds: []string{},
 	}
 
 	err := payload.Verify()
@@ -39,9 +39,9 @@ func TestVerifySessionLogoutPayloadFailsOnEmptySessionIDsList(t *testing.T) {
 	assert.Equal(t, err.Error(), "session_ids must contain at least one item")
 }
 
-func TestVerifySessionLogoutPayloadFailsOnEmptySessionID(t *testing.T) {
+func TestVerifySessionLogoutPayloadFailsOnEmptySessionId(t *testing.T) {
 	payload := &management.SessionLogoutPayload{
-		SessionIDs: []string{""},
+		SessionIds: []string{""},
 	}
 
 	err := payload.Verify()
@@ -51,7 +51,7 @@ func TestVerifySessionLogoutPayloadFailsOnEmptySessionID(t *testing.T) {
 
 func TestVerifySessionLogoutPayloadSucceeds(t *testing.T) {
 	payload := &management.SessionLogoutPayload{
-		SessionIDs: []string{"session_id"},
+		SessionIds: []string{"session_id"},
 	}
 
 	err := payload.Verify()

@@ -28,7 +28,7 @@ func (r *UserRoleRepository) SaveNewUserRole(role *model.UserRole) error {
 }
 
 func (r *UserRoleRepository) DeleteUserRole(role *model.UserRole) error {
-	return r.database.Where("user_id = ? AND role_id = ?", role.UserID, role.RoleID).Delete(&model.UserRole{}).Error
+	return r.database.Where("user_id = ? AND role_id = ?", role.UserId, role.RoleId).Delete(&model.UserRole{}).Error
 }
 
 func (r *UserRoleRepository) FindRolesForUser(user *model.User) ([]*model.UserRole, error) {

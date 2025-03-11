@@ -32,7 +32,7 @@ func RunCliUserList(context *cli.Context) error {
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"ID", "Username", "Global DomainRoles", "Domain DomainRoles", "Last Update"})
+	table.SetHeader([]string{"ID", "Username", "Global Roles", "Domain Specific Roles", "Last Update"})
 
 	userList, err := userService.ListUsersComplete()
 	if err != nil {

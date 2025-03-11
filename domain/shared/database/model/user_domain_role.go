@@ -14,10 +14,10 @@
 package model
 
 type UserDomainRole struct {
-	DomainID     uint `gorm:"uniqueIndex:idx_user_domain_role"`
+	DomainId     uint `gorm:"uniqueIndex:idx_user_domain_role"`
 	Domain       *Domain
-	DomainRoleID uint `gorm:"uniqueIndex:idx_user_domain_role"`
+	DomainRoleId uint `gorm:"uniqueIndex:idx_user_domain_role"`
 	DomainRole   *DomainRole
-	UserID       uint `gorm:"uniqueIndex:idx_user_domain_role"`
+	UserId       uint `gorm:"uniqueIndex:idx_user_domain_role"`
 	User         *User
 }

@@ -24,7 +24,7 @@ type SessionMapper struct {
 func (m *SessionMapper) MapDatabaseToMinimalDto(session *model.TokenSession) *management.SessionMinimal {
 	return &management.SessionMinimal{
 		ID:             session.ID,
-		SessionID:      session.SessionID,
+		SessionId:      session.SessionId,
 		SequenceNumber: session.SequenceNumber,
 		ExpiresAt:      session.ExpiresAt.Format("2006-01-02 15:04:05"),
 	}

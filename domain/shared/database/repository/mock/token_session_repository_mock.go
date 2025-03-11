@@ -24,12 +24,12 @@ type TokenSessionRepositoryMock struct {
 }
 
 func (r *TokenSessionRepositoryMock) SaveNewTokenSession(tokenSession *model.TokenSession) error {
-	if _, found := r.tokenSessions[tokenSession.SessionID]; found {
+	if _, found := r.tokenSessions[tokenSession.SessionId]; found {
 		return errors2.NewItemAlreadyExistsError("Token session already exists")
 	}
 
 	tokenSession.ID = r.counter
-	r.tokenSessions[tokenSession.SessionID] = tokenSession
+	r.tokenSessions[tokenSession.SessionId] = tokenSession
 	r.counter++
 
 	return nil
@@ -39,7 +39,7 @@ func (r *TokenSessionRepositoryMock) FindTokenSessionsByUserId(userId uint) ([]*
 	tokenSessions := make([]*model.TokenSession, 0)
 
 	for _, tokenSession := range r.tokenSessions {
-		if tokenSession.UserID == userId {
+		if tokenSession.UserId == userId {
 			tokenSessions = append(tokenSessions, tokenSession)
 		}
 	}

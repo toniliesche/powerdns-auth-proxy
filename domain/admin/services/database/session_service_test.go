@@ -38,7 +38,7 @@ func TestListUserSessions(t *testing.T) {
 
 	assert.NotEmpty(t, sessions, "expected sessions to not be empty")
 	assert.Equal(t, len(sessions), 1, "expected one session")
-	assert.Equal(t, sessions[0].SessionID, registry.Get("tokenSession"), "expected session ID to match")
+	assert.Equal(t, sessions[0].SessionId, registry.Get("tokenSession"), "expected session ID to match")
 }
 
 func TestLogoutUserSession(t *testing.T) {

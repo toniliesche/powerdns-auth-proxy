@@ -85,13 +85,19 @@ func (s *UserRoleService) GrantRoleToUser(username string, roleName string) erro
 	}
 
 	userRole := model.UserRole{
-		UserID: user.ID,
-		User:   user,
-		RoleID: role.ID,
-		Role:   role,
+		UserId: user.ID,
+		RoleId: role.ID,
 	}
 
-	return s.userRoleRepository.SaveNewUserRole(&userRole)
+	err = s.userRoleRepository.SaveNewUserRole(&userRole)
+	if err != nil {
+		return err
+	}
+
+	userRole.User = user
+	userRole.Role = role
+
+	return nil
 }
 
 func (s *UserRoleService) RevokeRolesFromUser(userId uint, roles []string) error {
@@ -122,8 +128,8 @@ func (s *UserRoleService) RevokeRoleFromUser(username string, roleName string) e
 	}
 
 	userRole := model.UserRole{
-		UserID: user.ID,
-		RoleID: role.ID,
+		UserId: user.ID,
+		RoleId: role.ID,
 	}
 
 	return s.userRoleRepository.DeleteUserRole(&userRole)

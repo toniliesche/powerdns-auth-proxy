@@ -24,7 +24,7 @@ type UserRoleRepositoryMock struct {
 }
 
 func (r *UserRoleRepositoryMock) SaveNewUserRole(role *model.UserRole) error {
-	key := fmt.Sprintf("%d-%d", role.UserID, role.RoleID)
+	key := fmt.Sprintf("%d-%d", role.UserId, role.RoleId)
 	if _, found := r.userRoles[key]; found {
 		return errors2.NewItemAlreadyExistsError("User role already exists")
 	}
@@ -35,7 +35,7 @@ func (r *UserRoleRepositoryMock) SaveNewUserRole(role *model.UserRole) error {
 }
 
 func (r *UserRoleRepositoryMock) DeleteUserRole(role *model.UserRole) error {
-	key := fmt.Sprintf("%d-%d", role.UserID, role.RoleID)
+	key := fmt.Sprintf("%d-%d", role.UserId, role.RoleId)
 	if _, found := r.userRoles[key]; !found {
 		return errors2.NewItemNotFoundError("User role not found")
 	}
@@ -49,7 +49,7 @@ func (r *UserRoleRepositoryMock) FindRolesForUser(user *model.User) ([]*model.Us
 	roles := make([]*model.UserRole, 0)
 
 	for _, role := range r.userRoles {
-		if role.UserID == user.ID {
+		if role.UserId == user.ID {
 			roles = append(roles, role)
 		}
 	}

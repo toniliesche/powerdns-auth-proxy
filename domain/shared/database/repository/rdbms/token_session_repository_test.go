@@ -31,14 +31,14 @@ func TestTokenSessionCanBeSaved(t *testing.T) {
 		return
 	}
 
-	err = repo.SaveNewTokenSession(&model.TokenSession{UserID: registry.GetUint("userId"), SessionID: test.TokenSession})
+	err = repo.SaveNewTokenSession(&model.TokenSession{UserId: registry.GetUint("userId"), SessionId: test.TokenSession})
 
 	if !assert.NoError(t, err, "failed to save new token session") {
 		return
 	}
 }
 
-func TestTokenSessionCanBeFetchedBySessionID(t *testing.T) {
+func TestTokenSessionCanBeFetchedBySessionId(t *testing.T) {
 	registry := test.NewRegistry()
 	repo := ProvideTestTokenSessionRepository(registry, t, true)
 

@@ -28,7 +28,7 @@ func (r *UserDomainRoleRepository) SaveNewUserDomainRole(role *model.UserDomainR
 }
 
 func (r *UserDomainRoleRepository) DeleteUserDomainRole(role *model.UserDomainRole) error {
-	return r.database.Where("user_id = ? AND domain_id = ? AND domain_role_id = ?", role.UserID, role.DomainID, role.DomainRoleID).Delete(&model.UserDomainRole{}).Error
+	return r.database.Where("user_id = ? AND domain_id = ? AND domain_role_id = ?", role.UserId, role.DomainId, role.DomainRoleId).Delete(&model.UserDomainRole{}).Error
 }
 
 func (r *UserDomainRoleRepository) FindDomainRolesForUserAndDomain(user *model.User, domain *model.Domain) ([]*model.UserDomainRole, error) {

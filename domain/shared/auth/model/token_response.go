@@ -16,6 +16,6 @@ package model
 type TokenResponse struct {
 	AccessToken    string `json:"access_token"`
 	RefreshToken   string `json:"refresh_token"`
-	SessionID      string `json:"session_id"`
+	SessionId      string `json:"session_id"`
 	SequenceNumber uint   `json:"sequence_number"`
 }

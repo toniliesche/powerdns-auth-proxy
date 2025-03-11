@@ -20,19 +20,19 @@ import (
 )
 
 type SessionLogoutPayload struct {
-	SessionIDs []string `json:"session_ids"`
+	SessionIds []string `json:"session_ids"`
 }
 
 func (p *SessionLogoutPayload) Verify() errors.HTTPError {
-	if p.SessionIDs == nil {
+	if p.SessionIds == nil {
 		return errors.NewBadRequestError(fmt.Errorf("session_ids is required"))
 	}
 
-	if len(p.SessionIDs) == 0 {
+	if len(p.SessionIds) == 0 {
 		return errors.NewBadRequestError(fmt.Errorf("session_ids must contain at least one item"))
 	}
 
-	for index, sessionID := range p.SessionIDs {
+	for index, sessionID := range p.SessionIds {
 		if strings.TrimSpace(sessionID) == "" {
 			return errors.NewBadRequestError(fmt.Errorf("session_ids[%d]: session id cannot be empty", index))
 		}

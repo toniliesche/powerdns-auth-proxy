@@ -40,7 +40,7 @@ func (s *ApiKeyService) Create(username string) (*model.ApiKey, error) {
 	dbApiKey := &model.ApiKey{
 		Identifier: security.GenerateRandomString(12, security.CharsetAlphaNumeric),
 		ApiKey:     hash,
-		UserID:     user.ID,
+		UserId:     user.ID,
 		User:       user,
 	}
 

@@ -23,6 +23,6 @@ type ApiKey struct {
 	LastUsed   *time.Time
 	Identifier string `gorm:"unique"`
 	ApiKey     string `gorm:"column:api_key"`
-	UserID     uint   `gorm:"index"`
+	UserId     uint   `gorm:"index"`
 	User       *User
 }

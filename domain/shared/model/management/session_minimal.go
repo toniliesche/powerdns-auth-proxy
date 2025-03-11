@@ -15,7 +15,7 @@ package management
 
 type SessionMinimal struct {
 	ID             uint   `json:"id"`
-	SessionID      string `json:"session_id"`
+	SessionId      string `json:"session_id"`
 	SequenceNumber uint   `json:"sequence_number"`
 	ExpiresAt      string `json:"expires_at"`
 }

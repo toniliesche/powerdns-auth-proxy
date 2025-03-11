@@ -218,9 +218,9 @@ func (s *MigrationService) RunUserRoleImport(dbUser *model.User, user *importer.
 			}
 
 			userRole := &model.UserRole{
-				UserID: dbUser.ID,
+				UserId: dbUser.ID,
 				User:   dbUser,
-				RoleID: dbRole.ID,
+				RoleId: dbRole.ID,
 				Role:   dbRole,
 			}
 
@@ -268,11 +268,11 @@ func (s *MigrationService) RunUserDomainRoleImport(dbUser *model.User, user *imp
 			}
 
 			userDomainRole := &model.UserDomainRole{
-				UserID:       dbUser.ID,
+				UserId:       dbUser.ID,
 				User:         dbUser,
-				DomainID:     dbDomain.ID,
+				DomainId:     dbDomain.ID,
 				Domain:       dbDomain,
-				DomainRoleID: dbDomainRole.ID,
+				DomainRoleId: dbDomainRole.ID,
 				DomainRole:   dbDomainRole,
 			}
 

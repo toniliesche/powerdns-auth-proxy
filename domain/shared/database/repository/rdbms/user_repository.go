@@ -82,7 +82,7 @@ func (r *UserRepository) FetchUserByApiKey(apiKey string) (*model.User, error) {
 		Preload("UserDomainRoles").
 		Preload("UserDomainRoles.Domain").
 		Preload("UserDomainRoles.DomainRole").
-		Where("id = ?", dbApiKey.UserID).
+		Where("id = ?", dbApiKey.UserId).
 		Find(&user)
 
 	if result.Error != nil {

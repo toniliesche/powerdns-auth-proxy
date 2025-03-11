@@ -15,7 +15,9 @@ package app
 
 import (
 	"fmt"
+	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli/v2"
+	"os"
 	"powerdns-auth-proxy/domain/admin/services/interfaces"
 	"powerdns-auth-proxy/domain/shared/setup"
 )
@@ -34,7 +36,19 @@ func RunCliDomainRoleList(context *cli.Context) error {
 		return err
 	}
 
-	_, err = roleService.ListDomainRolesForUserPerDomain(context.Args().Get(1), context.Args().Get(0))
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Domain", "Role"})
+
+	domainRoles, err := roleService.ListDomainRolesForUserPerDomain(context.Args().Get(1), context.Args().Get(0))
+	if err != nil {
+		return fmt.Errorf("could not list domain roles for user: %w", err)
+	}
+
+	for _, roles := range domainRoles {
+		table.Append([]string{roles.Role, roles.Role})
+	}
+
+	table.Render()
 
 	return err
 }
@@ -59,7 +73,7 @@ func RunCliDomainRoleAdd(context *cli.Context) error {
 
 	err = roleService.GrantDomainRoleToUser(context.Args().Get(1), context.Args().Get(0), context.Args().Get(2))
 	if err != nil {
-		return fmt.Errorf("could not add role to user: %w", err)
+		return fmt.Errorf("could not add domain role to user: %w", err)
 	}
 
 	fmt.Printf("domain role successfully added to user: %s [domain: %s, role: %s]\n", context.Args().Get(0), context.Args().Get(1), context.Args().Get(2))

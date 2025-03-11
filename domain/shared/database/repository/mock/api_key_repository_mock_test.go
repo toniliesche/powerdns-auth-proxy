@@ -31,7 +31,7 @@ func TestApiKeyCanBeSaved(t *testing.T) {
 		return
 	}
 
-	err = repo.SaveNewApiKey(&model.ApiKey{UserID: registry.GetUint("userId"), ApiKey: test.ApiKey})
+	err = repo.SaveNewApiKey(&model.ApiKey{UserId: registry.GetUint("userId"), ApiKey: test.ApiKey})
 
 	if !assert.NoError(t, err, "failed to save new api key") {
 		return
