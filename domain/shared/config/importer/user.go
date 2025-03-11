@@ -19,7 +19,6 @@ type User struct {
 	Username        string            `yaml:"username"`
 	Password        string            `yaml:"password"`
 	Deleted         bool              `yaml:"deleted"`
-	ApiKey          bool              `yaml:"api_key"`
 	UserDomainRoles []*UserDomainRole `yaml:"user_domain_roles"`
 	UserRoles       []*UserRole       `yaml:"user_roles"`
 }

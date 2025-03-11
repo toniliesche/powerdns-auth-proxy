@@ -252,6 +252,313 @@ To run the application in a Docker container, you can use the following command:
 docker-compose -f <path to your docker-compose.yaml> -p "<name of your docker compose stack>" up -d
 ```
 
+## Configuring the Application
+
+To configure the application, you can use the following configuration options:
+
+### Admin API Endpoints
+
+The admin API endpoints can be used to manage users, permissions, and roles. To learn more about the available
+endpoints,
+please refer to the [OpenAPI documentation](spec/openapi.yaml) | [Redoc](spec/redoc.html).
+
+### Admin CLI Commands
+
+With the admin CLI commands, you can manage users, permissions, and roles. To learn more about the available commands,
+please refer to the following section.
+
+NOTE! The admin cli will only manage the authentication proxy layer and NOT change any resources within the PowerDNS
+server.
+
+#### Manage Domains
+
+Domains are the main resource that can be managed by the PowerDNS server. To grant access to a domain, you need to add
+it to the local authorization management first.
+
+##### Add Domain
+
+You can add a new domain to the PowerDNS authorization proxy by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli domain add <domain fqdn>
+```
+
+Example response:
+
+```
+Domains successfully created: example.com
+```
+
+##### List Domains
+
+You can list all domains that are currently managed by the PowerDNS authorization proxy by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli domain list
+```
+
+Example response:
+
+```
++----+----------------+---------------------+
+| ID |      FQDN      |     LAST UPDATE     |
++----+----------------+---------------------+
+|  1 | example.com    | 2025-01-01 12:00:00 |
++----+----------------+---------------------+
+```
+
+##### Delete Domain
+
+You can delete a domain from the PowerDNS authorization proxy by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli domain delete <domain fqdn>
+```
+
+Example response:
+
+```
+domain successfully deleted: example.com
+```
+
+#### Manage Users
+
+Users are the entities that will get granted access to certain resources within the PowerDNS server. To grant access to
+a user, you need to add it to the local authorization management first.
+
+##### Add User
+
+You can add a new user to the PowerDNS authorization proxy by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user add <username> <password>
+```
+
+Example response:
+
+```
+User successfully created: example-user
+```
+
+##### List Users
+
+You can list all users that are currently managed by the PowerDNS authorization proxy by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user list
+```
+
+Example response:
+
+```
+----+---------------+--------------+-----------------------+---------------------+
+| ID | USERNAME     | GLOBAL ROLES | DOMAIN SPECIFIC ROLES |     LAST UPDATE     |
++----+--------------+--------------+-----------------------+---------------------+
+|  1 | example-user | none         | none                  | 2025-01-01 12:00:00 |
++----+--------------+--------------+-----------------------+---------------------+
+```
+
+##### Delete User
+
+You can delete a user from the PowerDNS authorization proxy by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user delete <username>
+```
+
+Example response:
+
+```
+User successfully deleted: example-user
+```
+
+#### Manage Global User Roles
+
+Global user roles are the roles that can be assigned to a user on a global level. These roles will be applied to all
+domains that are managed by the PowerDNS authorization proxy.
+
+##### Add Global User Role to User
+
+You can add a new global user role to a user by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user role add <username> <role>
+```
+
+Example response:
+
+```
+role successfully added to user: example-user [role: admin]
+```
+
+##### List Global User Roles
+
+You can list all global user roles that are currently managed by the PowerDNS authorization proxy by using the following
+command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user role list <username>
+```
+
+Example response:
+
+```
++-------+
+| ROLE  |
++-------+
+| admin |
++-------+
+```
+
+##### Delete Global User Role from User
+
+You can delete a global user role from a user by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user role remove <username> <role>
+```
+
+Example response:
+
+```
+role successfully removed from user: example-user [role: admin]
+```
+
+#### Manage Domain-Specific User Roles
+
+Domain-specific user roles are the roles that can be assigned to a user on a domain level. These roles will only be
+applied to the specified domain.
+
+##### Add Domain-Specific User Role to User
+
+You can add a new domain-specific user role to a user by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user role add <username> <domain fqdn> <role>
+```
+
+Example response:
+
+```
+domain role successfully added to user: example-user [domain: example.com, role: admin]
+```
+
+##### List Domain-Specific User Roles
+
+You can list all domain-specific user roles that are currently managed by the PowerDNS authorization proxy by using the
+following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user role list <username> <domain fqdn>
+```
+
+Example response:
+
+```
++--------------+-------+
+| DOMAIN       | ROLE  |
++--------------+-------+
+| example.com  | admin |
++--------------+-------+
+```
+
+###### Delete Domain-Specific User Role from User
+
+You can delete a domain-specific user role from a user by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli user role remove <username> <domain fqdn> <role>
+```
+
+Example response:
+
+```
+domain role successfully removed from user: example-user [domain: example.com, role: admin]
+```
+
+#### Manage API Keys
+
+API keys are the keys that can be used to authenticate against the PowerDNS authorization proxy. To grant access to an
+API key, you need to add it to the local authorization management first.
+
+##### Add API Key to User
+
+You can add a new API key to a user by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli api-key add <username>
+```
+
+Example response:
+
+```
+API key successfully generated for user: $2a$10$GcLqwe.zzXIOiIKev.CwX.iK2aJA/cG4104bhCBZoRSj36zIJW/LK [user: example-user, identifier: JADDkW28MKeH]
+```
+
+##### List API Keys
+
+You can list all API keys that are currently managed by the PowerDNS authorization proxy by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli api-key list <username>
+```
+
+Example response:
+
+```
++----+--------------+--------------+---------------------+
+| ID |  IDENTIFIER  |   USERNAME   |      LAST USED      |
++----+--------------+--------------+---------------------+
+|  1 | JADDkW28MKeH | example-user | 2025-01-01 12:00:00 |
++----+--------------+--------------+---------------------+
+```
+
+##### Delete API Key from User
+
+You can delete an API key from a user by using the following command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> cli api-key delete <identifier>
+```
+
+Example response:
+
+```
+API key successfully deleted: JADDkW28MKeH
+```
+
+### Import Configuration Files
+
+Additionally to the CLI commands, you can import configuration files to manage users, permissions, and roles. To learn
+more about the available configuration options, please refer to the following example.
+
+```yaml
+domains:
+  - fqdn: example.com
+    deleted: false
+
+users:
+  - username: example-user
+    password: example-password
+    deleted: false
+    user_roles:
+      - role: admin
+        deleted: false
+    domain_roles:
+      - domain: example.com
+        role: admin
+        deleted: false
+```
+
+The `deleted` fields are optional and default to false. If set to true, the import will check if the resource exists and
+delete it if it does. 
+
+To run the import of this yaml file, you can use the db migration command:
+
+```bash
+./powerdns-auth-proxy --config <path to config> db-migrate [--import-file <path to import file>]
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
