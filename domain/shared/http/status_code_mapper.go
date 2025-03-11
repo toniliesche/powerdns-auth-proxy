@@ -15,7 +15,9 @@ package http
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-sql-driver/mysql"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/mattn/go-sqlite3"
 	nethttp "net/http"
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
@@ -30,18 +32,26 @@ func (m *StatusCodeMapper) MapStatusCode(err error) int {
 		return nethttp.StatusOK
 	}
 
+	fmt.Printf("%v %T\n", err, err)
+
 	var httpError httperrors.HTTPError
 	if errors.As(err, &httpError) {
 		return httpError.GetCode()
 	}
 
-	if errors.As(err, &sqlite3.Error{}) {
+	sqliteErr := sqlite3.Error{}
+	if errors.As(err, &sqliteErr) {
 		return m.mapSqliteError(err.(sqlite3.Error))
 	}
 
-	var mysqlError *mysql.MySQLError
+	mysqlError := &mysql.MySQLError{}
 	if errors.As(err, &mysqlError) {
 		return m.mapMySqlError(err.(*mysql.MySQLError))
+	}
+
+	pgError := &pgconn.PgError{}
+	if errors.As(err, &pgError) {
+		return m.mapPgError(err.(*pgconn.PgError))
 	}
 
 	if errors.As(err, &errors2.ItemNotFoundError{}) {
@@ -67,6 +77,17 @@ func (m *StatusCodeMapper) mapSqliteError(err sqlite3.Error) int {
 func (m *StatusCodeMapper) mapMySqlError(sqlError *mysql.MySQLError) int {
 	switch sqlError.Number {
 	case 1062:
+		return nethttp.StatusConflict
+	default:
+		return nethttp.StatusInternalServerError
+	}
+}
+
+func (m *StatusCodeMapper) mapPgError(pgError *pgconn.PgError) int {
+	fmt.Println(pgError.Code)
+
+	switch pgError.Code {
+	case "42601":
 		return nethttp.StatusConflict
 	default:
 		return nethttp.StatusInternalServerError
