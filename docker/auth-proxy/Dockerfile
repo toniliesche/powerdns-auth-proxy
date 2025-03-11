@@ -11,7 +11,7 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-ARG GOLANGVER
+ARG GOLANGVER=1.24
 FROM golang:${GOLANGVER}-bookworm AS build-stage
 
 ARG CACHEBUST
