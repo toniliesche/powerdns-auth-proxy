@@ -83,7 +83,7 @@ func provideMariadbClient(config *config.MySQLDBConfig, logger logger.Interface)
 }
 
 func providePostgresClient(sql *config.PostgreSQLConfig, logger logger.Interface) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d search_path=%s", sql.Host, sql.User, sql.Password, sql.Database, sql.Port, sql.Database)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d", sql.Host, sql.User, sql.Password, sql.Database, sql.Port)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger})
 	if err != nil {
