@@ -21,14 +21,15 @@ import (
 )
 
 type Config struct {
-	Debug    bool            `yaml:"debug" json:"debug"`
-	AuthType string          `yaml:"auth_type" json:"auth_type"`
-	Database string          `yaml:"database" json:"database"`
-	LogPath  string          `yaml:"log_path" json:"log_path"`
-	MySQL    *MySQLDBConfig  `yaml:"mysql,omitempty" json:"mysql,omitempty"`
-	PowerDNS *PowerDNSConfig `yaml:"powerdns" json:"power_dns"`
-	Sqlite   *SqliteConfig   `yaml:"sqlite,omitempty" json:"sqlite,omitempty"`
-	JWT      *JWTConfig      `yaml:"jwt,omitempty" json:"jwt,omitempty"`
+	Debug      bool              `yaml:"debug" json:"debug"`
+	AuthType   string            `yaml:"auth_type" json:"auth_type"`
+	Database   string            `yaml:"database" json:"database"`
+	LogPath    string            `yaml:"log_path" json:"log_path"`
+	MySQL      *MySQLDBConfig    `yaml:"mysql,omitempty" json:"mysql,omitempty"`
+	PostgreSQL *PostgreSQLConfig `yaml:"postgres,omitempty" json:"postgres,omitempty"`
+	PowerDNS   *PowerDNSConfig   `yaml:"powerdns" json:"power_dns"`
+	Sqlite     *SqliteConfig     `yaml:"sqlite,omitempty" json:"sqlite,omitempty"`
+	JWT        *JWTConfig        `yaml:"jwt,omitempty" json:"jwt,omitempty"`
 }
 
 type PowerDNSConfig struct {

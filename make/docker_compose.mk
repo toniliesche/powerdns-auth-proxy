@@ -1,7 +1,10 @@
 AUTH_PROXY_CMD=docker compose -f docker/docker-compose.yml -p pdns-auth-proxy
-MARIADB_CMD=docker compose -f docker/docker-compose.mariadb.yml -p pdns-database
+MARIADB_CMD=docker compose -f docker/docker-compose.mariadb.yml -p pdns-mariadb
+POSTGRES_CMD=docker compose -f docker/docker-compose.postgres.yml -p pdns-postgres
 
 up: up-mariadb setup-mariadb-powerdns setup-mariadb-gateway up-gateway-mariadb;
+
+up-pg: up-mariadb up-postgres setup-mariadb-powerdns setup-postgres-gateway up-gateway-postgres;
 
 up-gateway: create-network
 	@docker compose -p powerdns-auth-proxy up -d
@@ -9,11 +12,17 @@ up-gateway: create-network
 up-gateway-jwt: create-network
 	@AUTH_TYPE=jwt $(AUTH_PROXY_CMD) up -d --remove-orphans
 
-up-gateway-mariadb: create-network up-mariadb check-db
+up-gateway-mariadb: create-network up-mariadb check-db-mariadb
 	@AUTH_TYPE=jwt DB_TYPE=mysql $(AUTH_PROXY_CMD) up -d --remove-orphans
+
+up-gateway-postgres: create-network up-postgres check-db-postgres
+	@AUTH_TYPE=jwt DB_TYPE=postgres $(AUTH_PROXY_CMD) up -d --remove-orphans
 
 up-mariadb: create-network
 	@$(MARIADB_CMD) up --pull always -d --remove-orphans
+
+up-postgres: create-network
+	@$(POSTGRES_CMD) up --pull always -d --remove-orphans
 
 start: start-gateway start-mariadb;
 
@@ -23,7 +32,10 @@ start-gateway:
 start-mariadb:
 	@$(MARIADB_CMD) start
 
-down: down-gateway down-mariadb;
+start-postgres:
+	@$(POSTGRES_CMD) start
+
+down: down-gateway down-mariadb down-postgres;
 
 down-gateway:
 	@$(AUTH_PROXY_CMD) down --volumes
@@ -31,10 +43,16 @@ down-gateway:
 down-mariadb:
 	@$(MARIADB_CMD) down --volumes
 
-stop: stop-gateway stop-mariadb;
+down-postgres:
+	@$(POSTGRES_CMD) down --volumes
+
+stop: stop-gateway stop-mariadb stop-postgres;
 
 stop-gateway:
 	@$(AUTH_PROXY_CMD) stop
 
 stop-mariadb:
 	@$(MARIADB_CMD) stop
+
+stop-postgres:
+	@$(POSTGRES_CMD) stop

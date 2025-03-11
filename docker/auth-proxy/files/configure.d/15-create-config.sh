@@ -114,8 +114,11 @@ function create_database_config {
   fi
 
   case "${DB_TYPE}" in
-    mysql)
+    mariadb|mysql)
       create_mysql_config
+      ;;
+    postgres)
+      create_postgres_config
       ;;
     sqlite)
       create_sqlite_config
@@ -157,6 +160,39 @@ mysql:
   user: ${DB_MYSQL_USER}
   password: ${DB_MYSQL_PASSWORD}
   database: ${DB_MYSQL_DATABASE}
+EOF
+}
+
+function create_postgres_config {
+  if [ -z "${DB_POSTGRES_HOST}" ]; then
+    echo "DB_POSTGRES_HOST is not set. Exiting."
+    exit 1
+  fi
+
+  if [ -z "${DB_POSTGRES_USER}" ]; then
+    echo "DB_POSTGRES_USER is not set. Exiting."
+    exit 1
+  fi
+
+  if [ -z "${DB_POSTGRES_PASSWORD}" ]; then
+    echo "DB_POSTGRES_PASSWORD is not set. Exiting."
+    exit 1
+  fi
+
+  if [ -z "${DB_POSTGRES_DATABASE}" ]; then
+    echo "DB_POSTGRES_DATABASE is not set. Exiting."
+    exit 1
+  fi
+
+cat <<EOF >> ${CONFIG_PATH}/config.yaml
+database: postgres
+
+postgres:
+  host: ${DB_POSTGRES_HOST}
+  port: ${DB_POSTGRES_PORT:-5432}
+  user: ${DB_POSTGRES_USER}
+  password: ${DB_POSTGRES_PASSWORD}
+  database: ${DB_POSTGRES_DATABASE}
 EOF
 }
 

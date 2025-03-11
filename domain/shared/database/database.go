@@ -16,6 +16,7 @@ package database
 import (
 	"fmt"
 	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -37,6 +38,8 @@ func ProvideDatabaseClient(config *config.Config) (*gorm.DB, error) {
 	switch config.Database {
 	case "mariadb", "mysql":
 		db, err = provideMariadbClient(config.MySQL, gormLogger)
+	case "postgres", "postgresql":
+		db, err = providePostgresClient(config.PostgreSQL, gormLogger)
 	case "sqlite":
 		db, err = provideSqliteClient(config.Sqlite, gormLogger)
 	default:
@@ -68,6 +71,21 @@ func provideMariadbClient(config *config.MySQLDBConfig, logger logger.Interface)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.User, config.Password, config.Host, config.Port, config.Database)
 
 	db, err := gorm.Open(mysql.New(mysql.Config{DSN: dsn}), &gorm.Config{Logger: logger})
+	if err != nil {
+		return nil, err
+	}
+
+	if db == nil {
+		return nil, fmt.Errorf("could not connect to remote database")
+	}
+
+	return db, nil
+}
+
+func providePostgresClient(sql *config.PostgreSQLConfig, gormLogger logger.Interface) (*gorm.DB, error) {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d", sql.Host, sql.User, sql.Password, sql.Database, sql.Port)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: gormLogger})
 	if err != nil {
 		return nil, err
 	}
