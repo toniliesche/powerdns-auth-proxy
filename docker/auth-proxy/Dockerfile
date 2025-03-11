@@ -20,21 +20,18 @@ RUN echo ${CACHEBUST} && \
 
 WORKDIR /tmp/powerdns-auth-proxy
 
-ARG BUILDVER
+ARG COMMIT
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    git checkout ${BUILDVER} && \
+    git checkout ${COMMIT} && \
     make build
 
 FROM debian:bookworm-slim
 
-ARG BUILDVER
-ARG COMMIT
 LABEL org.opencontainers.image.authors="Toni Liesche <docker@toniliesche.de>"
 LABEL org.opencontainers.image.url="https://hub.docker.com/r/tliesche/powerdns-auth-proxy"
 LABEL org.opencontainers.image.documentation="https://raw.githubusercontent.com/toniliesche/powerdns-auth-proxy/refs/heads/develop/README.md"
 LABEL org.opencontainers.image.source="https://github.com/toniliesche/powerdns-auth-proxy"
-LABEL org.opencontainers.image.version="${BUILDVER} <${COMMIT}>"
 LABEL org.opencontainers.image.licenses="MIT"
 LABEL org.opencontainers.image.title="PowerDNS Authentication Proxy"
 LABEL org.opencontainers.image.description="Database backed authentication proxy for PowerDNS HTTP API"
@@ -51,3 +48,7 @@ COPY --from=build-stage /tmp/powerdns-auth-proxy/docker/auth-proxy/files/var/lib
 
 ENTRYPOINT [ "/entry-point.sh" ]
 CMD [ "su", "apiuser", "-s", "/usr/bin/bash", "-c", "powerdns-auth-proxy --config /etc/powerdns-auth-proxy/config.yaml run" ]
+
+ARG BUILDVER
+ARG COMMIT
+LABEL org.opencontainers.image.version="${BUILDVER} <${COMMIT}>"
