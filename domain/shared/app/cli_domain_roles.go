@@ -45,7 +45,7 @@ func RunCliDomainRoleList(context *cli.Context) error {
 	}
 
 	for _, roles := range domainRoles {
-		table.Append([]string{roles.Role, roles.Role})
+		table.Append([]string{roles.Domain, roles.Role})
 	}
 
 	table.Render()

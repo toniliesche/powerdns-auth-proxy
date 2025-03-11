@@ -41,12 +41,13 @@ func (s *ApiKeyService) Create(username string) (*model.ApiKey, error) {
 		Identifier: security.GenerateRandomString(12, security.CharsetAlphaNumeric),
 		ApiKey:     hash,
 		UserId:     user.ID,
-		User:       user,
 	}
 
 	if err := s.apiKeyRepository.SaveNewApiKey(dbApiKey); err != nil {
 		return nil, err
 	}
+
+	dbApiKey.User = user
 
 	return dbApiKey, nil
 }
