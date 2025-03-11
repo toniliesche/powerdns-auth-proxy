@@ -14,6 +14,9 @@ build-docker-rc: set-version-rc set-commit
 		--build-arg GOLANGVER=$(GOLANGVER) \
 		-t tliesche/powerdns-auth-proxy:$(run.commit) \
 		-t tliesche/powerdns-auth-proxy:$(run.build.version) \
+		-t tliesche/powerdns-auth-proxy:$(run.build.version.rc) \
+		-t tliesche/powerdns-auth-proxy:$(run.build.version.rc.minor) \
+		-t tliesche/powerdns-auth-proxy:$(run.build.version.rc.major) \
 		-t tliesche/powerdns-auth-proxy:edge \
 		$(if $(PUSH),--push,--no-cache --progress=plain) \
 		docker/auth-proxy
