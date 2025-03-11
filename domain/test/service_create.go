@@ -11,13 +11,22 @@
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 
-package interfaces
+package test
 
-import "powerdns-auth-proxy/domain/shared/database/model"
+import (
+	"fmt"
+	"powerdns-auth-proxy/domain/shared/basics"
+)
 
-type ApiKeyServiceInterface interface {
-	Create(username string) (*model.ApiKey, error)
-	Delete(apiKey string) error
-	DeleteByIdentifier(identifier string) error
-	List(username string) ([]*model.ApiKey, error)
+func ServiceCreateApiKey(container *basics.InjectionContainer, registry *Registry) error {
+	apiKey, err := container.ApiKeyService.Create(UserUsername)
+	if err != nil {
+		return err
+	}
+
+	registry.Set("apiKey", apiKey.ApiKey)
+	registry.Set("apiKeyIdentifier", apiKey.Identifier)
+	registry.Set("apiKeyId", fmt.Sprintf("%d", apiKey.ID))
+
+	return nil
 }

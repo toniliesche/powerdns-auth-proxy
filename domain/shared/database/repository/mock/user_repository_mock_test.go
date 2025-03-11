@@ -25,7 +25,7 @@ import (
 func TestUserCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, false)
+	repo := getUserRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -40,7 +40,7 @@ func TestUserCanBeSaved(t *testing.T) {
 
 func TestUserExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, true)
+	repo := getUserRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -55,7 +55,7 @@ func TestUserExistenceCanBeChecked(t *testing.T) {
 
 func TestUserNonExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, true)
+	repo := getUserRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -71,7 +71,7 @@ func TestUserNonExistenceCanBeChecked(t *testing.T) {
 func TestUserCanBeFetchedByUsername(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, true)
+	repo := getUserRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -94,7 +94,7 @@ func TestUserCanBeFetchedByUsername(t *testing.T) {
 func TestCorrectMockUserWillBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, true)
+	repo := getUserRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -114,7 +114,7 @@ func TestCorrectMockUserWillBeFetched(t *testing.T) {
 func TestUserCanBeFetchedByApiKey(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, true)
+	repo := getUserRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -138,7 +138,7 @@ func TestUserCanBeFetchedByApiKey(t *testing.T) {
 func TestCorrectMockUserWillBeFetchedByApiKey(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, true)
+	repo := getUserRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -158,7 +158,7 @@ func TestCorrectMockUserWillBeFetchedByApiKey(t *testing.T) {
 func TestUserCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRepository(registry, t, true)
+	repo := getUserRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user repository") {
 		return
@@ -177,7 +177,7 @@ func TestUserCanBeDeleted(t *testing.T) {
 	}
 }
 
-func ProvideTestMockUserRepository(registry *test.Registry, t *testing.T, init bool) interfaces.UserRepositoryInterface {
+func getUserRepository(registry *test.Registry, t *testing.T, init bool) interfaces.UserRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil

@@ -25,7 +25,7 @@ import (
 func TestTokenSessionCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockTokenSessionRepository(registry, t, false)
+	repo := getTokenSessionRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to provide test token session repository") {
 		return
@@ -40,7 +40,7 @@ func TestTokenSessionCanBeSaved(t *testing.T) {
 
 func TestTokenSessionCanBeFetchedBySessionId(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockTokenSessionRepository(registry, t, true)
+	repo := getTokenSessionRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test token session repository") {
 		return
@@ -59,7 +59,7 @@ func TestTokenSessionCanBeFetchedBySessionId(t *testing.T) {
 
 func TestCorrectTokenSessionCanBeFetched(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockTokenSessionRepository(registry, t, true)
+	repo := getTokenSessionRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test token session repository") {
 		return
@@ -79,7 +79,7 @@ func TestCorrectTokenSessionCanBeFetched(t *testing.T) {
 func TestTokenSessionCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockTokenSessionRepository(registry, t, true)
+	repo := getTokenSessionRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test token session repository") {
 		return
@@ -92,7 +92,7 @@ func TestTokenSessionCanBeDeleted(t *testing.T) {
 	}
 }
 
-func ProvideTestMockTokenSessionRepository(registry *test.Registry, t *testing.T, init bool) interfaces.TokenSessionRepositoryInterface {
+func getTokenSessionRepository(registry *test.Registry, t *testing.T, init bool) interfaces.TokenSessionRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil

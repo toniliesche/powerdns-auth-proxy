@@ -22,4 +22,5 @@ type ApiKeyRepositoryInterface interface {
 	FetchApiKeyByIdentifier(identifier string) (*model.ApiKey, error)
 	FindApiKeysByUserId(userId uint) ([]*model.ApiKey, error)
 	DeleteApiKey(key string) error
+	DeleteApiKeyByIdentifier(identifier string) error
 }

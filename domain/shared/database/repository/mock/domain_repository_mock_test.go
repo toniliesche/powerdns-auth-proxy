@@ -25,7 +25,7 @@ import (
 func TestDomainCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRepository(registry, t, false)
+	repo := getDomainRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to provide test domain repository") {
 		return
@@ -40,7 +40,7 @@ func TestDomainCanBeSaved(t *testing.T) {
 
 func TestDomainExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRepository(registry, t, true)
+	repo := getDomainRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test domain repository") {
 		return
@@ -55,7 +55,7 @@ func TestDomainExistenceCanBeChecked(t *testing.T) {
 
 func TestDomainNonExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRepository(registry, t, true)
+	repo := getDomainRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test domain repository") {
 		return
@@ -71,7 +71,7 @@ func TestDomainNonExistenceCanBeChecked(t *testing.T) {
 func TestDomainCanBeFetchedByFqdn(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRepository(registry, t, true)
+	repo := getDomainRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test domain repository") {
 		return
@@ -95,7 +95,7 @@ func TestDomainCanBeFetchedByFqdn(t *testing.T) {
 func TestCorrectDomainWillBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRepository(registry, t, true)
+	repo := getDomainRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test domain repository") {
 		return
@@ -115,7 +115,7 @@ func TestCorrectDomainWillBeFetched(t *testing.T) {
 func TestDomainCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRepository(registry, t, true)
+	repo := getDomainRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test domain repository") {
 		return
@@ -134,7 +134,7 @@ func TestDomainCanBeDeleted(t *testing.T) {
 	}
 }
 
-func ProvideTestMockDomainRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.DomainRepositoryInterface {
+func getDomainRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.DomainRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil

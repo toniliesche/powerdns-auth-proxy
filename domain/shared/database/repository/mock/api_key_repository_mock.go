@@ -82,6 +82,18 @@ func (r *ApiKeyRepositoryMock) DeleteApiKey(key string) error {
 	return nil
 }
 
+func (r *ApiKeyRepositoryMock) DeleteApiKeyByIdentifier(identifier string) error {
+	for _, apiKey := range r.keys {
+		if apiKey.Identifier == identifier {
+			delete(r.keys, apiKey.ApiKey)
+
+			return nil
+		}
+	}
+
+	return errors2.NewItemNotFoundError("api key not found")
+}
+
 func ProvideApiKeyRepositoryMock() (*ApiKeyRepositoryMock, error) {
 	return &ApiKeyRepositoryMock{
 		keys:    make(map[string]*model.ApiKey),

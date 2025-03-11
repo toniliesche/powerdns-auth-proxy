@@ -52,8 +52,12 @@ func (s *ApiKeyService) Create(username string) (*model.ApiKey, error) {
 	return dbApiKey, nil
 }
 
-func (s *ApiKeyService) Delete(apiKeyId string) error {
-	return s.apiKeyRepository.DeleteApiKey(apiKeyId)
+func (s *ApiKeyService) Delete(apiKey string) error {
+	return s.apiKeyRepository.DeleteApiKey(apiKey)
+}
+
+func (s *ApiKeyService) DeleteByIdentifier(identifier string) error {
+	return s.apiKeyRepository.DeleteApiKeyByIdentifier(identifier)
 }
 
 func (s *ApiKeyService) List(username string) ([]*model.ApiKey, error) {

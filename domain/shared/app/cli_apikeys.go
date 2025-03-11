@@ -85,7 +85,7 @@ func RunCliApiKeyDelete(context *cli.Context) error {
 		return err
 	}
 
-	err = apiKeyService.Delete(context.Args().Get(0))
+	err = apiKeyService.DeleteByIdentifier(context.Args().Get(0))
 	if err != nil {
 		return fmt.Errorf("could not delete api key: %w", err)
 	}

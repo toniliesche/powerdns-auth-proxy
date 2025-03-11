@@ -25,7 +25,7 @@ import (
 func TestRoleCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockRoleRepository(registry, t, false)
+	repo := getRoleRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to provide test role repository") {
 		return
@@ -40,7 +40,7 @@ func TestRoleCanBeSaved(t *testing.T) {
 
 func TestRoleExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockRoleRepository(registry, t, true)
+	repo := getRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test role repository") {
 		return
@@ -55,7 +55,7 @@ func TestRoleExistenceCanBeChecked(t *testing.T) {
 
 func TestRoleNonExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockRoleRepository(registry, t, true)
+	repo := getRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test role repository") {
 		return
@@ -71,7 +71,7 @@ func TestRoleNonExistenceCanBeChecked(t *testing.T) {
 func TestRoleCanBeFetchedByName(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockRoleRepository(registry, t, true)
+	repo := getRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test role repository") {
 		return
@@ -91,7 +91,7 @@ func TestRoleCanBeFetchedByName(t *testing.T) {
 func TestCorrectRoleWillBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockRoleRepository(registry, t, true)
+	repo := getRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test role repository") {
 		return
@@ -111,7 +111,7 @@ func TestCorrectRoleWillBeFetched(t *testing.T) {
 func TestRoleCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockRoleRepository(registry, t, true)
+	repo := getRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test role repository") {
 		return
@@ -130,7 +130,7 @@ func TestRoleCanBeDeleted(t *testing.T) {
 	}
 }
 
-func ProvideTestMockRoleRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.RoleRepositoryInterface {
+func getRoleRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.RoleRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil

@@ -25,7 +25,7 @@ import (
 func TestUserRoleCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRoleRepository(registry, t, false)
+	repo := getUserRoleRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to provide test user role repository") {
 		return
@@ -41,7 +41,7 @@ func TestUserRoleCanBeSaved(t *testing.T) {
 func TestUserRoleCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockUserRoleRepository(registry, t, true)
+	repo := getUserRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test user role repository") {
 		return
@@ -54,7 +54,7 @@ func TestUserRoleCanBeDeleted(t *testing.T) {
 	}
 }
 
-func ProvideTestMockUserRoleRepository(registry *test.Registry, t *testing.T, init bool) interfaces.UserRoleRepositoryInterface {
+func getUserRoleRepository(registry *test.Registry, t *testing.T, init bool) interfaces.UserRoleRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil

@@ -25,7 +25,7 @@ import (
 func TestDomainRoleCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRoleRepository(registry, t, false)
+	repo := getDomainRoleRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to setup test database") {
 		return
@@ -40,7 +40,7 @@ func TestDomainRoleCanBeSaved(t *testing.T) {
 
 func TestDomainRoleExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRoleRepository(registry, t, true)
+	repo := getDomainRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to setup test database") {
 		return
@@ -55,7 +55,7 @@ func TestDomainRoleExistenceCanBeChecked(t *testing.T) {
 
 func TestDomainRoleNonExistenceCanBeChecked(t *testing.T) {
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRoleRepository(registry, t, true)
+	repo := getDomainRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to setup test database") {
 		return
@@ -71,7 +71,7 @@ func TestDomainRoleNonExistenceCanBeChecked(t *testing.T) {
 func TestDomainRoleCanBeFetchedByName(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRoleRepository(registry, t, true)
+	repo := getDomainRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to setup test database") {
 		return
@@ -91,7 +91,7 @@ func TestDomainRoleCanBeFetchedByName(t *testing.T) {
 func TestCorrectDomainRoleWillBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRoleRepository(registry, t, true)
+	repo := getDomainRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to setup test database") {
 		return
@@ -111,7 +111,7 @@ func TestCorrectDomainRoleWillBeFetched(t *testing.T) {
 func TestDomainRoleCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockDomainRoleRepository(registry, t, true)
+	repo := getDomainRoleRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to setup test database") {
 		return
@@ -130,7 +130,7 @@ func TestDomainRoleCanBeDeleted(t *testing.T) {
 	}
 }
 
-func ProvideTestMockDomainRoleRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.DomainRoleRepositoryInterface {
+func getDomainRoleRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.DomainRoleRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil

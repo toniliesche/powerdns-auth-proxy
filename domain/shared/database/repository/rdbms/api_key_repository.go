@@ -104,6 +104,21 @@ func (r *ApiKeyRepository) DeleteApiKey(key string) error {
 	return r.database.Where("id = ?", apiKey.ID).Delete(&model.ApiKey{}).Error
 }
 
+func (r *ApiKeyRepository) DeleteApiKeyByIdentifier(identifier string) error {
+	apiKey, err := r.FetchApiKeyByIdentifier(identifier)
+	if err != nil {
+		return err
+	}
+
+	newIdentifier := fmt.Sprintf("%s#deleted-%d", apiKey.Identifier, apiKey.ID)
+	err = r.database.Model(&model.ApiKey{}).Where("id = ?", apiKey.ID).Update("identifier", newIdentifier).Error
+	if err != nil {
+		return err
+	}
+
+	return r.database.Where("id = ?", apiKey.ID).Delete(&model.ApiKey{}).Error
+}
+
 func ProvideApiKeyRepository(container *basics.InjectionContainer) (*ApiKeyRepository, error) {
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide api key repository: database client could not be resolved")

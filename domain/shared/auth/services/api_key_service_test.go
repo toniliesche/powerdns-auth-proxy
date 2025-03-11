@@ -15,36 +15,89 @@ package services_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"powerdns-auth-proxy/domain/shared/database/model"
 	"powerdns-auth-proxy/domain/shared/interfaces"
+	"powerdns-auth-proxy/domain/shared/setup"
+	"powerdns-auth-proxy/domain/test"
 	"testing"
 )
 
 func TestCreateKey(t *testing.T) {
-	apiKeyService, err := setupApiKeyService()
+	registry := test.NewRegistry()
+	apiKeyService, err := getApiKeyService(registry, false)
 	if !assert.NoError(t, err, "failed to setup api key service") {
 		return
 	}
 
-	apiKey, err := apiKeyService.Create("test-user")
+	apiKey, err := apiKeyService.Create(test.UserUsername)
 	if !assert.NoError(t, err, "failed to create api key") {
 		return
 	}
-
 	if !assert.NotNil(t, apiKey, "api key is nil") {
 		return
 	}
 }
 
-func setupApiKeyService() (interfaces.ApiKeyServiceInterface, error) {
-	container := getContainer("api_key")
-
-	dbUser := &model.User{
-		Username: "test-user",
+func TestDeleteKey(t *testing.T) {
+	registry := test.NewRegistry()
+	apiKeyService, err := getApiKeyService(registry, true)
+	if !assert.NoError(t, err, "failed to setup api key service") {
+		return
 	}
 
-	if err := container.UserRepository.SaveNewUser(dbUser); err != nil {
+	err = apiKeyService.Delete(registry.Get("apiKey"))
+	if !assert.NoError(t, err, "failed to delete api key") {
+		return
+	}
+}
+
+func TestDeleteKeyByIdentifier(t *testing.T) {
+	registry := test.NewRegistry()
+	apiKeyService, err := getApiKeyService(registry, true)
+	if !assert.NoError(t, err, "failed to setup api key service") {
+		return
+	}
+
+	err = apiKeyService.DeleteByIdentifier(registry.Get("apiKeyIdentifier"))
+	if !assert.NoError(t, err, "failed to delete api key by identifier") {
+		return
+	}
+}
+
+func TestListKeys(t *testing.T) {
+	registry := test.NewRegistry()
+	apiKeyService, err := getApiKeyService(registry, true)
+	if !assert.NoError(t, err, "failed to setup api key service") {
+		return
+	}
+
+	keys, err := apiKeyService.List(test.UserUsername)
+	if !assert.NoError(t, err, "failed to list api keys") {
+		return
+	}
+	if !assert.NotNil(t, keys, "keys are nil") {
+		return
+	}
+	if !assert.Len(t, keys, 1, "keys length is not 1") {
+		return
+	}
+}
+
+func getApiKeyService(registry *test.Registry, withData bool) (interfaces.ApiKeyServiceInterface, error) {
+	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true, AuthenticationType: "api_key"})
+	if err != nil {
 		return nil, err
+	}
+
+	err = test.RepositoryCreateTestUser(container, registry)
+	if err != nil {
+		return nil, err
+	}
+
+	if withData {
+		err = test.ServiceCreateApiKey(container, registry)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return container.ApiKeyService, nil

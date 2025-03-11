@@ -25,7 +25,7 @@ import (
 func TestApiKeyCanBeSaved(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockApiKeyRepository(registry, t, false)
+	repo := getApiKeyRepository(registry, t, false)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
@@ -41,7 +41,7 @@ func TestApiKeyCanBeSaved(t *testing.T) {
 func TestApiKeyCanBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockApiKeyRepository(registry, t, true)
+	repo := getApiKeyRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
@@ -65,7 +65,7 @@ func TestApiKeyCanBeFetched(t *testing.T) {
 func TestApiKeyCanBeFetchedByIdentifier(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockApiKeyRepository(registry, t, true)
+	repo := getApiKeyRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
@@ -89,7 +89,7 @@ func TestApiKeyCanBeFetchedByIdentifier(t *testing.T) {
 func TestCorrectApiKeyWillBeFetched(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockApiKeyRepository(registry, t, true)
+	repo := getApiKeyRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
@@ -109,7 +109,7 @@ func TestCorrectApiKeyWillBeFetched(t *testing.T) {
 func TestApiKeyCanBeDeleted(t *testing.T) {
 	var err error
 	registry := test.NewRegistry()
-	repo := ProvideTestMockApiKeyRepository(registry, t, true)
+	repo := getApiKeyRepository(registry, t, true)
 
 	if !assert.NotNil(t, repo, "failed to provide test api key repository") {
 		return
@@ -128,7 +128,7 @@ func TestApiKeyCanBeDeleted(t *testing.T) {
 	}
 }
 
-func ProvideTestMockApiKeyRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.ApiKeyRepositoryInterface {
+func getApiKeyRepository(registry *test.Registry, t *testing.T, withData bool) interfaces.ApiKeyRepositoryInterface {
 	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockRepositories: true})
 	if !assert.NoError(t, err, "failed to setup test database") {
 		return nil
