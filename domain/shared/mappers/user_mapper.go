@@ -58,8 +58,9 @@ func (m *UserMapper) MapDatabaseToDtoList(users []*model.User) []*management.Use
 
 func (m *UserMapper) MapDatabaseToMinimalDto(user *model.User) *management.UserMinimal {
 	return &management.UserMinimal{
-		ID:       user.ID,
-		Username: user.Username,
+		ID:        user.ID,
+		Username:  user.Username,
+		UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 }
 

@@ -13,26 +13,8 @@
 
 package management
 
-import "powerdns-auth-proxy/domain/shared/database/model"
-
 type UserMinimal struct {
 	ID        uint   `json:"id"`
 	Username  string `json:"username"`
 	UpdatedAt string `json:"updated_at"`
-}
-
-func MapUserMinimalFromDb(user *model.User) *UserMinimal {
-	return &UserMinimal{
-		ID:        user.ID,
-		Username:  user.Username,
-		UpdatedAt: user.UpdatedAt.Format("2006-01-02 15:04:05"),
-	}
-}
-
-func MapUsersMinimalFromDbList(users []*model.User) []*UserMinimal {
-	minimalUsers := make([]*UserMinimal, 0)
-	for _, user := range users {
-		minimalUsers = append(minimalUsers, MapUserMinimalFromDb(user))
-	}
-	return minimalUsers
 }
