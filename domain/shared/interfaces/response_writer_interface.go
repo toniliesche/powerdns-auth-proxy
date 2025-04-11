@@ -23,6 +23,7 @@ type ResponseWriterInterface interface {
 	HandleData(context *gin.Context, data interface{})
 	HandleError(context *gin.Context, err error)
 	WriteResponse(context *gin.Context, response *nethttp.Response)
+	WriteResponseModified(context *gin.Context, response *nethttp.Response)
 	ForbiddenError(context *gin.Context)
 	SetDebug(debug bool)
 }

@@ -69,6 +69,35 @@ func (w *ResponseWriter) WriteResponse(context *gin.Context, response *nethttp.R
 	}
 }
 
+func (w *ResponseWriter) WriteResponseModified(context *gin.Context, response *nethttp.Response) {
+	if response.Body != nil {
+		defer response.Body.Close()
+	}
+
+	// Copy headers
+	for k, v := range response.Header {
+		for _, vv := range v {
+			if k == "Content-Length" || k == "Transfer-Encoding" {
+				continue
+			}
+
+			context.Header(k, vv)
+		}
+	}
+
+	// Set the status code
+	context.Status(response.StatusCode)
+
+	if response.Body == nil {
+		return
+	}
+
+	_, err := io.Copy(context.Writer, response.Body)
+	if err != nil {
+		w.HandleError(context, err)
+	}
+}
+
 func (w *ResponseWriter) createResponse(context *gin.Context, data interface{}, err error) *nethttp.Response {
 	response := model.ResponseData{
 		Message:   w.StatusMessageMapper.MapMessage(err),

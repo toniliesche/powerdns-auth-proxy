@@ -15,7 +15,8 @@ AUTH_PROXY_CMD=docker compose -f docker/docker-compose.yml -p powerdns-auth-prox
 MARIADB_CMD=docker compose -f docker/docker-compose.mariadb.yml -p powerdns-mariadb
 POSTGRES_CMD=docker compose -f docker/docker-compose.postgres.yml -p powerdns-postgres
 
-up: up-mariadb setup-mariadb-powerdns setup-mariadb-gateway up-gateway-mariadb;
+#up: up-mariadb setup-mariadb-powerdns setup-mariadb-gateway up-gateway-mariadb;
+up: up-gateway-mariadb;
 
 up-pg: up-mariadb up-postgres setup-mariadb-powerdns setup-postgres-gateway up-gateway-postgres;
 
@@ -25,7 +26,8 @@ up-gateway: create-network
 up-gateway-jwt: create-network
 	@AUTH_TYPE=jwt $(AUTH_PROXY_CMD) up -d --remove-orphans
 
-up-gateway-mariadb: create-network up-mariadb check-db-mariadb
+#up-gateway-mariadb: create-network up-mariadb check-db-mariadb
+up-gateway-mariadb:
 	@AUTH_TYPE=jwt DB_TYPE=mysql $(AUTH_PROXY_CMD) up -d --remove-orphans
 
 up-gateway-postgres: create-network up-postgres check-db-postgres

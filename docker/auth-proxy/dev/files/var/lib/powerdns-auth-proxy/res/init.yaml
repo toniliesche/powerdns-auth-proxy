@@ -1,0 +1,8 @@
+domain_roles:
+  - name: admin
+  - name: record_admin
+  - name: readonly
+
+roles:
+  - name: superadmin
+  - name: admin

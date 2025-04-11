@@ -60,6 +60,11 @@ func TestUserIsNotDomainAdmin(t *testing.T) {
 func TestUserIsDomainAdminOnOtherDomain(t *testing.T) {
 	user := &model.User{
 		Username: "user",
+		DomainRoles: []*model.UserDomainRole{
+			{
+				Domain: "otherexample.com",
+			},
+		},
 	}
 
 	rule := &rules.IsDomainAdminRule{}

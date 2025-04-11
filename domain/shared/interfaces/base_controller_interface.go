@@ -31,6 +31,7 @@ type BaseControllerInterface interface {
 	HandleData(context *gin.Context, data interface{})
 	HandleError(context *gin.Context, err error)
 	WriteResponse(context *gin.Context, response *http.Response)
+	WriteResponseModified(context *gin.Context, response *http.Response)
 	ForbiddenError(context *gin.Context)
 	ForwardRequest(request *http.Request) (*http.Response, error)
 }

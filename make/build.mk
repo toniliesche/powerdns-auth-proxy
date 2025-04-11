@@ -58,4 +58,5 @@ build-dev-docker: set-commit
 		--build-arg COMMIT=$(run.commit) \
 		--build-arg GOLANGVER=$(GOLANGVER) \
 		-t tliesche/powerdns-auth-proxy:develop \
-		docker/auth-proxy
+		-f docker/auth-proxy/dev/Dockerfile \
+		.
