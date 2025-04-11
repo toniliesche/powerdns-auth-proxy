@@ -1,6 +1,7 @@
 services:
   api:
     image: tliesche/powerdns-auth-proxy:develop
+    hostname: powerdns-auth-proxy
     environment:
       - AUTH_TYPE=${AUTH_TYPE}
       - DB_TYPE=${DB_TYPE}
@@ -27,19 +28,33 @@ services:
 
   pdns-auth:
     image: pschiffe/pdns-mysql:4.9-alpine
+    hostname: powerdns-auth
     environment:
       - PDNS_api=yes
       - PDNS_api_key=${PDNS_API_KEY}
       - PDNS_webserver=yes
       - PDNS_webserver_address=0.0.0.0
+      - PDNS_webserver_allow_from=10.5.0.0/16
       - PDNS_gmysql_host=${DB_MARIADB_HOST}
       - PDNS_gmysql_port=${DB_MARIADB_PORT}
       - PDNS_gmysql_user=${DB_MARIADB_PDNS_USER}
       - PDNS_gmysql_password=${DB_MARIADB_PDNS_PASSWORD}
       - PDNS_gmysql_dbname=${DB_MARIADB_PDNS_DATABASE}
 
+  powerdns-admin:
+    image: powerdnsadmin/pda-legacy:0.4
+    hostname: powerdns-admin
+    environment:
+      - SECRET_KEY=${POWERDNS_ADMIN_SECRET}
+    volumes:
+      - powerdns-admin-data:/data
+    ports:
+      - "8081:80"
+
 volumes:
   gateway-data:
+    driver: local
+  powerdns-admin-data:
     driver: local
 
 networks:
