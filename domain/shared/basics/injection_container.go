@@ -37,6 +37,7 @@ type InjectionContainer struct {
 	AdminUserDomainRolesController sharedinterfaces.ControllerInterface
 	AdminUserRolesController       sharedinterfaces.ControllerInterface
 	AdminUserController            sharedinterfaces.ControllerInterface
+	ApiController                  sharedinterfaces.ControllerInterface
 	AutoprimariesController        sharedinterfaces.ControllerInterface
 	BaseControllerAdminAPI         sharedinterfaces.BaseControllerInterface
 	BaseControllerPowerDNS         sharedinterfaces.BaseControllerInterface

@@ -57,6 +57,9 @@ func configureRoutes(router *gin.Engine, container *basics.InjectionContainer) {
 		systemController.ConfigureEngineRoutes(router)
 	}
 
+	baseRoute := router.Group("/api")
+	container.ApiController.ConfigureGroupRoutes(baseRoute)
+
 	apiRoutes := router.Group("/api")
 	apiRoutes.Use(container.AuthService.Authentication(false))
 	for _, apiController := range container.GetPowerDnsControllers() {

@@ -24,6 +24,7 @@ import (
 	"powerdns-auth-proxy/domain/admin/user_domain_roles"
 	"powerdns-auth-proxy/domain/admin/user_roles"
 	"powerdns-auth-proxy/domain/admin/users"
+	"powerdns-auth-proxy/domain/powerdns/api"
 	"powerdns-auth-proxy/domain/powerdns/autoprimaries"
 	"powerdns-auth-proxy/domain/powerdns/cache"
 	"powerdns-auth-proxy/domain/powerdns/cryptokeys"
@@ -181,6 +182,10 @@ func (b *InjectionContainerBuilder) initHttpBasics(container *basics.InjectionCo
 		return err
 	}
 
+	if container.ApiController, err = api.ProvideApiController(container); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -236,6 +241,10 @@ func (b *InjectionContainerBuilder) initHttpBasicsTest(container *basics.Injecti
 	}
 
 	if container.BaseControllerPowerDNS, err = controller.ProvideControllerPowerDNS(container); err != nil {
+		return err
+	}
+
+	if container.ApiController, err = api.ProvideApiController(container); err != nil {
 		return err
 	}
 
