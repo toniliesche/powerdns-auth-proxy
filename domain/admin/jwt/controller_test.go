@@ -69,7 +69,7 @@ func TestProvideJwtControllerFailsOnMissingBaseController(t *testing.T) {
 
 func TestProvideJwtControllerSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
-	container.BaseController = &controller.BaseController{}
+	container.BaseControllerAdminAPI = &controller.BaseController{}
 
 	jwtController, err := jwt.ProvideJwtController(container)
 	assert.NoError(t, err, "provide jwt controller method should succeed")

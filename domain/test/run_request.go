@@ -40,8 +40,6 @@ func RunRequest(t *testing.T, controller interfaces.ControllerInterface, prefix 
 	router.ServeHTTP(w, req)
 
 	if !assert.Equal(t, code, w.Code, fmt.Sprintf("Response should be %d", code)) {
-		fmt.Println(w.Body.String())
-
 		return
 	}
 

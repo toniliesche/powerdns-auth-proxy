@@ -57,7 +57,7 @@ func (c *ZonesController) listZones(context *gin.Context) {
 	}
 
 	if len(filteredZones) == 0 {
-		context.JSON(200, gin.H{"message": "no zones found"})
+		context.JSON(200, []string{})
 		return
 	}
 

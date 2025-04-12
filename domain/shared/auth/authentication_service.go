@@ -24,10 +24,11 @@ import (
 )
 
 type AuthenticationService struct {
-	ruleSetProvider    *RuleSetProvider
-	authenticator      interfaces.RequestAuthenticatorInterface
-	adminAuthenticator interfaces.RequestAuthenticatorInterface
-	responseWriter     interfaces.ResponseWriterInterface
+	ruleSetProvider        *RuleSetProvider
+	authenticator          interfaces.RequestAuthenticatorInterface
+	adminAuthenticator     interfaces.RequestAuthenticatorInterface
+	responseWriterAdminAPI interfaces.ResponseWriterInterface
+	responseWriterPowerDNS interfaces.ResponseWriterInterface
 }
 
 func (s *AuthenticationService) Authentication(admin bool) gin.HandlerFunc {
@@ -42,7 +43,7 @@ func (s *AuthenticationService) Authentication(admin bool) gin.HandlerFunc {
 		user, err := authenticator.Authenticate(context)
 
 		if err != nil {
-			s.responseWriter.HandleError(context, errors.NewUnauthorizedError(err))
+			s.responseWriterPowerDNS.HandleError(context, errors.NewUnauthorizedError(err))
 			context.Abort()
 			return
 		}
@@ -55,7 +56,7 @@ func (s *AuthenticationService) Authentication(admin bool) gin.HandlerFunc {
 func (s *AuthenticationService) AdminAuthentication() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		if !s.CheckAccessOnResource(context, Admin, "") {
-			s.responseWriter.HandleError(context, errors.NewForbiddenError(fmt.Errorf("you are not authorized to access this resource")))
+			s.responseWriterAdminAPI.HandleError(context, errors.NewForbiddenError(fmt.Errorf("you are not authorized to access this resource")))
 			context.Abort()
 			return
 		}
@@ -98,9 +99,19 @@ func ProvideAuthenticationService(container *basics.InjectionContainer) (*Authen
 		return nil, fmt.Errorf("could not provide authentication service: admin authenticator could not be resolved")
 	}
 
-	if container.ResponseWriter == nil {
+	if container.ResponseWriterAdminAPI == nil {
 		return nil, fmt.Errorf("could not provide authentication service: response writer could not be resolved")
 	}
 
-	return &AuthenticationService{authenticator: container.Authenticator, adminAuthenticator: container.AdminAuthenticator, responseWriter: container.ResponseWriter, ruleSetProvider: GetRuleSetProvider()}, nil
+	if container.ResponseWriterPowerDNS == nil {
+		return nil, fmt.Errorf("could not provide authentication service: response writer could not be resolved")
+	}
+
+	return &AuthenticationService{
+		authenticator:          container.Authenticator,
+		adminAuthenticator:     container.AdminAuthenticator,
+		responseWriterAdminAPI: container.ResponseWriterAdminAPI,
+		responseWriterPowerDNS: container.ResponseWriterPowerDNS,
+		ruleSetProvider:        GetRuleSetProvider(),
+	}, nil
 }

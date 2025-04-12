@@ -15,7 +15,7 @@ services:
       - DB_POSTGRES_USER=${DB_POSTGRES_GATEWAY_USER}
       - DB_POSTGRES_PASSWORD=${DB_POSTGRES_GATEWAY_PASSWORD}
       - DB_POSTGRES_DATABASE=${DB_POSTGRES_GATEWAY_DATABASE}
-      - ENABLE_DEBUG=true
+      - ENABLE_DEBUG=false
       - JWT_AUDIENCE=${JWT_AUDIENCE}
       - JWT_ISSUER=${JWT_ISSUER}
       - PDNS_API_KEY=${PDNS_API_KEY}
@@ -40,6 +40,8 @@ services:
       - PDNS_gmysql_user=${DB_MARIADB_PDNS_USER}
       - PDNS_gmysql_password=${DB_MARIADB_PDNS_PASSWORD}
       - PDNS_gmysql_dbname=${DB_MARIADB_PDNS_DATABASE}
+    ports:
+      - "8082:8081"
 
   powerdns-admin:
     image: powerdnsadmin/pda-legacy:0.4

@@ -111,7 +111,7 @@ func getController(registry *test.Registry, withData bool) (*users.UserControlle
 		}
 	}
 
-	container.ResponseWriter.SetDebug(true)
+	container.ResponseWriterAdminAPI.SetDebug(true)
 
 	return container.AdminUserController.(*users.UserController), nil
 }

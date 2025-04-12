@@ -145,7 +145,11 @@ func (b *InjectionContainerBuilder) initHttpBasics(container *basics.InjectionCo
 		return err
 	}
 
-	if container.ResponseWriter, err = http.ProvideResponseWriter(container); err != nil {
+	if container.ResponseWriterAdminAPI, err = http.ProvideResponseWriterAdminAPI(container); err != nil {
+		return err
+	}
+
+	if container.ResponseWriterPowerDNS, err = http.ProvideResponseWriterPowerDNS(container); err != nil {
 		return err
 	}
 
@@ -169,7 +173,11 @@ func (b *InjectionContainerBuilder) initHttpBasics(container *basics.InjectionCo
 		return err
 	}
 
-	if container.BaseController, err = controller.ProvideController(container); err != nil {
+	if container.BaseControllerAdminAPI, err = controller.ProvideControllerAdminAPI(container); err != nil {
+		return err
+	}
+
+	if container.BaseControllerPowerDNS, err = controller.ProvideControllerPowerDNS(container); err != nil {
 		return err
 	}
 
@@ -187,7 +195,11 @@ func (b *InjectionContainerBuilder) initHttpBasicsTest(container *basics.Injecti
 		}
 	}
 
-	if container.ResponseWriter, err = http.ProvideResponseWriter(container); err != nil {
+	if container.ResponseWriterAdminAPI, err = http.ProvideResponseWriterAdminAPI(container); err != nil {
+		return err
+	}
+
+	if container.ResponseWriterPowerDNS, err = http.ProvideResponseWriterPowerDNS(container); err != nil {
 		return err
 	}
 
@@ -219,7 +231,11 @@ func (b *InjectionContainerBuilder) initHttpBasicsTest(container *basics.Injecti
 		}
 	}
 
-	if container.BaseController, err = controller.ProvideController(container); err != nil {
+	if container.BaseControllerAdminAPI, err = controller.ProvideControllerAdminAPI(container); err != nil {
+		return err
+	}
+
+	if container.BaseControllerPowerDNS, err = controller.ProvideControllerPowerDNS(container); err != nil {
 		return err
 	}
 

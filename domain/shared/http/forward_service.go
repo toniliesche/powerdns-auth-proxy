@@ -35,7 +35,6 @@ func (s *ForwardService) ForwardRequest(request *http.Request) (*http.Response, 
 
 	newURL, err := url.Parse(request.URL.String())
 	if err != nil {
-		fmt.Println("Error parsing URL:", err)
 		return nil, err
 	}
 	newURL.Host = s.basePath

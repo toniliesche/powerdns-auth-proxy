@@ -73,7 +73,7 @@ func TestProvideSessionsControllerFailsOnMissingBaseController(t *testing.T) {
 
 func TestProvideSessionsControllerFailsOnMissingSessionService(t *testing.T) {
 	container := &basics.InjectionContainer{}
-	container.BaseController = &controller.BaseController{}
+	container.BaseControllerAdminAPI = &controller.BaseController{}
 
 	sessionsController, err := sessions.ProvideSessionsController(container)
 	assert.Error(t, err, "provide session controller method should return an error")
@@ -83,7 +83,7 @@ func TestProvideSessionsControllerFailsOnMissingSessionService(t *testing.T) {
 
 func TestProvideSessionsControllerFailsOnMissingUserService(t *testing.T) {
 	container := &basics.InjectionContainer{}
-	container.BaseController = &controller.BaseController{}
+	container.BaseControllerAdminAPI = &controller.BaseController{}
 	container.SessionService = &database.SessionService{}
 
 	sessionsController, err := sessions.ProvideSessionsController(container)
@@ -110,7 +110,7 @@ func getController(registry *test.Registry, withData bool) (*sessions.SessionsCo
 		}
 	}
 
-	container.ResponseWriter.SetDebug(true)
+	container.ResponseWriterAdminAPI.SetDebug(true)
 
 	return container.AdminSessionsController.(*sessions.SessionsController), nil
 }

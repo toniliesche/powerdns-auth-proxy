@@ -74,7 +74,7 @@ func TestProvideIndexControllerFailsOnMissingBaseController(t *testing.T) {
 
 func TestProvideIndexControllerSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
-	container.BaseController = &controller.BaseController{}
+	container.BaseControllerAdminAPI = &controller.BaseController{}
 
 	indexController, err := index.ProvideIndexController(container)
 	assert.NoError(t, err, "provide index controller method should succeed")
@@ -87,7 +87,7 @@ func getController() (*index.IndexController, error) {
 		return nil, err
 	}
 
-	container.ResponseWriter.SetDebug(true)
+	container.ResponseWriterAdminAPI.SetDebug(true)
 
 	return container.AdminIndexController.(*index.IndexController), nil
 }

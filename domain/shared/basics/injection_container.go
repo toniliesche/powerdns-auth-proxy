@@ -38,32 +38,34 @@ type InjectionContainer struct {
 	AdminUserRolesController       sharedinterfaces.ControllerInterface
 	AdminUserController            sharedinterfaces.ControllerInterface
 	AutoprimariesController        sharedinterfaces.ControllerInterface
+	BaseControllerAdminAPI         sharedinterfaces.BaseControllerInterface
+	BaseControllerPowerDNS         sharedinterfaces.BaseControllerInterface
 	CacheController                sharedinterfaces.ControllerInterface
 	CryptokeysController           sharedinterfaces.ControllerInterface
-	MetadataController             sharedinterfaces.ControllerInterface
-	SearchController               sharedinterfaces.ControllerInterface
-	ServersController              sharedinterfaces.ControllerInterface
-	StatisticsController           sharedinterfaces.ControllerInterface
-	TsigkeysController             sharedinterfaces.ControllerInterface
-	ZonesController                sharedinterfaces.ControllerInterface
-	BaseController                 sharedinterfaces.BaseControllerInterface
 	DomainRepository               interfaces2.DomainRepositoryInterface
 	DomainRoleRepository           interfaces2.DomainRoleRepositoryInterface
-	UserDomainRoleService          interfaces.UserDomainRoleServiceInterface
 	DomainService                  interfaces.DomainServiceInterface
 	ForwardService                 sharedinterfaces.ForwardServiceInterface
 	JWTService                     sharedinterfaces.JWTServiceInterface
 	LoginService                   sharedinterfaces.LoginServiceInterface
-	ResponseWriter                 sharedinterfaces.ResponseWriterInterface
+	MetadataController             sharedinterfaces.ControllerInterface
+	ResponseWriterAdminAPI         sharedinterfaces.ResponseWriterInterface
+	ResponseWriterPowerDNS         sharedinterfaces.ResponseWriterInterface
 	RoleRepository                 interfaces2.RoleRepositoryInterface
 	RoleService                    interfaces.RoleServiceInterface
-	UserRoleService                interfaces.UserRoleServiceInterface
+	SearchController               sharedinterfaces.ControllerInterface
+	ServersController              sharedinterfaces.ControllerInterface
 	SessionRepository              interfaces2.TokenSessionRepositoryInterface
 	SessionService                 interfaces.SessionServiceInterface
+	StatisticsController           sharedinterfaces.ControllerInterface
+	TsigkeysController             sharedinterfaces.ControllerInterface
 	UserDomainRoleRepository       interfaces2.UserDomainRoleRepositoryInterface
+	UserDomainRoleService          interfaces.UserDomainRoleServiceInterface
 	UserRepository                 interfaces2.UserRepositoryInterface
-	UserService                    interfaces.UserServiceInterface
 	UserRoleRepository             interfaces2.UserRoleRepositoryInterface
+	UserRoleService                interfaces.UserRoleServiceInterface
+	UserService                    interfaces.UserServiceInterface
+	ZonesController                sharedinterfaces.ControllerInterface
 }
 
 func (c *InjectionContainer) GetPowerDnsControllers() []sharedinterfaces.ControllerInterface {

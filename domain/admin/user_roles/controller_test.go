@@ -102,7 +102,7 @@ func getController(registry *test.Registry, withData bool) (*user_roles.UserRole
 		}
 	}
 
-	container.ResponseWriter.SetDebug(true)
+	container.ResponseWriterAdminAPI.SetDebug(true)
 
 	return container.AdminUserRolesController.(*user_roles.UserRolesController), nil
 }

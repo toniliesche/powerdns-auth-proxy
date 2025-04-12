@@ -35,7 +35,7 @@ func (c *UserController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideUserController(container *basics.InjectionContainer) (*UserController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerAdminAPI == nil {
 		return nil, basics.NewMissingDependencyError("user controller could not be created: base controller could not be resolved")
 	}
 
@@ -43,5 +43,5 @@ func ProvideUserController(container *basics.InjectionContainer) (*UserControlle
 		return nil, basics.NewMissingDependencyError("user controller could not be created: user service could not be resolved")
 	}
 
-	return &UserController{container.BaseController, container.UserService}, nil
+	return &UserController{container.BaseControllerAdminAPI, container.UserService}, nil
 }

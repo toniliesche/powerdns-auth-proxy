@@ -29,9 +29,9 @@ func (c *ServersController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideServersController(container *basics.InjectionContainer) (*ServersController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("servers controller could not be created: base controller could not be resolved")
 	}
 
-	return &ServersController{container.BaseController}, nil
+	return &ServersController{container.BaseControllerPowerDNS}, nil
 }

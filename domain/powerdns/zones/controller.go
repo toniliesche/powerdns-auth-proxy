@@ -37,9 +37,9 @@ func (c *ZonesController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideZonesController(container *basics.InjectionContainer) (*ZonesController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("zones controller could not be created: base controller could not be resolved")
 	}
 
-	return &ZonesController{container.BaseController}, nil
+	return &ZonesController{container.BaseControllerPowerDNS}, nil
 }

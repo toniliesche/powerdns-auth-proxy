@@ -32,9 +32,9 @@ func (c *CryptokeysController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideCryptokeysController(container *basics.InjectionContainer) (*CryptokeysController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("cryptokeys controller could not be created: base controller could not be resolved")
 	}
 
-	return &CryptokeysController{container.BaseController}, nil
+	return &CryptokeysController{container.BaseControllerPowerDNS}, nil
 }

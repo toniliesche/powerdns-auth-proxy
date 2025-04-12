@@ -30,9 +30,9 @@ func (c *JWTController) ConfigureEngineRoutes(engine *gin.Engine) {
 }
 
 func ProvideJwtController(container *basics.InjectionContainer) (*JWTController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerAdminAPI == nil {
 		return nil, basics.NewMissingDependencyError("jwt controller could not be created: base controller could not be resolved")
 	}
 
-	return &JWTController{container.BaseController, container.JWTService}, nil
+	return &JWTController{container.BaseControllerAdminAPI, container.JWTService}, nil
 }

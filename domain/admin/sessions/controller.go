@@ -34,7 +34,7 @@ func (c *SessionsController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideSessionsController(container *basics.InjectionContainer) (*SessionsController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerAdminAPI == nil {
 		return nil, basics.NewMissingDependencyError("sessions controller could not be created: base controller could not be resolved")
 	}
 
@@ -47,7 +47,7 @@ func ProvideSessionsController(container *basics.InjectionContainer) (*SessionsC
 	}
 
 	return &SessionsController{
-		BaseControllerInterface: container.BaseController,
+		BaseControllerInterface: container.BaseControllerAdminAPI,
 		sessionService:          container.SessionService,
 		userService:             container.UserService,
 		mapper:                  &mappers.SessionMapper{},

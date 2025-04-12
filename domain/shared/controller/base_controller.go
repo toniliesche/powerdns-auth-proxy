@@ -99,8 +99,8 @@ func (c *BaseController) CheckAccess(context *gin.Context, ruleSet string, resou
 	return true
 }
 
-func ProvideController(container *basics.InjectionContainer) (*BaseController, error) {
-	if container.ResponseWriter == nil {
+func ProvideControllerAdminAPI(container *basics.InjectionContainer) (*BaseController, error) {
+	if container.ResponseWriterAdminAPI == nil {
 		return nil, fmt.Errorf("could not provide base controller: response writer could not be resolved")
 	}
 
@@ -112,5 +112,21 @@ func ProvideController(container *basics.InjectionContainer) (*BaseController, e
 		return nil, fmt.Errorf("could not provide base controller: forward service could not be resolved")
 	}
 
-	return &BaseController{container.ResponseWriter, container.AuthService, container.ForwardService}, nil
+	return &BaseController{container.ResponseWriterAdminAPI, container.AuthService, container.ForwardService}, nil
+}
+
+func ProvideControllerPowerDNS(container *basics.InjectionContainer) (*BaseController, error) {
+	if container.ResponseWriterPowerDNS == nil {
+		return nil, fmt.Errorf("could not provide base controller: response writer could not be resolved")
+	}
+
+	if container.AuthService == nil {
+		return nil, fmt.Errorf("could not provide base controller: auth service could not be resolved")
+	}
+
+	if container.ForwardService == nil {
+		return nil, fmt.Errorf("could not provide base controller: forward service could not be resolved")
+	}
+
+	return &BaseController{container.ResponseWriterPowerDNS, container.AuthService, container.ForwardService}, nil
 }

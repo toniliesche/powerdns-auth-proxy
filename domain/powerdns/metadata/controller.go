@@ -32,9 +32,9 @@ func (c *MetadataController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideMetadataController(container *basics.InjectionContainer) (*MetadataController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("metadata controller could not be created: base controller could not be resolved")
 	}
 
-	return &MetadataController{container.BaseController}, nil
+	return &MetadataController{container.BaseControllerPowerDNS}, nil
 }

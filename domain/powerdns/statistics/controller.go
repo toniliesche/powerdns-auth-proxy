@@ -28,9 +28,9 @@ func (c *StatisticsController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideStatisticsController(container *basics.InjectionContainer) (*StatisticsController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("statistics controller could not be created: base controller could not be resolved")
 	}
 
-	return &StatisticsController{container.BaseController}, nil
+	return &StatisticsController{container.BaseControllerPowerDNS}, nil
 }

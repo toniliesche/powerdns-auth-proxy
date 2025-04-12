@@ -28,9 +28,9 @@ func (c *SearchController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideSearchController(container *basics.InjectionContainer) (*SearchController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("search controller could not be created: base controller could not be resolved")
 	}
 
-	return &SearchController{container.BaseController}, nil
+	return &SearchController{container.BaseControllerPowerDNS}, nil
 }

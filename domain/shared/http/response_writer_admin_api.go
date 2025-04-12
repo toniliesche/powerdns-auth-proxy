@@ -25,26 +25,26 @@ import (
 	"powerdns-auth-proxy/domain/shared/model"
 )
 
-type ResponseWriter struct {
+type ResponseWriterAdminAPI struct {
 	MessageMapper       *MessageMapper
 	StatusCodeMapper    *StatusCodeMapper
 	StatusMessageMapper *StatusMessageMapper
 	debug               bool
 }
 
-func (w *ResponseWriter) HandleSuccess(context *gin.Context) {
+func (w *ResponseWriterAdminAPI) HandleSuccess(context *gin.Context) {
 	w.WriteResponse(context, w.createResponse(context, nil, nil))
 }
 
-func (w *ResponseWriter) HandleData(context *gin.Context, data interface{}) {
+func (w *ResponseWriterAdminAPI) HandleData(context *gin.Context, data interface{}) {
 	w.WriteResponse(context, w.createResponse(context, data, nil))
 }
 
-func (w *ResponseWriter) HandleError(context *gin.Context, err error) {
+func (w *ResponseWriterAdminAPI) HandleError(context *gin.Context, err error) {
 	w.WriteResponse(context, w.createResponse(context, nil, err))
 }
 
-func (w *ResponseWriter) WriteResponse(context *gin.Context, response *nethttp.Response) {
+func (w *ResponseWriterAdminAPI) WriteResponse(context *gin.Context, response *nethttp.Response) {
 	if response.Body != nil {
 		defer response.Body.Close()
 	}
@@ -69,7 +69,7 @@ func (w *ResponseWriter) WriteResponse(context *gin.Context, response *nethttp.R
 	}
 }
 
-func (w *ResponseWriter) WriteResponseModified(context *gin.Context, response *nethttp.Response) {
+func (w *ResponseWriterAdminAPI) WriteResponseModified(context *gin.Context, response *nethttp.Response) {
 	if response.Body != nil {
 		defer response.Body.Close()
 	}
@@ -98,7 +98,7 @@ func (w *ResponseWriter) WriteResponseModified(context *gin.Context, response *n
 	}
 }
 
-func (w *ResponseWriter) createResponse(context *gin.Context, data interface{}, err error) *nethttp.Response {
+func (w *ResponseWriterAdminAPI) createResponse(context *gin.Context, data interface{}, err error) *nethttp.Response {
 	response := model.ResponseData{
 		Message:   w.StatusMessageMapper.MapMessage(err),
 		RequestID: context.GetString("request_id"),
@@ -126,20 +126,20 @@ func (w *ResponseWriter) createResponse(context *gin.Context, data interface{}, 
 	}
 }
 
-func (w *ResponseWriter) ForbiddenError(context *gin.Context) {
+func (w *ResponseWriterAdminAPI) ForbiddenError(context *gin.Context) {
 	w.HandleError(context, errors.NewForbiddenError(fmt.Errorf("you are not authorized to access this resource")))
 }
 
-func (w *ResponseWriter) SetDebug(debug bool) {
+func (w *ResponseWriterAdminAPI) SetDebug(debug bool) {
 	w.debug = debug
 }
 
-func ProvideResponseWriter(container *basics.InjectionContainer) (*ResponseWriter, error) {
+func ProvideResponseWriterAdminAPI(container *basics.InjectionContainer) (*ResponseWriterAdminAPI, error) {
 	if container.Config == nil {
 		return nil, fmt.Errorf("could not provide response writer: config could not be resolved")
 	}
 
-	return &ResponseWriter{
+	return &ResponseWriterAdminAPI{
 		MessageMapper:       &MessageMapper{},
 		StatusCodeMapper:    &StatusCodeMapper{},
 		StatusMessageMapper: &StatusMessageMapper{},

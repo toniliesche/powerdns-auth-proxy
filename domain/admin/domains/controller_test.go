@@ -88,7 +88,7 @@ func TestProvideDomainControllerFailsOnMissingBaseController(t *testing.T) {
 
 func TestProvideDomainControllerFailsOnMissingDomainService(t *testing.T) {
 	container := &basics.InjectionContainer{}
-	container.BaseController = &controller.BaseController{}
+	container.BaseControllerAdminAPI = &controller.BaseController{}
 
 	domainController, err := domains.ProvideDomainController(container)
 	assert.Error(t, err, "provide domain controller method should return an error")
@@ -98,7 +98,7 @@ func TestProvideDomainControllerFailsOnMissingDomainService(t *testing.T) {
 
 func TestProvideDomainControllerSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
-	container.BaseController = &controller.BaseController{}
+	container.BaseControllerAdminAPI = &controller.BaseController{}
 	container.DomainService = &database.DomainService{}
 
 	domainController, err := domains.ProvideDomainController(container)

@@ -30,9 +30,9 @@ func (c *AutoprimariesController) ConfigureGroupRoutes(router *gin.RouterGroup) 
 }
 
 func ProvideAutoprimariesController(container *basics.InjectionContainer) (*AutoprimariesController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("autoprimaries controller could not be created: base controller could not be resolved")
 	}
 
-	return &AutoprimariesController{container.BaseController}, nil
+	return &AutoprimariesController{container.BaseControllerPowerDNS}, nil
 }

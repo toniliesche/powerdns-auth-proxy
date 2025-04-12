@@ -33,7 +33,7 @@ func (c *DomainController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideDomainController(container *basics.InjectionContainer) (*DomainController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerAdminAPI == nil {
 		return nil, basics.NewMissingDependencyError("domains controller could not be created: base controller could not be resolved")
 	}
 
@@ -41,5 +41,5 @@ func ProvideDomainController(container *basics.InjectionContainer) (*DomainContr
 		return nil, basics.NewMissingDependencyError("domains controller could not be created: domain service could not be resolved")
 	}
 
-	return &DomainController{container.BaseController, container.DomainService}, nil
+	return &DomainController{container.BaseControllerAdminAPI, container.DomainService}, nil
 }

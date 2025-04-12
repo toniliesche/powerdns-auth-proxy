@@ -34,9 +34,9 @@ func (c *IndexController) NotFound(context *gin.Context) {
 }
 
 func ProvideIndexController(container *basics.InjectionContainer) (*IndexController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerAdminAPI == nil {
 		return nil, basics.NewMissingDependencyError("index controller could not be created: base controller could not be resolved")
 	}
 
-	return &IndexController{container.BaseController}, nil
+	return &IndexController{container.BaseControllerAdminAPI}, nil
 }

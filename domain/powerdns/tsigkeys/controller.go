@@ -32,9 +32,9 @@ func (c *TsigkeysController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideTsigkeysController(container *basics.InjectionContainer) (*TsigkeysController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("tsigkeys controller could not be created: base controller could not be resolved")
 	}
 
-	return &TsigkeysController{container.BaseController}, nil
+	return &TsigkeysController{container.BaseControllerPowerDNS}, nil
 }

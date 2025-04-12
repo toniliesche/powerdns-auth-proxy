@@ -28,9 +28,9 @@ func (c *CacheController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 }
 
 func ProvideCacheController(container *basics.InjectionContainer) (*CacheController, error) {
-	if container.BaseController == nil {
+	if container.BaseControllerPowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("cache controller could not be created: base controller could not be resolved")
 	}
 
-	return &CacheController{container.BaseController}, nil
+	return &CacheController{container.BaseControllerPowerDNS}, nil
 }
