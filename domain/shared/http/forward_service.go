@@ -29,6 +29,7 @@ type ForwardService struct {
 
 func (s *ForwardService) ForwardRequest(request *http.Request) (*http.Response, error) {
 	request.Header.Del("Authorization")
+	request.Header.Del("X-Api-Key")
 	request.Header.Add("X-Api-Key", s.apiKey)
 
 	request.Host = s.basePath
