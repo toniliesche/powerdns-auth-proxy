@@ -11,20 +11,26 @@
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 
-package zones
+package rules
 
 import (
-	"github.com/gin-gonic/gin"
-	"powerdns-auth-proxy/domain/shared/auth"
+	"powerdns-auth-proxy/domain/shared/auth/model"
+	"strings"
 )
 
-func (c *ZonesController) sendNotifyToSlaves(context *gin.Context) {
-	zone := context.Param("zone")
-	if !c.CheckAccessOnResource(context, auth.SubdomainUser, zone) {
-		c.ForbiddenError(context)
-		return
+type IsSubdomainUserRule struct {
+}
+
+func (a *IsSubdomainUserRule) CheckAccessOnResource(user *model.User, resource string) bool {
+	if (resource == "*") && len(user.DomainRoles) >= 0 {
+		return true
 	}
 
-	response, _ := c.ForwardRequest(context.Request)
-	c.WriteResponse(context, response)
+	for _, role := range user.DomainRoles {
+		if strings.HasSuffix(role.Domain, resource) {
+			return true
+		}
+	}
+
+	return false
 }

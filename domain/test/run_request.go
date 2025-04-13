@@ -25,7 +25,7 @@ import (
 	"testing"
 )
 
-func RunRequest(t *testing.T, controller interfaces.ControllerInterface, prefix string, path string, method string, code int, payload ...interface{}) {
+func RunRequestSimple(t *testing.T, controller interfaces.ControllerInterface, prefix string, path string, method string, code int, payload ...interface{}) []byte {
 	router := gin.New()
 	controller.ConfigureEngineRoutes(router)
 	controller.ConfigureGroupRoutes(router.Group(prefix))
@@ -40,10 +40,14 @@ func RunRequest(t *testing.T, controller interfaces.ControllerInterface, prefix 
 	router.ServeHTTP(w, req)
 
 	if !assert.Equal(t, code, w.Code, fmt.Sprintf("Response should be %d", code)) {
-		return
+		return nil
 	}
 
-	responseBody := w.Body.Bytes()
+	return w.Body.Bytes()
+}
+
+func RunRequest(t *testing.T, controller interfaces.ControllerInterface, prefix string, path string, method string, code int, payload ...interface{}) {
+	responseBody := RunRequestSimple(t, controller, prefix, path, method, code, payload...)
 	response := &Response{}
 
 	err := json.Unmarshal(responseBody, response)

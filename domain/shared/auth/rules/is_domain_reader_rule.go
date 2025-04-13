@@ -23,7 +23,7 @@ type IsDomainReaderRule struct {
 
 func (a *IsDomainReaderRule) CheckAccessOnResource(user *model.User, resource string) bool {
 	for _, role := range user.DomainRoles {
-		if role.Role == "readonly" && (resource == "*" || strings.HasSuffix(resource, role.Domain)) {
+		if (role.Role == "readonly") && (resource == "*" || strings.HasSuffix(resource, role.Domain)) {
 			return true
 		}
 	}

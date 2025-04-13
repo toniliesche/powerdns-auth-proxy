@@ -20,7 +20,7 @@ import (
 
 func (c *ZonesController) getZone(context *gin.Context) {
 	zone := context.Param("zone")
-	if !c.CheckAccessOnResource(context, auth.Reader, zone) {
+	if !c.CheckAccessOnResource(context, auth.SubdomainUser, zone) {
 		c.ForbiddenError(context)
 		return
 	}

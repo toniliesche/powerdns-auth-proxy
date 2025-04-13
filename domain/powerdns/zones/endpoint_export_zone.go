@@ -19,7 +19,8 @@ import (
 )
 
 func (c *ZonesController) exportZone(context *gin.Context) {
-	if !c.CheckAccessOnResource(context, auth.Admin, "") {
+	zone := context.Param("zone")
+	if !c.CheckAccessOnResource(context, auth.DomainAdmin, zone) {
 		c.ForbiddenError(context)
 		return
 	}

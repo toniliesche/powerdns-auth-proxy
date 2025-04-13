@@ -16,13 +16,28 @@ package zones
 import (
 	"github.com/gin-gonic/gin"
 	"powerdns-auth-proxy/domain/shared/auth"
+	"powerdns-auth-proxy/domain/shared/http/errors"
 )
 
 func (c *ZonesController) updateRRSet(context *gin.Context) {
 	zone := context.Param("zone")
-	if !c.CheckAccessOnResource(context, auth.RecordAdmin, zone) {
+	if !c.CheckAccessOnResource(context, auth.SubdomainUser, zone) {
 		c.ForbiddenError(context)
 		return
+	}
+
+	var request *RequestUpdateRRSet
+
+	if err := context.ShouldBindJSON(&request); err != nil {
+		c.HandleError(context, errors.NewBadRequestError(err))
+		return
+	}
+
+	for _, rrSet := range request.RRSets {
+		if !c.CheckAccessOnResource(context, auth.RecordAdmin, rrSet.Name) {
+			c.ForbiddenError(context)
+			return
+		}
 	}
 
 	response, _ := c.ForwardRequest(context.Request)

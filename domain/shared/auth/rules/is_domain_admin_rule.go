@@ -23,7 +23,7 @@ type IsDomainAdminRule struct {
 
 func (a *IsDomainAdminRule) CheckAccessOnResource(user *model.User, resource string) bool {
 	for _, domainRole := range user.DomainRoles {
-		if domainRole.Role == "admin" && (resource == "*" || strings.HasSuffix(resource, domainRole.Domain)) {
+		if (domainRole.Role == "admin") && (resource == "*" || strings.HasSuffix(resource, domainRole.Domain)) {
 			return true
 		}
 	}

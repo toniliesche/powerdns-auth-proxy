@@ -23,7 +23,7 @@ type IsRecordAdminRule struct {
 
 func (a *IsRecordAdminRule) CheckAccessOnResource(user *model.User, resource string) bool {
 	for _, role := range user.DomainRoles {
-		if role.Role == "record_admin" && (resource == "*" || strings.HasSuffix(resource, role.Domain)) {
+		if (role.Role == "record_admin") && (resource == "*" || strings.HasSuffix(resource, role.Domain)) {
 			return true
 		}
 	}

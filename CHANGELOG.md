@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-04-13
+### Changed
+
+- Changed way to authorize users (assume implicit reading of TLD domain)
+
+### Fixed
+
+- Fixed tests
+
+## [1.1.1] - 2025-04-12
+### Added
+
+- Added /api endpoint to retrieve api version of PowerDNS server
+
+### Fixed
+
+- Filter X-Api-Key header from requests sent to PowerDNS API Proxy
+
 ## [1.1.0] - 2025-04-12
 ### Added
 

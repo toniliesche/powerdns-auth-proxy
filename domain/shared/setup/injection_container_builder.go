@@ -193,7 +193,9 @@ func (b *InjectionContainerBuilder) initHttpBasicsTest(container *basics.Injecti
 	var err error
 
 	if config.EnableMockForwardService {
-		container.ForwardService = &http.ForwardServiceMock{}
+		if container.ForwardService, err = http.ProvideForwardServiceMock(container); err != nil {
+			return err
+		}
 	} else {
 		if container.ForwardService, err = http.ProvideForwardService(container); err != nil {
 			return err

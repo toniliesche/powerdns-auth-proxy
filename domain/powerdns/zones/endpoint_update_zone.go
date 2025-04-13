@@ -20,7 +20,7 @@ import (
 
 func (c *ZonesController) updateZone(context *gin.Context) {
 	zone := context.Param("zone")
-	if !c.CheckAccessOnResource(context, auth.RecordAdmin, zone) {
+	if !c.CheckAccessOnResource(context, auth.DomainAdmin, zone) {
 		c.ForbiddenError(context)
 		return
 	}

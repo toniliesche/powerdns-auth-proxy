@@ -23,11 +23,12 @@ type RuleSetProvider struct {
 }
 
 const (
-	Superadmin  = "superadmin"
-	Admin       = "admin"
-	DomainAdmin = "domain_admin"
-	RecordAdmin = "record_admin"
-	Reader      = "reader"
+	Superadmin    = "superadmin"
+	Admin         = "admin"
+	DomainAdmin   = "domain_admin"
+	RecordAdmin   = "record_admin"
+	Reader        = "reader"
+	SubdomainUser = "subdomain_user"
 )
 
 func (p *RuleSetProvider) GetRuleSet(name string) (*RuleSet, error) {
@@ -69,6 +70,16 @@ func GetRuleSetProvider() *RuleSetProvider {
 			},
 			Reader: {
 				rules: []rules.Rule{
+					&rules.IsDomainReaderRule{},
+					&rules.IsRecordAdminRule{},
+					&rules.IsDomainAdminRule{},
+					&rules.IsAdminRule{},
+					&rules.IsSuperadminRule{},
+				},
+			},
+			SubdomainUser: {
+				rules: []rules.Rule{
+					&rules.IsSubdomainUserRule{},
 					&rules.IsDomainReaderRule{},
 					&rules.IsRecordAdminRule{},
 					&rules.IsDomainAdminRule{},

@@ -14,10 +14,15 @@
 package zones_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"io"
+	nethttp "net/http"
 	"powerdns-auth-proxy/domain/powerdns/zones"
+	"powerdns-auth-proxy/domain/shared/http"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"powerdns-auth-proxy/domain/test"
 	"testing"
@@ -37,12 +42,55 @@ func TestConfigureRoutes(t *testing.T) {
 }
 
 func TestCallListZones(t *testing.T) {
-	controller, err := getController()
+	controller, forwardService, err := getControllerAndForwardService()
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallListZones: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/api", "/api/v1/servers/localhost/zones", "GET", 200)
+	responseContent := []*zones.Zone{
+		{
+			ID:               "example.com",
+			Name:             "example.com",
+			Type:             "",
+			URL:              "/api/v1/servers/localhost/zones/example.com.",
+			Kind:             "Native",
+			RRSets:           nil,
+			Serial:           2025041301,
+			NotifiedSerial:   0,
+			EditedSerial:     2025041301,
+			Masters:          []string{},
+			DNSSec:           false,
+			NSEC3Param:       "",
+			NSEC3Narrow:      false,
+			Presigned:        false,
+			SOAEdit:          "",
+			SOAEditApi:       "",
+			ApiRectify:       false,
+			Zone:             "",
+			Catalog:          "",
+			Account:          "",
+			Nameservers:      nil,
+			MasterTSIGKeyIDs: nil,
+			SlaveTSIGKeyIDs:  nil,
+		},
+	}
+
+	responseJson, _ := json.Marshal(responseContent)
+
+	body := io.NopCloser(
+		bytes.NewBuffer(responseJson),
+	)
+
+	response := &nethttp.Response{
+		StatusCode:    200,
+		Body:          body,
+		ContentLength: int64(len(responseJson)),
+		Header:        nethttp.Header{},
+	}
+
+	forwardService.PushResponse(response)
+
+	test.RunRequestSimple(t, controller, "/api", "/api/v1/servers/localhost/zones", "GET", 200)
 }
 
 func TestCallCreateZone(t *testing.T) {
@@ -110,11 +158,29 @@ func TestCallExportZone(t *testing.T) {
 
 func TestCallUpdateRRSet(t *testing.T) {
 	controller, err := getController()
+
 	if !assert.NoError(t, err, fmt.Sprintf("could not initialize TestCallUpdateRRSet: %s", err)) {
 		return
 	}
 
-	test.RunRequest(t, controller, "/api", "/api/v1/servers/localhost/zones/example.com", "PATCH", 200)
+	payload := &zones.RequestUpdateRRSet{
+		RRSets: []*zones.RRSet{
+			{
+				Name:       "dev.example.com",
+				Type:       "A",
+				TTL:        3600,
+				ChangeType: "REPLACE",
+				Records: []zones.Record{
+					{
+						Content:  "127.0.0.1",
+						Disabled: false,
+					},
+				},
+			},
+		},
+	}
+
+	test.RunRequest(t, controller, "/api", "/api/v1/servers/localhost/zones/example.com", "PATCH", 200, payload)
 }
 
 func TestCallRectifyZone(t *testing.T) {
@@ -133,4 +199,13 @@ func getController() (*zones.ZonesController, error) {
 	}
 
 	return container.ZonesController.(*zones.ZonesController), nil
+}
+
+func getControllerAndForwardService() (*zones.ZonesController, *http.ForwardServiceMock, error) {
+	container, err := setup.InitContainerTest(&setup.TestConfig{EnableMockAuthentication: true, EnableMockForwardService: true})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return container.ZonesController.(*zones.ZonesController), container.ForwardService.(*http.ForwardServiceMock), nil
 }
