@@ -26,9 +26,9 @@ func main() {
 		HelpName: "gateway",
 		Usage:    "A gateway for the PowerDNS API to provide more specific permissions",
 		Commands: []*cli.Command{
-			commands.ProvideRunCommand(),
-			commands.ProvideDatabaseMigrateCommand(),
-			commands.ProvideCliCommand(),
+			commands.NewRunCommand(),
+			commands.NewDatabaseMigrateCommand(),
+			commands.NewCliCommand(),
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{

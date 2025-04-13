@@ -193,7 +193,7 @@ func TestRevokeDomainRolesFromUser(t *testing.T) {
 func TestProvideUserDomainRoleServiceFailsOnMissingDomainRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	_, err := database.ProvideUserDomainRoleService(container)
+	_, err := database.NewUserDomainRoleService(container)
 	assert.Error(t, err, "provide user domain role service should return an error")
 	assert.Equal(t, "could not provide user domain role service: domain repository could not be resolved", err.Error())
 }
@@ -202,7 +202,7 @@ func TestProvideUserDomainRoleServiceFailsOnMissingDomainRoleRepository(t *testi
 	container := &basics.InjectionContainer{}
 	container.DomainRepository = &rdbms.DomainRepository{}
 
-	_, err := database.ProvideUserDomainRoleService(container)
+	_, err := database.NewUserDomainRoleService(container)
 	assert.Error(t, err, "provide user domain role service should return an error")
 	assert.Equal(t, "could not provide user domain role service: domain role repository could not be resolved", err.Error())
 }
@@ -212,7 +212,7 @@ func TestProvideUserDomainRoleServiceFailsOnMissingUserRepository(t *testing.T) 
 	container.DomainRepository = &rdbms.DomainRepository{}
 	container.DomainRoleRepository = &rdbms.DomainRoleRepository{}
 
-	_, err := database.ProvideUserDomainRoleService(container)
+	_, err := database.NewUserDomainRoleService(container)
 	assert.Error(t, err, "provide user domain role service should return an error")
 	assert.Equal(t, "could not provide user domain role service: user repository could not be resolved", err.Error())
 }
@@ -223,7 +223,7 @@ func TestProvideUserDomainRoleServiceFailsOnMissingUserDomainRoleRepository(t *t
 	container.DomainRoleRepository = &rdbms.DomainRoleRepository{}
 	container.UserRepository = &rdbms.UserRepository{}
 
-	_, err := database.ProvideUserDomainRoleService(container)
+	_, err := database.NewUserDomainRoleService(container)
 	assert.Error(t, err, "provide user domain role service should return an error")
 	assert.Equal(t, "could not provide user domain role service: user domain role repository could not be resolved", err.Error())
 }
@@ -235,7 +235,7 @@ func TestProvideUserDomainRoleServiceSucceeds(t *testing.T) {
 	container.UserRepository = &rdbms.UserRepository{}
 	container.UserDomainRoleRepository = &rdbms.UserDomainRoleRepository{}
 
-	service, err := database.ProvideUserDomainRoleService(container)
+	service, err := database.NewUserDomainRoleService(container)
 	assert.NoError(t, err, "provide user domain role service should not return an error")
 	assert.NotNil(t, service, "provide user domain role service should return a service")
 }

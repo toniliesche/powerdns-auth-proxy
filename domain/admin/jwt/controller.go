@@ -29,9 +29,13 @@ func (c *JWTController) ConfigureEngineRoutes(engine *gin.Engine) {
 	engine.POST("/auth/refresh", c.refresh)
 }
 
-func ProvideJwtController(container *basics.InjectionContainer) (*JWTController, error) {
+func NewJwtController(container *basics.InjectionContainer) (*JWTController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide jwt controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerAdminAPI == nil {
-		return nil, basics.NewMissingDependencyError("jwt controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide jwt controller: base controller could not be resolved")
 	}
 
 	return &JWTController{container.BaseControllerAdminAPI, container.JWTService}, nil

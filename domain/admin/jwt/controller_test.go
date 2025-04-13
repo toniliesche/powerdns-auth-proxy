@@ -61,9 +61,9 @@ func TestCallRefresh(t *testing.T) {
 func TestProvideJwtControllerFailsOnMissingBaseController(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	jwtController, err := jwt.ProvideJwtController(container)
+	jwtController, err := jwt.NewJwtController(container)
 	assert.Error(t, err, "provide jwt controller method should return an error")
-	assert.Equal(t, "jwt controller could not be created: base controller could not be resolved", err.Error())
+	assert.Equal(t, "could not provide jwt controller: base controller could not be resolved", err.Error())
 	assert.Nil(t, jwtController, "provide jwt controller method should not return a controller")
 }
 
@@ -71,7 +71,7 @@ func TestProvideJwtControllerSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.BaseControllerAdminAPI = &controller.BaseController{}
 
-	jwtController, err := jwt.ProvideJwtController(container)
+	jwtController, err := jwt.NewJwtController(container)
 	assert.NoError(t, err, "provide jwt controller method should succeed")
 	assert.NotNil(t, jwtController, "provide jwt controller method should return a controller")
 }
@@ -82,5 +82,5 @@ func getController() (*jwt.JWTController, error) {
 		return nil, err
 	}
 
-	return jwt.ProvideJwtController(container)
+	return jwt.NewJwtController(container)
 }

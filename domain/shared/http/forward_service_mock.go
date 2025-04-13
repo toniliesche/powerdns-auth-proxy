@@ -58,7 +58,11 @@ func (s *ForwardServiceMock) PushResponse(response *http.Response) {
 	}
 }
 
-func ProvideForwardServiceMock(container *basics.InjectionContainer) (interfaces.ForwardServiceInterface, error) {
+func NewForwardServiceMock(container *basics.InjectionContainer) (interfaces.ForwardServiceInterface, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide forward service mock: passed injection container is nil")
+	}
+
 	return &ForwardServiceMock{
 		responseQueue: fifo.New[*http.Response](10),
 	}, nil

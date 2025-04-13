@@ -46,7 +46,11 @@ func (r *UserRoleRepository) FindRolesForUser(user *model.User) ([]*model.UserRo
 	return userRoles, nil
 }
 
-func ProvideUserRoleRepository(container *basics.InjectionContainer) (*UserRoleRepository, error) {
+func NewUserRoleRepository(container *basics.InjectionContainer) (*UserRoleRepository, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user role repository: passed injection container is nil")
+	}
+
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide user role repository: database client could not be resolved")
 	}

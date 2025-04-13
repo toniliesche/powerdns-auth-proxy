@@ -42,7 +42,11 @@ func (a *BasicAuthRequestAuthenticator) Authenticate(context *gin.Context) (*mod
 	return a.userMapper.FromDatabase(dbUser)
 }
 
-func ProvideBasicAuthenticator(container *basics.InjectionContainer) (interfaces.RequestAuthenticatorInterface, error) {
+func NewBasicAuthenticator(container *basics.InjectionContainer) (interfaces.RequestAuthenticatorInterface, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide basic auth authenticator: passed injection container is nil")
+	}
+
 	if container.LoginService == nil {
 		return nil, basics.NewMissingDependencyError("could not provide basic auth authenticator: login service could not be resolved")
 	}

@@ -14,6 +14,7 @@
 package mock
 
 import (
+	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
 )
@@ -69,7 +70,11 @@ func (r *TokenSessionRepositoryMock) UpdateTokenSession(session *model.TokenSess
 	return nil
 }
 
-func ProvideTokenSessionRepositoryMock() (*TokenSessionRepositoryMock, error) {
+func NewTokenSessionRepositoryMock(container *basics.InjectionContainer) (*TokenSessionRepositoryMock, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide token session repository mock: passed injection container is nil")
+	}
+
 	return &TokenSessionRepositoryMock{
 		tokenSessions: make(map[string]*model.TokenSession),
 		counter:       1,

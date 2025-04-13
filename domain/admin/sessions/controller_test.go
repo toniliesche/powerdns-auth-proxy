@@ -65,9 +65,9 @@ func TestCallLogoutSessionEndpoint(t *testing.T) {
 func TestProvideSessionsControllerFailsOnMissingBaseController(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	sessionsController, err := sessions.ProvideSessionsController(container)
+	sessionsController, err := sessions.NewSessionsController(container)
 	assert.Error(t, err, "provide session controller method should return an error")
-	assert.Equal(t, "sessions controller could not be created: base controller could not be resolved", err.Error())
+	assert.Equal(t, "could not provide sessions controller: base controller could not be resolved", err.Error())
 	assert.Nil(t, sessionsController, "provide session controller method should not return a controller")
 }
 
@@ -75,9 +75,9 @@ func TestProvideSessionsControllerFailsOnMissingSessionService(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.BaseControllerAdminAPI = &controller.BaseController{}
 
-	sessionsController, err := sessions.ProvideSessionsController(container)
+	sessionsController, err := sessions.NewSessionsController(container)
 	assert.Error(t, err, "provide session controller method should return an error")
-	assert.Equal(t, "sessions controller could not be created: session service could not be resolved", err.Error())
+	assert.Equal(t, "could not provide sessions controller: session service could not be resolved", err.Error())
 	assert.Nil(t, sessionsController, "provide session controller method should not return a controller")
 }
 
@@ -86,9 +86,9 @@ func TestProvideSessionsControllerFailsOnMissingUserService(t *testing.T) {
 	container.BaseControllerAdminAPI = &controller.BaseController{}
 	container.SessionService = &database.SessionService{}
 
-	sessionsController, err := sessions.ProvideSessionsController(container)
+	sessionsController, err := sessions.NewSessionsController(container)
 	assert.Error(t, err, "provide session controller method should return an error")
-	assert.Equal(t, "sessions controller could not be created: user service could not be resolved", err.Error())
+	assert.Equal(t, "could not provide sessions controller: user service could not be resolved", err.Error())
 	assert.Nil(t, sessionsController, "provide session controller method should not return a controller")
 }
 

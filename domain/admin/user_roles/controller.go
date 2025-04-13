@@ -32,13 +32,17 @@ func (c *UserRolesController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.POST("/v1/users/:userId/roles/revoke", c.revokeUserRoles)
 }
 
-func ProvideUserRolesController(container *basics.InjectionContainer) (*UserRolesController, error) {
+func NewUserRolesController(container *basics.InjectionContainer) (*UserRolesController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user roles controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerAdminAPI == nil {
-		return nil, basics.NewMissingDependencyError("user roles controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide user roles controller: base controller could not be resolved")
 	}
 
 	if container.UserRoleService == nil {
-		return nil, basics.NewMissingDependencyError("user roles controller could not be created: user role service could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide user roles controller: user role service could not be resolved")
 	}
 
 	return &UserRolesController{container.BaseControllerAdminAPI, container.UserRoleService, container.UserService}, nil

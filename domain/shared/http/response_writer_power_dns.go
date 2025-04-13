@@ -162,9 +162,13 @@ func (w *ResponseWriterPowerDNS) SetDebug(debug bool) {
 	w.debug = debug
 }
 
-func ProvideResponseWriterPowerDNS(container *basics.InjectionContainer) (*ResponseWriterPowerDNS, error) {
+func NewResponseWriterPowerDNS(container *basics.InjectionContainer) (*ResponseWriterPowerDNS, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide powerdns response writer: passed injection container is nil")
+	}
+
 	if container.Config == nil {
-		return nil, fmt.Errorf("could not provide response writer: config could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide powerdns response writer: config could not be resolved")
 	}
 
 	return &ResponseWriterPowerDNS{

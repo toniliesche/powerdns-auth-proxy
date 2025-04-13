@@ -14,7 +14,11 @@
 package zones
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
+	"io"
 	"powerdns-auth-proxy/domain/shared/auth"
 	"powerdns-auth-proxy/domain/shared/http/errors"
 )
@@ -26,9 +30,16 @@ func (c *ZonesController) updateRRSet(context *gin.Context) {
 		return
 	}
 
-	var request *RequestUpdateRRSet
+	body, err := io.ReadAll(context.Request.Body)
+	if err != nil {
+		log.Error().Err(err).Msg("Error reading request body")
+		c.HandleError(context, errors.NewBadRequestError(err))
+		return
+	}
 
-	if err := context.ShouldBindJSON(&request); err != nil {
+	request := &RequestUpdateRRSet{}
+	if err := json.Unmarshal(body, request); err != nil {
+		log.Error().Err(err).Msg("Error unmarshalling request")
 		c.HandleError(context, errors.NewBadRequestError(err))
 		return
 	}
@@ -40,8 +51,10 @@ func (c *ZonesController) updateRRSet(context *gin.Context) {
 		}
 	}
 
+	context.Request.Body = io.NopCloser(bytes.NewBuffer(body))
 	response, err := c.ForwardRequest(context.Request)
 	if err != nil {
+		log.Err(err).Msg("failed to forward request")
 		c.HandleError(context, err)
 		return
 	}

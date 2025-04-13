@@ -27,9 +27,13 @@ func (c *StatisticsController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.GET("/v1/servers/:server/statistics", c.getStatistics)
 }
 
-func ProvideStatisticsController(container *basics.InjectionContainer) (*StatisticsController, error) {
+func NewStatisticsController(container *basics.InjectionContainer) (*StatisticsController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide statistics controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("statistics controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide statistics controller: base controller could not be resolved")
 	}
 
 	return &StatisticsController{container.BaseControllerPowerDNS}, nil

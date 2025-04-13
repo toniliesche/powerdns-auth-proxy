@@ -32,13 +32,17 @@ func (c *DomainController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.DELETE("/v1/domains/:id", c.deleteDomain)
 }
 
-func ProvideDomainController(container *basics.InjectionContainer) (*DomainController, error) {
+func NewDomainController(container *basics.InjectionContainer) (*DomainController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide domains controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerAdminAPI == nil {
-		return nil, basics.NewMissingDependencyError("domains controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide domains controller: base controller could not be resolved")
 	}
 
 	if container.DomainService == nil {
-		return nil, basics.NewMissingDependencyError("domains controller could not be created: domain service could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide domains controller: domain service could not be resolved")
 	}
 
 	return &DomainController{container.BaseControllerAdminAPI, container.DomainService}, nil

@@ -69,7 +69,11 @@ func (r *TokenSessionRepository) UpdateTokenSession(session *model.TokenSession)
 	return r.database.Save(session).Error
 }
 
-func ProvideTokenSessionRepository(container *basics.InjectionContainer) (*TokenSessionRepository, error) {
+func NewTokenSessionRepository(container *basics.InjectionContainer) (*TokenSessionRepository, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide token session repository: passed injection container is nil")
+	}
+
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide token session repository: database client could not be resolved")
 	}

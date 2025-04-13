@@ -48,9 +48,12 @@ func (s *LoginService) LoginByUsername(username string) (*model.User, error) {
 	return s.userRepository.FetchUser(username)
 }
 
-func ProvideLoginService(container *basics.InjectionContainer) (*LoginService, error) {
+func NewLoginService(container *basics.InjectionContainer) (*LoginService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide login service: passed injection container is nil")
+	}
 	if container.UserRepository == nil {
-		return nil, fmt.Errorf("could not provide login service: user repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide login service: user repository could not be resolved")
 	}
 
 	return &LoginService{userRepository: container.UserRepository}, nil

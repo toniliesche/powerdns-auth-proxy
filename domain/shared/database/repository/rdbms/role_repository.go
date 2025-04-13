@@ -100,7 +100,11 @@ func (r *RoleRepository) DeleteRoleByName(roleName string) error {
 	return r.database.Where("id = ?", role.ID).Delete(&model.Role{}).Error
 }
 
-func ProvideRoleRepository(container *basics.InjectionContainer) (*RoleRepository, error) {
+func NewRoleRepository(container *basics.InjectionContainer) (*RoleRepository, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide role repository: passed injection container is nil")
+	}
+
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide role repository: database client could not be resolved")
 	}

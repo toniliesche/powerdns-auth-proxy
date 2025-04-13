@@ -14,6 +14,7 @@
 package mock
 
 import (
+	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
 )
@@ -107,7 +108,11 @@ func (r *UserRepositoryMock) DeleteUserById(id uint) error {
 	return errors2.NewItemNotFoundError("user not found")
 }
 
-func ProvideUserRepositoryMock() (*UserRepositoryMock, error) {
+func NewUserRepositoryMock(container *basics.InjectionContainer) (*UserRepositoryMock, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user repository mock: passed injection container is nil")
+	}
+
 	return &UserRepositoryMock{
 		users:   make(map[string]*model.User),
 		counter: 1,

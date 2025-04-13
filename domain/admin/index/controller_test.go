@@ -66,9 +66,9 @@ func TestCallNotFound(t *testing.T) {
 func TestProvideIndexControllerFailsOnMissingBaseController(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	indexController, err := index.ProvideIndexController(container)
+	indexController, err := index.NewIndexController(container)
 	assert.Error(t, err, "provide index controller method should return an error")
-	assert.Equal(t, "index controller could not be created: base controller could not be resolved", err.Error())
+	assert.Equal(t, "could not provide index controller: base controller could not be resolved", err.Error())
 	assert.Nil(t, indexController, "provide index controller method should not return a controller")
 }
 
@@ -76,7 +76,7 @@ func TestProvideIndexControllerSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.BaseControllerAdminAPI = &controller.BaseController{}
 
-	indexController, err := index.ProvideIndexController(container)
+	indexController, err := index.NewIndexController(container)
 	assert.NoError(t, err, "provide index controller method should succeed")
 	assert.NotNil(t, indexController, "provide index controller method should return a controller")
 }

@@ -46,7 +46,10 @@ func (s SessionService) LogoutUserSession(userSessions []string) error {
 	return nil
 }
 
-func ProvideSessionService(container *basics.InjectionContainer) (*SessionService, error) {
+func NewSessionService(container *basics.InjectionContainer) (*SessionService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide session service: passed injection container is nil")
+	}
 	if container.SessionRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide session service: session repository could not be resolved")
 	}

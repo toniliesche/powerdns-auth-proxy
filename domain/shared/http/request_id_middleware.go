@@ -16,21 +16,29 @@ package http
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog"
+	"powerdns-auth-proxy/domain/shared/basics"
 )
 
 type RequestIDMiddleware struct {
-	App string
+	app    string
+	logger *zerolog.Logger
 }
 
 func (m *RequestIDMiddleware) Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("request_id", m.App+"-"+uuid.New().String())
+		c.Set("request_id", m.app+"-"+uuid.New().String())
 		c.Next()
 	}
 }
 
-func ProvideRequestIDMiddleware(app string) *RequestIDMiddleware {
-	return &RequestIDMiddleware{
-		App: app,
+func NewRequestIDMiddleware(container *basics.InjectionContainer) (*RequestIDMiddleware, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide request id middleware: passed injection container is nil")
 	}
+
+	return &RequestIDMiddleware{
+		app:    "powerdns-auth-proxy",
+		logger: container.Logger,
+	}, nil
 }

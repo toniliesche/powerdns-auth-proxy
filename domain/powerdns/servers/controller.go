@@ -28,9 +28,13 @@ func (c *ServersController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.GET("/v1/servers/:server", c.getServer)
 }
 
-func ProvideServersController(container *basics.InjectionContainer) (*ServersController, error) {
+func NewServersController(container *basics.InjectionContainer) (*ServersController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide servers controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("servers controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide servers controller: base controller could not be resolved")
 	}
 
 	return &ServersController{container.BaseControllerPowerDNS}, nil

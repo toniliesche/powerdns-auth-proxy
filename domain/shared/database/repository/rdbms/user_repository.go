@@ -190,7 +190,7 @@ func (r *UserRepository) findAllBasic() ([]*model.User, error) {
 	return users, nil
 }
 
-func ProvideUserRepository(container *basics.InjectionContainer) (*UserRepository, error) {
+func NewUserRepository(container *basics.InjectionContainer) (*UserRepository, error) {
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide user repository: database client could not be resolved")
 	}

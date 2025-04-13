@@ -17,7 +17,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func ProvideCliCommand() *cli.Command {
+func NewCliCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "cli",
 		Usage: "run the cli component",

@@ -73,7 +73,11 @@ func (a *JWTRequestAuthenticator) Authenticate(context *gin.Context) (*model.Use
 	return a.userMapper.FromTokenClaims(claims)
 }
 
-func ProvideJWTRequestAuthenticator(container *basics.InjectionContainer) (*JWTRequestAuthenticator, error) {
+func NewJWTRequestAuthenticator(container *basics.InjectionContainer) (*JWTRequestAuthenticator, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide jwt request authenticator: passed injection container is nil")
+	}
+
 	if container.Config == nil {
 		return nil, basics.NewMissingDependencyError("could not provide jwt request authenticator: config could not be resolved")
 	}

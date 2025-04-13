@@ -105,7 +105,7 @@ func TestDeleteDomainByFqdn(t *testing.T) {
 func TestProvideDomainServiceFailsOnMissingDomainRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	_, err := database.ProvideDomainService(container)
+	_, err := database.NewDomainService(container)
 	assert.Error(t, err, "provide domain service method should return an error")
 	assert.Equal(t, "could not provide domain service: domain repository could not be resolved", err.Error())
 }
@@ -114,7 +114,7 @@ func TestProvideDomainServiceSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.DomainRepository = &rdbms.DomainRepository{}
 
-	service, err := database.ProvideDomainService(container)
+	service, err := database.NewDomainService(container)
 	assert.NoError(t, err, "provide domain service method should succeed")
 	assert.NotNil(t, service, "provide domain service method should return a service")
 }

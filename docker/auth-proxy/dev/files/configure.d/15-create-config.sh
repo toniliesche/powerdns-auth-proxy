@@ -2,7 +2,13 @@
 
 CONFIG_PATH=/etc/powerdns-auth-proxy
 
-function create_jwt_config {
+function crea
+	response, err := c.ForwardRequest(context.Request)
+	if err != nil {
+		c.HandleError(context, err)
+		return
+	}
+_jwt_config {
   if [ -z "${JWT_AUDIENCE}" ]; then
     echo "JWT_AUDIENCE is not set. Exiting."
     exit 1
@@ -75,7 +81,8 @@ EOF
 
 function create_log_config {
   cat <<EOF >> ${CONFIG_PATH}/config.yaml
-log_path: /var/log/powerdns-auth-proxy
+log_path: /dev/stdout
+log_level: ${LOG_LEVEL:-info}
 EOF
 }
 

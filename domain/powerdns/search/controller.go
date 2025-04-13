@@ -27,9 +27,13 @@ func (c *SearchController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.GET("/v1/servers/:server/search-data", c.searchData)
 }
 
-func ProvideSearchController(container *basics.InjectionContainer) (*SearchController, error) {
+func NewSearchController(container *basics.InjectionContainer) (*SearchController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide search controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("search controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide search controller: base controller could not be resolved")
 	}
 
 	return &SearchController{container.BaseControllerPowerDNS}, nil

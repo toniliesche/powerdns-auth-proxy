@@ -14,6 +14,7 @@
 package mock
 
 import (
+	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
 )
@@ -94,7 +95,11 @@ func (r *ApiKeyRepositoryMock) DeleteApiKeyByIdentifier(identifier string) error
 	return errors2.NewItemNotFoundError("api key not found")
 }
 
-func ProvideApiKeyRepositoryMock() (*ApiKeyRepositoryMock, error) {
+func NewApiKeyRepositoryMock(container *basics.InjectionContainer) (*ApiKeyRepositoryMock, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide api key repository mock: passed injection container is nil")
+	}
+
 	return &ApiKeyRepositoryMock{
 		keys:    make(map[string]*model.ApiKey),
 		counter: 1,

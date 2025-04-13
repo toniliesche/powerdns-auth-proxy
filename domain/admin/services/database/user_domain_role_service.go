@@ -189,7 +189,11 @@ func (s *UserDomainRoleService) RevokeDomainRoleFromUser(fqdn string, username s
 	return s.userDomainRoleRepository.DeleteUserDomainRole(&userDomainRole)
 }
 
-func ProvideUserDomainRoleService(container *basics.InjectionContainer) (*UserDomainRoleService, error) {
+func NewUserDomainRoleService(container *basics.InjectionContainer) (*UserDomainRoleService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user domain role service: passed injection container is nil")
+	}
+
 	if container.DomainRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide user domain role service: domain repository could not be resolved")
 	}

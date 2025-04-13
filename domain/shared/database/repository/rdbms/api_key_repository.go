@@ -119,7 +119,11 @@ func (r *ApiKeyRepository) DeleteApiKeyByIdentifier(identifier string) error {
 	return r.database.Where("id = ?", apiKey.ID).Delete(&model.ApiKey{}).Error
 }
 
-func ProvideApiKeyRepository(container *basics.InjectionContainer) (*ApiKeyRepository, error) {
+func NewApiKeyRepository(container *basics.InjectionContainer) (*ApiKeyRepository, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide api key repository: passed injection container is nil")
+	}
+
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide api key repository: database client could not be resolved")
 	}

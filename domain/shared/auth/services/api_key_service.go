@@ -69,7 +69,11 @@ func (s *ApiKeyService) List(username string) ([]*model.ApiKey, error) {
 	return s.apiKeyRepository.FindApiKeysByUserId(user.ID)
 }
 
-func ProvideApiKeyService(container *basics.InjectionContainer) (*ApiKeyService, error) {
+func NewApiKeyService(container *basics.InjectionContainer) (*ApiKeyService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide api key service: passed injection container is nil")
+	}
+
 	if container.ApiKeyRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide api key service: api key repository could not be resolved")
 	}

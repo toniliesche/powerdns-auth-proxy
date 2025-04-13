@@ -49,7 +49,10 @@ func (s *RoleService) DeleteRole(name string) error {
 	return s.roleRepository.DeleteRoleByName(name)
 }
 
-func ProvideRoleService(container *basics.InjectionContainer) (*RoleService, error) {
+func NewRoleService(container *basics.InjectionContainer) (*RoleService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide role service: passed injection container is nil")
+	}
 	if container.RoleRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide role service: role repository could not be resolved")
 	}

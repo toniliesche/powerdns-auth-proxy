@@ -18,6 +18,7 @@ services:
       - ENABLE_DEBUG=false
       - JWT_AUDIENCE=${JWT_AUDIENCE}
       - JWT_ISSUER=${JWT_ISSUER}
+      - LOG_LEVEL=debug
       - PDNS_API_KEY=${PDNS_API_KEY}
       - PDNS_HOST=${PDNS_HOST}
       - PDNS_PORT=${PDNS_PORT}

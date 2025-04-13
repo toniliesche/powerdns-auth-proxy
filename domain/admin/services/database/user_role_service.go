@@ -14,7 +14,6 @@
 package database
 
 import (
-	"fmt"
 	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
 	interfaces2 "powerdns-auth-proxy/domain/shared/database/repository/interfaces"
@@ -135,17 +134,21 @@ func (s *UserRoleService) RevokeRoleFromUser(username string, roleName string) e
 	return s.userRoleRepository.DeleteUserRole(&userRole)
 }
 
-func ProvideUserRoleService(container *basics.InjectionContainer) (*UserRoleService, error) {
+func NewUserRoleService(container *basics.InjectionContainer) (*UserRoleService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user role service: passed injection container is nil")
+	}
+
 	if container.RoleRepository == nil {
-		return nil, fmt.Errorf("could not provide user role service: role repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide user role service: role repository could not be resolved")
 	}
 
 	if container.UserRepository == nil {
-		return nil, fmt.Errorf("could not provide user role service: user repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide user role service: user repository could not be resolved")
 	}
 
 	if container.UserRoleRepository == nil {
-		return nil, fmt.Errorf("could not provide user role service: user role repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide user role service: user role repository could not be resolved")
 	}
 
 	return &UserRoleService{

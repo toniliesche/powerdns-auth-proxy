@@ -63,7 +63,7 @@ func TestLogoutUserSession(t *testing.T) {
 func TestProvideSessionServiceFailsOnMissingSessionRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	_, err := database.ProvideSessionService(container)
+	_, err := database.NewSessionService(container)
 	assert.Error(t, err, "provide session service should return an error")
 	assert.Equal(t, "could not provide session service: session repository could not be resolved", err.Error())
 }
@@ -72,7 +72,7 @@ func TestProvideSessionServiceFailsOnMissingUserRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.SessionRepository = &rdbms.TokenSessionRepository{}
 
-	_, err := database.ProvideSessionService(container)
+	_, err := database.NewSessionService(container)
 	assert.Error(t, err, "provide session service should return an error")
 	assert.Equal(t, "could not provide session service: user repository could not be resolved", err.Error())
 }
@@ -82,7 +82,7 @@ func TestProvideSessionServiceSucceeds(t *testing.T) {
 	container.SessionRepository = &rdbms.TokenSessionRepository{}
 	container.UserRepository = &rdbms.UserRepository{}
 
-	service, err := database.ProvideSessionService(container)
+	service, err := database.NewSessionService(container)
 	assert.NoError(t, err, "provide session service should not return an error")
 	assert.NotNil(t, service, "provide session service should return a service")
 }

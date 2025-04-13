@@ -33,17 +33,21 @@ func (c *SessionsController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.POST("/v1/users/:userId/sessions/logout", c.logoutUserSession)
 }
 
-func ProvideSessionsController(container *basics.InjectionContainer) (*SessionsController, error) {
+func NewSessionsController(container *basics.InjectionContainer) (*SessionsController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide sessions controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerAdminAPI == nil {
-		return nil, basics.NewMissingDependencyError("sessions controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide sessions controller: base controller could not be resolved")
 	}
 
 	if container.SessionService == nil {
-		return nil, basics.NewMissingDependencyError("sessions controller could not be created: session service could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide sessions controller: session service could not be resolved")
 	}
 
 	if container.UserService == nil {
-		return nil, basics.NewMissingDependencyError("sessions controller could not be created: user service could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide sessions controller: user service could not be resolved")
 	}
 
 	return &SessionsController{

@@ -63,7 +63,11 @@ func (r *UserDomainRoleRepository) FindDomainRolesForUser(user *model.User) ([]*
 	return userDomainRoles, nil
 }
 
-func ProvideUserDomainRoleRepository(container *basics.InjectionContainer) (*UserDomainRoleRepository, error) {
+func NewUserDomainRoleRepository(container *basics.InjectionContainer) (*UserDomainRoleRepository, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user domain role repository: passed injection container is nil")
+	}
+
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide user domain role repository: database client could not be resolved")
 	}

@@ -60,5 +60,5 @@ func getController() (*servers.ServersController, error) {
 		return nil, err
 	}
 
-	return servers.ProvideServersController(container)
+	return servers.NewServersController(container)
 }

@@ -14,10 +14,12 @@
 package basics
 
 import (
+	"github.com/rs/zerolog"
 	"gorm.io/gorm"
-	"powerdns-auth-proxy/domain/admin/services/interfaces"
+	serviceinterfaces "powerdns-auth-proxy/domain/admin/services/interfaces"
 	"powerdns-auth-proxy/domain/shared/config"
-	interfaces2 "powerdns-auth-proxy/domain/shared/database/repository/interfaces"
+	dbrepointerfaces "powerdns-auth-proxy/domain/shared/database/repository/interfaces"
+	"powerdns-auth-proxy/domain/shared/http/interfaces"
 	sharedinterfaces "powerdns-auth-proxy/domain/shared/interfaces"
 )
 
@@ -25,7 +27,7 @@ type InjectionContainer struct {
 	Config             *config.Config
 	DB                 *gorm.DB
 	AdminAuthenticator sharedinterfaces.RequestAuthenticatorInterface
-	ApiKeyRepository   interfaces2.ApiKeyRepositoryInterface
+	ApiKeyRepository   dbrepointerfaces.ApiKeyRepositoryInterface
 	ApiKeyService      sharedinterfaces.ApiKeyServiceInterface
 	Authenticator      sharedinterfaces.RequestAuthenticatorInterface
 	AuthService        sharedinterfaces.AuthenticationServiceInterface
@@ -43,29 +45,33 @@ type InjectionContainer struct {
 	BaseControllerPowerDNS         sharedinterfaces.BaseControllerInterface
 	CacheController                sharedinterfaces.ControllerInterface
 	CryptokeysController           sharedinterfaces.ControllerInterface
-	DomainRepository               interfaces2.DomainRepositoryInterface
-	DomainRoleRepository           interfaces2.DomainRoleRepositoryInterface
-	DomainService                  interfaces.DomainServiceInterface
+	DomainRepository               dbrepointerfaces.DomainRepositoryInterface
+	DomainRoleRepository           dbrepointerfaces.DomainRoleRepositoryInterface
+	DomainService                  serviceinterfaces.DomainServiceInterface
 	ForwardService                 sharedinterfaces.ForwardServiceInterface
 	JWTService                     sharedinterfaces.JWTServiceInterface
+	Logger                         *zerolog.Logger
 	LoginService                   sharedinterfaces.LoginServiceInterface
 	MetadataController             sharedinterfaces.ControllerInterface
+	RequestLogMiddleware           interfaces.GinMiddleware
+	RequestIDMiddleware            interfaces.GinMiddleware
+	ResponseLogMiddleware          interfaces.GinMiddleware
 	ResponseWriterAdminAPI         sharedinterfaces.ResponseWriterInterface
 	ResponseWriterPowerDNS         sharedinterfaces.ResponseWriterInterface
-	RoleRepository                 interfaces2.RoleRepositoryInterface
-	RoleService                    interfaces.RoleServiceInterface
+	RoleRepository                 dbrepointerfaces.RoleRepositoryInterface
+	RoleService                    serviceinterfaces.RoleServiceInterface
 	SearchController               sharedinterfaces.ControllerInterface
 	ServersController              sharedinterfaces.ControllerInterface
-	SessionRepository              interfaces2.TokenSessionRepositoryInterface
-	SessionService                 interfaces.SessionServiceInterface
+	SessionRepository              dbrepointerfaces.TokenSessionRepositoryInterface
+	SessionService                 serviceinterfaces.SessionServiceInterface
 	StatisticsController           sharedinterfaces.ControllerInterface
 	TsigkeysController             sharedinterfaces.ControllerInterface
-	UserDomainRoleRepository       interfaces2.UserDomainRoleRepositoryInterface
-	UserDomainRoleService          interfaces.UserDomainRoleServiceInterface
-	UserRepository                 interfaces2.UserRepositoryInterface
-	UserRoleRepository             interfaces2.UserRoleRepositoryInterface
-	UserRoleService                interfaces.UserRoleServiceInterface
-	UserService                    interfaces.UserServiceInterface
+	UserDomainRoleRepository       dbrepointerfaces.UserDomainRoleRepositoryInterface
+	UserDomainRoleService          serviceinterfaces.UserDomainRoleServiceInterface
+	UserRepository                 dbrepointerfaces.UserRepositoryInterface
+	UserRoleRepository             dbrepointerfaces.UserRoleRepositoryInterface
+	UserRoleService                serviceinterfaces.UserRoleServiceInterface
+	UserService                    serviceinterfaces.UserServiceInterface
 	ZonesController                sharedinterfaces.ControllerInterface
 }
 

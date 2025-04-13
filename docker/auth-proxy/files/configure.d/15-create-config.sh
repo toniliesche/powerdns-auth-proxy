@@ -75,7 +75,8 @@ EOF
 
 function create_log_config {
   cat <<EOF >> ${CONFIG_PATH}/config.yaml
-log_path: /var/log/powerdns-auth-proxy
+log_path: /dev/stdout
+log_level: ${LOG_LEVEL:-info}
 EOF
 }
 

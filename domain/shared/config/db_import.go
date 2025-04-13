@@ -48,7 +48,7 @@ func (c *DBImportConfig) Validate() error {
 	return nil
 }
 
-func ProvideImportConfig(context *cli.Context) (*DBImportConfig, error) {
+func NewImportConfig(context *cli.Context) (*DBImportConfig, error) {
 	importFile := context.String("import-file")
 	if importFile == "" {
 		return nil, nil

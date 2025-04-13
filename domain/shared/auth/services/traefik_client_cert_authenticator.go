@@ -34,7 +34,11 @@ func (a *TraefikClientCertRequestAuthenticator) Authenticate(context *gin.Contex
 	return a.userMapper.FromDatabase(dbUser)
 }
 
-func ProvideTraefikClientCertRequestAuthenticator(container *basics.InjectionContainer) (*TraefikClientCertRequestAuthenticator, error) {
+func NewTraefikClientCertRequestAuthenticator(container *basics.InjectionContainer) (*TraefikClientCertRequestAuthenticator, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide traefik client cert request authenticator: passed injection container is nil")
+	}
+
 	if container.LoginService == nil {
 		return nil, basics.NewMissingDependencyError("could not provide traefik client cert request authenticator: login service could not be resolved")
 	}

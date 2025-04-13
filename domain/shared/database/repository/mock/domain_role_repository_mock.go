@@ -14,6 +14,7 @@
 package mock
 
 import (
+	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
 )
@@ -60,7 +61,11 @@ func (r *DomainRoleRepositoryMock) DeleteDomainRoleByName(roleName string) error
 	return nil
 }
 
-func ProvideDomainRoleRepositoryMock() (*DomainRoleRepositoryMock, error) {
+func NewDomainRoleRepositoryMock(container *basics.InjectionContainer) (*DomainRoleRepositoryMock, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide domain role repository: passed injection container is nil")
+	}
+
 	return &DomainRoleRepositoryMock{
 		roles:   make(map[string]*model.DomainRole),
 		counter: 1,

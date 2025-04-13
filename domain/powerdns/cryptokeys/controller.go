@@ -31,9 +31,13 @@ func (c *CryptokeysController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.DELETE("/v1/servers/:server/zones/:zone/cryptokeys/:cryptokey", c.deleteCryptoKey)
 }
 
-func ProvideCryptokeysController(container *basics.InjectionContainer) (*CryptokeysController, error) {
+func NewCryptokeysController(container *basics.InjectionContainer) (*CryptokeysController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide cryptokeys controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("cryptokeys controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide cryptokeys controller: base controller could not be resolved")
 	}
 
 	return &CryptokeysController{container.BaseControllerPowerDNS}, nil

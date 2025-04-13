@@ -80,9 +80,9 @@ func TestCallDeleteDomainEndpoint(t *testing.T) {
 func TestProvideDomainControllerFailsOnMissingBaseController(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	domainController, err := domains.ProvideDomainController(container)
+	domainController, err := domains.NewDomainController(container)
 	assert.Error(t, err, "provide domain controller method should return an error")
-	assert.Equal(t, "domains controller could not be created: base controller could not be resolved", err.Error())
+	assert.Equal(t, "could not provide domains controller: base controller could not be resolved", err.Error())
 	assert.Nil(t, domainController, "provide domain controller method should not return a controller")
 }
 
@@ -90,9 +90,9 @@ func TestProvideDomainControllerFailsOnMissingDomainService(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.BaseControllerAdminAPI = &controller.BaseController{}
 
-	domainController, err := domains.ProvideDomainController(container)
+	domainController, err := domains.NewDomainController(container)
 	assert.Error(t, err, "provide domain controller method should return an error")
-	assert.Equal(t, "domains controller could not be created: domain service could not be resolved", err.Error())
+	assert.Equal(t, "could not provide domains controller: domain service could not be resolved", err.Error())
 	assert.Nil(t, domainController, "provide domain controller method should not return a controller")
 }
 
@@ -101,7 +101,7 @@ func TestProvideDomainControllerSucceeds(t *testing.T) {
 	container.BaseControllerAdminAPI = &controller.BaseController{}
 	container.DomainService = &database.DomainService{}
 
-	domainController, err := domains.ProvideDomainController(container)
+	domainController, err := domains.NewDomainController(container)
 	assert.NoError(t, err, "provide domain controller method should succeed")
 	assert.NotNil(t, domainController, "provide domain controller method should return a controller")
 }

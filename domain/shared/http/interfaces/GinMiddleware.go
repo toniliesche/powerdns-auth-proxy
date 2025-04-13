@@ -11,30 +11,10 @@
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 
-package commands
+package interfaces
 
-import (
-	"github.com/urfave/cli/v2"
-	"powerdns-auth-proxy/domain/shared/app"
-	"powerdns-auth-proxy/domain/shared/config"
-)
+import "github.com/gin-gonic/gin"
 
-func NewDatabaseMigrateCommand() *cli.Command {
-	return &cli.Command{
-		Name:   "migrate-db",
-		Usage:  "run database migrations config",
-		Action: app.RunDatabaseMigration,
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:  "import-file",
-				Usage: "path to the import file",
-				Value: config.ImportConfig,
-			},
-			&cli.StringFlag{
-				Name:  "init-file",
-				Usage: "path to the init file",
-				Value: config.InitConfig,
-			},
-		},
-	}
+type GinMiddleware interface {
+	Middleware() gin.HandlerFunc
 }

@@ -14,40 +14,51 @@
 package app
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/urfave/cli/v2"
 	"powerdns-auth-proxy/domain/shared/basics"
-	"powerdns-auth-proxy/domain/shared/http"
+	"powerdns-auth-proxy/domain/shared/log"
 	"powerdns-auth-proxy/domain/shared/setup"
 )
 
 func RunApi(context *cli.Context) error {
-	fmt.Println("Starting the api gateway")
+	logger := log.NewTempLogger()
+	logger.Info().
+		Msg("Booting api gateway")
 
-	container, err := setup.InitContainerCli(context)
+	container, err := setup.InitContainerCli(context, logger)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Container initialized")
+	logger = container.Logger
 
 	router := gin.Default()
-	router.Use(http.ProvideRequestIDMiddleware("powerdns-auth-proxy").Middleware())
+	router.Use(container.RequestIDMiddleware.Middleware())
 
-	fmt.Println("Configuring routes")
+	if container.Config.Debug {
+		router.Use(container.RequestLogMiddleware.Middleware())
+		router.Use(container.ResponseLogMiddleware.Middleware())
+	}
+
+	logger.Info().
+		Msg("Configuring api gateway routes")
 
 	configureRoutes(router, container)
 
-	fmt.Println("Routes configured")
-
-	fmt.Println("Running the api gateway")
+	logger.Info().
+		Msg("Starting api gateway")
 
 	if err = router.Run("0.0.0.0:8080"); err != nil {
-		return fmt.Errorf("an error occured while running the api gateway: %w", err)
+		logger.Error().
+			Err(err).
+			Msg("An error occurred while running the api gateway")
+
+		return err
 	}
 
-	fmt.Println("API gateway stopped")
+	logger.Info().
+		Msg("Api gateway has been stopped")
 
 	return nil
 }

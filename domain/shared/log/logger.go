@@ -22,27 +22,26 @@ import (
 	"time"
 )
 
-const LoggerLogIdentifier = "Logger"
-
 func NewTempLogger() *zerolog.Logger {
 	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
 	return &logger
 }
 
 func NewLogger(container *basics.InjectionContainer) (*zerolog.Logger, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide logger: passed injection container is nil")
+	}
+
 	if container.Config == nil {
 		return nil, basics.NewMissingDependencyError("could not provide logger: system config could not be resolved")
 	}
 
-	var err error
-	if err = container.SystemConfig.Validate("log"); err != nil {
-		return nil, errors.NewInvalidConfigError("Logger", err)
-	}
+	cfg := container.Config
 
-	logConfig := container.SystemConfig.Log
+	var err error
 	var writer io.Writer
 
-	if logConfig.DevMode {
+	if cfg.Debug {
 		zerolog.TimeFieldFormat = time.RFC3339Nano
 		writer = zerolog.ConsoleWriter{
 			Out:        os.Stdout,
@@ -56,21 +55,22 @@ func NewLogger(container *basics.InjectionContainer) (*zerolog.Logger, error) {
 		}
 	} else {
 		var logFile string
-		if logConfig.Path == "" {
+		if cfg.LogPath == "" {
 			logFile = "/dev/stdout"
 		} else {
-			logFile = logConfig.Path
+			logFile = cfg.LogPath
 		}
 
 		var fileErr error
 		writer, fileErr = os.OpenFile(logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 		if fileErr != nil {
-			return nil, errors.NewFileAccessError(logFile, err)
+			fmt.Printf("Error opening log file %s: %v\n", logFile, fileErr)
+			return nil, err
 		}
 		zerolog.TimeFieldFormat = "2006-01-02 15:04:05.000"
 	}
 
-	logLevel, err := resolveLogLevel(logConfig.Level)
+	logLevel, err := resolveLogLevel(cfg.LogLevel)
 	if err != nil {
 		return nil, err
 	}
@@ -80,14 +80,14 @@ func NewLogger(container *basics.InjectionContainer) (*zerolog.Logger, error) {
 		Level(zerolog.DebugLevel).
 		With().
 		Timestamp().
-		Str("cloud-toolbox.component.type", container.SystemConfig.ComponentType).
-		Str("cloud-toolbox.component.id", container.SystemConfig.ComponentId).
+		Str("component.id", "powerdns-auth-proxy").
 		Logger()
 
 	logger.Debug().
-		Msgf("[%s] Logger setup complete. Switching to application logger", LoggerLogIdentifier)
+		Msg("Logger setup complete. Switching to application logger")
+
 	logger.Debug().
-		Msgf("[%s] Setting log level to %s", LoggerLogIdentifier, logLevel.String())
+		Msgf("Setting log level to %s", logLevel.String())
 
 	logger = logger.Level(logLevel)
 
@@ -100,13 +100,13 @@ func resolveLogLevel(level string) (zerolog.Level, error) {
 		return zerolog.TraceLevel, nil
 	case "debug":
 		return zerolog.DebugLevel, nil
-	case "info":
+	case "info", "":
 		return zerolog.InfoLevel, nil
 	case "warn":
 		return zerolog.WarnLevel, nil
 	case "error", "fatal", "panic":
 		return zerolog.ErrorLevel, nil
 	default:
-		return zerolog.NoLevel, errors.NewInvalidConfigError("Logger", fmt.Errorf("invalid log level: %s", level))
+		return zerolog.NoLevel, fmt.Errorf("invalid log level: %s", level)
 	}
 }

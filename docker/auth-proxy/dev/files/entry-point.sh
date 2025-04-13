@@ -1,5 +1,7 @@
 #!/bin/sh
 
+chmod 666 /dev/stdout
+
 if [ ! -f /.configured ] && [ -d /configure.d ]; then
   for file in /configure.d/*.sh; do
     if [ -f ${file} ]; then

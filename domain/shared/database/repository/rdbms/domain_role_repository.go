@@ -70,9 +70,13 @@ func (r *DomainRoleRepository) DeleteDomainRoleByName(name string) error {
 	return r.database.Where("id = ?", role.ID).Delete(&model.DomainRole{}).Error
 }
 
-func ProvideDomainRoleRepository(container *basics.InjectionContainer) (*DomainRoleRepository, error) {
+func NewDomainRoleRepository(container *basics.InjectionContainer) (*DomainRoleRepository, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide domain role repository: passed injection container is nil")
+	}
+
 	if container.DB == nil {
-		return nil, fmt.Errorf("could not provide domain role repository: database client could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide domain role repository: database client could not be resolved")
 	}
 
 	return &DomainRoleRepository{database: container.DB}, nil

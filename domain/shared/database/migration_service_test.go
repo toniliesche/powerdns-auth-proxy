@@ -33,7 +33,7 @@ func TestRunMigrations(t *testing.T) {
 		return
 	}
 
-	migrationsService, err := database.ProvideMigrationService(container)
+	migrationsService, err := database.NewMigrationService(container)
 	if !assert.NoError(t, err, fmt.Sprintf("failed to provide migration service %s", err)) {
 		return
 	}

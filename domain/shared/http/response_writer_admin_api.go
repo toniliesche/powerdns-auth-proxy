@@ -134,9 +134,13 @@ func (w *ResponseWriterAdminAPI) SetDebug(debug bool) {
 	w.debug = debug
 }
 
-func ProvideResponseWriterAdminAPI(container *basics.InjectionContainer) (*ResponseWriterAdminAPI, error) {
+func NewResponseWriterAdminAPI(container *basics.InjectionContainer) (*ResponseWriterAdminAPI, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide admin api response writer: passed injection container is nil")
+	}
+
 	if container.Config == nil {
-		return nil, fmt.Errorf("could not provide response writer: config could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide admin api response writer: config could not be resolved")
 	}
 
 	return &ResponseWriterAdminAPI{

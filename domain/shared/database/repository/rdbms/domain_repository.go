@@ -118,7 +118,11 @@ func (r *DomainRepository) DeleteDomainById(id uint) error {
 	return r.database.Where("id = ?", domain.ID).Delete(&model.Domain{}).Error
 }
 
-func ProvideDomainRepository(container *basics.InjectionContainer) (*DomainRepository, error) {
+func NewDomainRepository(container *basics.InjectionContainer) (*DomainRepository, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide domain repository: passed injection container is nil")
+	}
+
 	if container.DB == nil {
 		return nil, basics.NewMissingDependencyError("could not provide domain repository: database client could not be resolved")
 	}

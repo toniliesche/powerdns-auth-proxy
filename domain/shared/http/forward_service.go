@@ -15,7 +15,9 @@ package http
 
 import (
 	"fmt"
+	"github.com/rs/zerolog"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"powerdns-auth-proxy/domain/shared/basics"
 )
@@ -25,6 +27,7 @@ type ForwardService struct {
 	proto    string
 	apiKey   string
 	client   *http.Client
+	logger   *zerolog.Logger
 }
 
 func (s *ForwardService) ForwardRequest(request *http.Request) (*http.Response, error) {
@@ -44,16 +47,32 @@ func (s *ForwardService) ForwardRequest(request *http.Request) (*http.Response, 
 	request.URL = newURL
 	request.RequestURI = ""
 
+	dump, err := httputil.DumpRequestOut(request, true)
+	if err == nil {
+		s.logger.Trace().
+			Msg("Outgoing request")
+		s.logger.Trace().
+			Msg(string(dump))
+	}
+
 	return s.client.Do(request)
 }
 
-func ProvideForwardService(container *basics.InjectionContainer) (*ForwardService, error) {
+func NewForwardService(container *basics.InjectionContainer) (*ForwardService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide forward service: passed injection container is nil")
+	}
+
 	if container.Config == nil {
 		return nil, basics.NewMissingDependencyError("could not provide forward service: config could not be resolved")
 	}
 
 	if container.Config.PowerDNS == nil {
 		return nil, basics.NewMissingDependencyError("could not provide forward service: powerdns config could not be resolved")
+	}
+
+	if container.Logger == nil {
+		return nil, basics.NewMissingDependencyError("could not provide forward service: logger could not be resolved")
 	}
 
 	powerDNSConfig := container.Config.PowerDNS
@@ -75,5 +94,6 @@ func ProvideForwardService(container *basics.InjectionContainer) (*ForwardServic
 		proto:    proto,
 		apiKey:   powerDNSConfig.ApiKey,
 		client:   &http.Client{},
+		logger:   container.Logger,
 	}, nil
 }

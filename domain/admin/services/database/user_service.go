@@ -115,7 +115,11 @@ func (s *UserService) UpdateUserPasswordById(userId uint, password string) error
 	return s.userRepository.UpdateUser(user)
 }
 
-func ProvideUserService(container *basics.InjectionContainer) (*UserService, error) {
+func NewUserService(container *basics.InjectionContainer) (*UserService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user service: passed injection container is nil")
+	}
+
 	if container.UserRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide user service: user repository could not be resolved")
 	}

@@ -78,7 +78,7 @@ func TestDeleteRole(t *testing.T) {
 func TestProvideRoleServiceFailsOnMissingRoleRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	_, err := database.ProvideRoleService(container)
+	_, err := database.NewRoleService(container)
 	assert.Error(t, err, "provide role service should return an error")
 	assert.Equal(t, "could not provide role service: role repository could not be resolved", err.Error())
 }
@@ -87,7 +87,7 @@ func TestProvideRoleServiceSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.RoleRepository = &rdbms.RoleRepository{}
 
-	service, err := database.ProvideRoleService(container)
+	service, err := database.NewRoleService(container)
 	assert.NoError(t, err, "provide role service should not return an error")
 	assert.NotNil(t, service, "provide role service should return a service")
 }
@@ -105,5 +105,5 @@ func getRoleService(registry *test.Registry, withData bool) (*database.RoleServi
 		}
 	}
 
-	return database.ProvideRoleService(container)
+	return database.NewRoleService(container)
 }

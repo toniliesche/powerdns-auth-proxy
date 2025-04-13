@@ -232,7 +232,10 @@ func (s *JWTService) parseToken(tokenString string) (jwt.MapClaims, error) {
 	return claims, nil
 }
 
-func ProvideJWTService(container *basics.InjectionContainer) (*JWTService, error) {
+func NewJWTService(container *basics.InjectionContainer) (*JWTService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide jwt service: passed injection container is nil")
+	}
 	if container.Config == nil {
 		return nil, basics.NewMissingDependencyError("could not provide jwt service: config could not be resolved")
 	}

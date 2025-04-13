@@ -186,12 +186,12 @@ func getAuthenticationService() (interfaces.AuthenticationServiceInterface, erro
 	}
 	container.UserRepository.SaveNewUser(user)
 
-	container.Authenticator, err = services.ProvideBasicAuthenticator(container)
+	container.Authenticator, err = services.NewBasicAuthenticator(container)
 	if err != nil {
 		return nil, basics.NewMissingDependencyError(fmt.Sprintf("authenticator could not be provided: %s", err))
 	}
 
-	container.AuthService, err = auth.ProvideAuthenticationService(container)
+	container.AuthService, err = auth.NewAuthenticationService(container)
 	if err != nil {
 		return nil, basics.NewMissingDependencyError(fmt.Sprintf("authentication service could not be provided: %s", err))
 	}

@@ -15,6 +15,7 @@ package mock
 
 import (
 	"fmt"
+	"powerdns-auth-proxy/domain/shared/basics"
 	"powerdns-auth-proxy/domain/shared/database/model"
 	errors2 "powerdns-auth-proxy/domain/shared/database/repository/errors"
 )
@@ -57,7 +58,11 @@ func (r *UserRoleRepositoryMock) FindRolesForUser(user *model.User) ([]*model.Us
 	return roles, nil
 }
 
-func ProvideUserRoleRepositoryMock() (*UserRoleRepositoryMock, error) {
+func NewUserRoleRepositoryMock(container *basics.InjectionContainer) (*UserRoleRepositoryMock, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user role repository mock: passed injection container is nil")
+	}
+
 	return &UserRoleRepositoryMock{
 		userRoles: make(map[string]*model.UserRole),
 	}, nil

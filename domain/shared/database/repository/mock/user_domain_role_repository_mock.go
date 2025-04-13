@@ -98,9 +98,13 @@ func (r *UserDomainRoleRepositoryMock) FindDomainRolesForUser(user *model.User) 
 	return roles, nil
 }
 
-func ProvideUserDomainRoleRepositoryMock(container *basics.InjectionContainer) (*UserDomainRoleRepositoryMock, error) {
+func NewUserDomainRoleRepositoryMock(container *basics.InjectionContainer) (*UserDomainRoleRepositoryMock, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide user domain role repository mock: passed injection container is nil")
+	}
+
 	if container.DomainRepository == nil {
-		return nil, fmt.Errorf("could not provide user domain role repository mock: domain repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide user domain role repository mock: domain repository could not be resolved")
 	}
 
 	return &UserDomainRoleRepositoryMock{

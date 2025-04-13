@@ -17,16 +17,22 @@ import (
 	"github.com/urfave/cli/v2"
 	"powerdns-auth-proxy/domain/shared/config"
 	"powerdns-auth-proxy/domain/shared/database"
+	"powerdns-auth-proxy/domain/shared/log"
 	"powerdns-auth-proxy/domain/shared/setup"
 )
 
 func RunDatabaseMigration(context *cli.Context) error {
-	container, err := setup.InitContainerCli(context)
+	logger := log.NewTempLogger()
+
+	logger.Info().
+		Msg("Running database migration")
+
+	container, err := setup.InitContainerCli(context, logger)
 	if err != nil {
 		return err
 	}
 
-	migrationService, err := database.ProvideMigrationService(container)
+	migrationService, err := database.NewMigrationService(container)
 	if err != nil {
 		return err
 	}
@@ -36,7 +42,7 @@ func RunDatabaseMigration(context *cli.Context) error {
 	}
 
 	var initConfig *config.DBInitConfig
-	if initConfig, err = config.ProvideInitConfig(context); err != nil {
+	if initConfig, err = config.NewInitConfig(context); err != nil {
 		return err
 	}
 
@@ -49,7 +55,7 @@ func RunDatabaseMigration(context *cli.Context) error {
 	}
 
 	var importConfig *config.DBImportConfig
-	if importConfig, err = config.ProvideImportConfig(context); err != nil {
+	if importConfig, err = config.NewImportConfig(context); err != nil {
 		return err
 	}
 

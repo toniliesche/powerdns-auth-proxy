@@ -18,7 +18,7 @@ import (
 	"powerdns-auth-proxy/domain/shared/app"
 )
 
-func ProvideRunCommand() *cli.Command {
+func NewRunCommand() *cli.Command {
 	return &cli.Command{
 		Name:   "run",
 		Usage:  "run the api gateway component",

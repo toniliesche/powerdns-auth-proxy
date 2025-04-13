@@ -42,7 +42,11 @@ func (a *ApiKeyRequestAuthenticator) Authenticate(context *gin.Context) (*model.
 	return a.userMapper.FromDatabase(dbUser)
 }
 
-func ProvideApiKeyRequestAuthenticator(container *basics.InjectionContainer) (interfaces.RequestAuthenticatorInterface, error) {
+func NewApiKeyRequestAuthenticator(container *basics.InjectionContainer) (interfaces.RequestAuthenticatorInterface, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide api key request authenticator: passed injection container is nil")
+	}
+
 	if container.LoginService == nil {
 		return nil, basics.NewMissingDependencyError("could not provide api key request authenticator: login service could not be resolved")
 	}

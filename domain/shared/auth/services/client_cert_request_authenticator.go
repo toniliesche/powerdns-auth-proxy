@@ -34,7 +34,11 @@ func (a *ClientCertRequestAuthenticator) Authenticate(context *gin.Context) (*mo
 	return a.userMapper.FromDatabase(dbUser)
 }
 
-func ProvideClientCertRequestAuthenticator(container *basics.InjectionContainer) (*ClientCertRequestAuthenticator, error) {
+func NewClientCertRequestAuthenticator(container *basics.InjectionContainer) (*ClientCertRequestAuthenticator, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide client cert request authenticator: passed injection container is nil")
+	}
+
 	if container.LoginService == nil {
 		return nil, basics.NewMissingDependencyError("could not provide client cert request authenticator: login service could not be resolved")
 	}

@@ -25,6 +25,7 @@ type Config struct {
 	AuthType   string            `yaml:"auth_type" json:"auth_type"`
 	Database   string            `yaml:"database" json:"database"`
 	LogPath    string            `yaml:"log_path" json:"log_path"`
+	LogLevel   string            `yaml:"log_level" json:"log_level"`
 	MySQL      *MySQLDBConfig    `yaml:"mysql,omitempty" json:"mysql,omitempty"`
 	PostgreSQL *PostgreSQLConfig `yaml:"postgres,omitempty" json:"postgres,omitempty"`
 	PowerDNS   *PowerDNSConfig   `yaml:"powerdns" json:"power_dns"`
@@ -39,7 +40,7 @@ type PowerDNSConfig struct {
 	ApiKey string `yaml:"api_key"`
 }
 
-func ProvideApplicationConfig(context *cli.Context) (*Config, error) {
+func NewApplicationConfig(context *cli.Context) (*Config, error) {
 	var err error
 	var configContent []byte
 	if configContent, err = os.ReadFile(context.String("config")); err != nil {

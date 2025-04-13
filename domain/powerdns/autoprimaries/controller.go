@@ -29,9 +29,13 @@ func (c *AutoprimariesController) ConfigureGroupRoutes(router *gin.RouterGroup) 
 	router.DELETE("/v1/servers/:server/zones/:zone/autoprimaries/:ip/:nameserver", c.deleteAutoPrimary)
 }
 
-func ProvideAutoprimariesController(container *basics.InjectionContainer) (*AutoprimariesController, error) {
+func NewAutoprimariesController(container *basics.InjectionContainer) (*AutoprimariesController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide autoprimaries controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("autoprimaries controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide autoprimaries controller: base controller could not be resolved")
 	}
 
 	return &AutoprimariesController{container.BaseControllerPowerDNS}, nil

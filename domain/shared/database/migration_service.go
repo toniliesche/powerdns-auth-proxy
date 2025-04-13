@@ -285,33 +285,37 @@ func (s *MigrationService) RunUserDomainRoleImport(dbUser *model.User, user *imp
 	return nil
 }
 
-func ProvideMigrationService(container *basics.InjectionContainer) (*MigrationService, error) {
+func NewMigrationService(container *basics.InjectionContainer) (*MigrationService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide migration service: passed injection container is nil")
+	}
+
 	if container.DB == nil {
-		return nil, fmt.Errorf("database client could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide migration service: database client could not be resolved")
 	}
 
 	if container.DomainRepository == nil {
-		return nil, fmt.Errorf("domain repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide migration service: domain repository could not be resolved")
 	}
 
 	if container.DomainRoleRepository == nil {
-		return nil, fmt.Errorf("domain role repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide migration service: domain role repository could not be resolved")
 	}
 
 	if container.RoleRepository == nil {
-		return nil, fmt.Errorf("role repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide migration service: role repository could not be resolved")
 	}
 
 	if container.UserDomainRoleRepository == nil {
-		return nil, fmt.Errorf("user domain role repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide migration service: user domain role repository could not be resolved")
 	}
 
 	if container.UserRepository == nil {
-		return nil, fmt.Errorf("user repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide migration service: user repository could not be resolved")
 	}
 
 	if container.UserRoleRepository == nil {
-		return nil, fmt.Errorf("user role repository could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide migration service: user role repository could not be resolved")
 	}
 
 	return &MigrationService{

@@ -150,7 +150,7 @@ func TestRevokeRolesFromUser(t *testing.T) {
 func TestProvideUserRoleServiceFailsOnMissingRoleRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	service, err := database.ProvideUserRoleService(container)
+	service, err := database.NewUserRoleService(container)
 	assert.Error(t, err, "provide user role service should return an error")
 	assert.Equal(t, "could not provide user role service: role repository could not be resolved", err.Error())
 	assert.Nil(t, service, "provide user role service should return nil")
@@ -160,7 +160,7 @@ func TestProvideUserRoleServiceFailsOnMissingUserRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.RoleRepository = &rdbms.RoleRepository{}
 
-	service, err := database.ProvideUserRoleService(container)
+	service, err := database.NewUserRoleService(container)
 	assert.Error(t, err, "provide user role service should return an error")
 	assert.Equal(t, "could not provide user role service: user repository could not be resolved", err.Error())
 	assert.Nil(t, service, "provide user role service should return nil")
@@ -171,7 +171,7 @@ func TestProvideUserRoleServiceFailsOnMissingUserRoleRepository(t *testing.T) {
 	container.RoleRepository = &rdbms.RoleRepository{}
 	container.UserRepository = &rdbms.UserRepository{}
 
-	service, err := database.ProvideUserRoleService(container)
+	service, err := database.NewUserRoleService(container)
 	assert.Error(t, err, "provide user role service should return an error")
 	assert.Equal(t, "could not provide user role service: user role repository could not be resolved", err.Error())
 	assert.Nil(t, service, "provide user role service should return nil")
@@ -183,7 +183,7 @@ func TestProvideUserRoleServiceSucceeds(t *testing.T) {
 	container.UserRepository = &rdbms.UserRepository{}
 	container.UserRoleRepository = &rdbms.UserRoleRepository{}
 
-	service, err := database.ProvideUserRoleService(container)
+	service, err := database.NewUserRoleService(container)
 	assert.NoError(t, err, "provide user role service should not return an error")
 	assert.NotNil(t, service, "provide user role service should return a service")
 }
@@ -194,7 +194,7 @@ func getUserRoleService(registry *test.Registry, withData bool) (*database.UserR
 		return nil, err
 	}
 
-	service, err := database.ProvideUserRoleService(container)
+	service, err := database.NewUserRoleService(container)
 	if err != nil {
 		return nil, err
 	}

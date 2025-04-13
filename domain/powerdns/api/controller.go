@@ -37,9 +37,13 @@ func (c *ApiController) showApiInfo(context *gin.Context) {
 	c.WriteResponse(context, response)
 }
 
-func ProvideApiController(container *basics.InjectionContainer) (*ApiController, error) {
+func NewApiController(container *basics.InjectionContainer) (*ApiController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide api controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("api controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide api controller: base controller could not be resolved")
 	}
 
 	return &ApiController{container.BaseControllerPowerDNS}, nil

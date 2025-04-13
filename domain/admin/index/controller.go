@@ -33,9 +33,13 @@ func (c *IndexController) NotFound(context *gin.Context) {
 	c.HandleError(context, errors.NewNotFoundError(fmt.Errorf("path '%s' not found", context.Request.URL.Path)))
 }
 
-func ProvideIndexController(container *basics.InjectionContainer) (*IndexController, error) {
+func NewIndexController(container *basics.InjectionContainer) (*IndexController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide index controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerAdminAPI == nil {
-		return nil, basics.NewMissingDependencyError("index controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide index controller: base controller could not be resolved")
 	}
 
 	return &IndexController{container.BaseControllerAdminAPI}, nil

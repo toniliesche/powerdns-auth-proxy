@@ -90,21 +90,25 @@ func (s *AuthenticationService) CheckAccessOnResource(context *gin.Context, rule
 	return false
 }
 
-func ProvideAuthenticationService(container *basics.InjectionContainer) (*AuthenticationService, error) {
+func NewAuthenticationService(container *basics.InjectionContainer) (*AuthenticationService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide authentication service: passed injection container is nil")
+	}
+
 	if container.Authenticator == nil {
-		return nil, fmt.Errorf("could not provide authentication service: authenticator could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide authentication service: authenticator could not be resolved")
 	}
 
 	if container.AdminAuthenticator == nil {
-		return nil, fmt.Errorf("could not provide authentication service: admin authenticator could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide authentication service: admin authenticator could not be resolved")
 	}
 
 	if container.ResponseWriterAdminAPI == nil {
-		return nil, fmt.Errorf("could not provide authentication service: response writer could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide authentication service: response writer could not be resolved")
 	}
 
 	if container.ResponseWriterPowerDNS == nil {
-		return nil, fmt.Errorf("could not provide authentication service: response writer could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide authentication service: response writer could not be resolved")
 	}
 
 	return &AuthenticationService{

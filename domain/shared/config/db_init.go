@@ -72,7 +72,7 @@ func (c *DBInitConfig) Validate() error {
 	return nil
 }
 
-func ProvideInitConfig(context *cli.Context) (*DBInitConfig, error) {
+func NewInitConfig(context *cli.Context) (*DBInitConfig, error) {
 	initFile := context.String("init-file")
 	if initFile == "" {
 		return nil, nil

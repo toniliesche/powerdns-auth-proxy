@@ -36,9 +36,13 @@ func (c *ZonesController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.PUT("/v1/servers/:server/zones/:zone/rectify", c.rectifyZone)
 }
 
-func ProvideZonesController(container *basics.InjectionContainer) (*ZonesController, error) {
+func NewZonesController(container *basics.InjectionContainer) (*ZonesController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide zones controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("zones controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide zones controller: base controller could not be resolved")
 	}
 
 	return &ZonesController{container.BaseControllerPowerDNS}, nil

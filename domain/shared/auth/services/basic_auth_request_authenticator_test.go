@@ -23,7 +23,7 @@ import (
 
 func TestBasicAuthSucceeds(t *testing.T) {
 	container := getContainer("basic_auth")
-	authenticator, _ := services.ProvideBasicAuthenticator(container)
+	authenticator, _ := services.NewBasicAuthenticator(container)
 
 	context, _ := gin.CreateTestContext(&httptest.ResponseRecorder{})
 	context.Request = httptest.NewRequest("GET", "/test", nil)
@@ -46,7 +46,7 @@ func TestBasicAuthSucceeds(t *testing.T) {
 
 func TestBasicAuthFailsOnMissingHeader(t *testing.T) {
 	container := getContainer("basic_auth")
-	authenticator, _ := services.ProvideBasicAuthenticator(container)
+	authenticator, _ := services.NewBasicAuthenticator(container)
 
 	context, _ := gin.CreateTestContext(&httptest.ResponseRecorder{})
 	context.Request = httptest.NewRequest("GET", "/test", nil)
@@ -64,7 +64,7 @@ func TestBasicAuthFailsOnMissingHeader(t *testing.T) {
 
 func TestBasicAuthFailsOnWrongUsername(t *testing.T) {
 	container := getContainer("basic_auth")
-	authenticator, _ := services.ProvideBasicAuthenticator(container)
+	authenticator, _ := services.NewBasicAuthenticator(container)
 
 	context, _ := gin.CreateTestContext(&httptest.ResponseRecorder{})
 	context.Request = httptest.NewRequest("GET", "/test", nil)
@@ -83,7 +83,7 @@ func TestBasicAuthFailsOnWrongUsername(t *testing.T) {
 
 func TestBasicAuthFailsOnWrongPassword(t *testing.T) {
 	container := getContainer("basic_auth")
-	authenticator, _ := services.ProvideBasicAuthenticator(container)
+	authenticator, _ := services.NewBasicAuthenticator(container)
 
 	context, _ := gin.CreateTestContext(&httptest.ResponseRecorder{})
 	context.Request = httptest.NewRequest("GET", "/test", nil)

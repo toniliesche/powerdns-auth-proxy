@@ -19,6 +19,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"os"
 	"powerdns-auth-proxy/domain/admin/services/interfaces"
+	"powerdns-auth-proxy/domain/shared/log"
 	"powerdns-auth-proxy/domain/shared/setup"
 )
 
@@ -110,7 +111,8 @@ func RunCliDomainRoleRemove(context *cli.Context) error {
 }
 
 func getDomainRoleService(context *cli.Context) (interfaces.UserDomainRoleServiceInterface, error) {
-	container, err := setup.InitContainerCli(context)
+	logger := log.NewTempLogger()
+	container, err := setup.InitContainerCli(context, logger)
 	if err != nil {
 		return nil, err
 	}

@@ -19,6 +19,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"os"
 	"powerdns-auth-proxy/domain/admin/services/interfaces"
+	"powerdns-auth-proxy/domain/shared/log"
 	"powerdns-auth-proxy/domain/shared/model/management"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"strconv"
@@ -135,7 +136,8 @@ func RunCliUserDelete(context *cli.Context) error {
 }
 
 func getUserService(context *cli.Context) (interfaces.UserServiceInterface, error) {
-	container, err := setup.InitContainerCli(context)
+	logger := log.NewTempLogger()
+	container, err := setup.InitContainerCli(context, logger)
 	if err != nil {
 		return nil, err
 	}

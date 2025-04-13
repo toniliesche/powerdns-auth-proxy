@@ -61,7 +61,10 @@ func (s *DomainService) DeleteDomainById(id uint) error {
 	return s.domainRepository.DeleteDomainById(id)
 }
 
-func ProvideDomainService(container *basics.InjectionContainer) (*DomainService, error) {
+func NewDomainService(container *basics.InjectionContainer) (*DomainService, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide domain service: passed injection container is nil")
+	}
 	if container.DomainRepository == nil {
 		return nil, basics.NewMissingDependencyError("could not provide domain service: domain repository could not be resolved")
 	}

@@ -11,30 +11,39 @@
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
 
-package cache
+package http
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
+	"net/http/httputil"
 	"powerdns-auth-proxy/domain/shared/basics"
-	"powerdns-auth-proxy/domain/shared/interfaces"
 )
 
-type CacheController struct {
-	interfaces.BaseControllerInterface
+type RequestLogMiddleware struct {
+	logger *zerolog.Logger
 }
 
-func (c *CacheController) ConfigureGroupRoutes(router *gin.RouterGroup) {
-	router.PUT("/v1/servers/:server/cache/flush", c.flushCache)
+func (m *RequestLogMiddleware) Middleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		dump, err := httputil.DumpRequest(c.Request, true)
+		if err == nil {
+			m.logger.Trace().
+				Msg("Incoming request")
+			m.logger.Trace().
+				Msg(string(dump))
+		}
+
+		c.Next()
+	}
 }
 
-func NewCacheController(container *basics.InjectionContainer) (*CacheController, error) {
+func NewRequestLogMiddleware(container *basics.InjectionContainer) (*RequestLogMiddleware, error) {
 	if container == nil {
-		return nil, basics.NewMissingDependencyError("could not provide cache controller: passed injection container is nil")
+		return nil, basics.NewMissingDependencyError("could not provide request log middleware: passed injection container is nil")
 	}
 
-	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("could not provide cache controller: base controller could not be resolved")
-	}
-
-	return &CacheController{container.BaseControllerPowerDNS}, nil
+	return &RequestLogMiddleware{
+		logger: container.Logger,
+	}, nil
 }

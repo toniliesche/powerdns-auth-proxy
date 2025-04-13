@@ -19,6 +19,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"os"
 	"powerdns-auth-proxy/domain/shared/interfaces"
+	"powerdns-auth-proxy/domain/shared/log"
 	"powerdns-auth-proxy/domain/shared/setup"
 	"strconv"
 )
@@ -96,7 +97,8 @@ func RunCliApiKeyDelete(context *cli.Context) error {
 }
 
 func getApiKeyService(context *cli.Context) (interfaces.ApiKeyServiceInterface, error) {
-	container, err := setup.InitContainerCli(context)
+	logger := log.NewTempLogger()
+	container, err := setup.InitContainerCli(context, logger)
 	if err != nil {
 		return nil, err
 	}

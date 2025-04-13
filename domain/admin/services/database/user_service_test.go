@@ -221,7 +221,7 @@ func TestUpdateUserPasswordById(t *testing.T) {
 func TestProvideUserServiceFailsOnMissingUserRepository(t *testing.T) {
 	container := &basics.InjectionContainer{}
 
-	service, err := database.ProvideUserService(container)
+	service, err := database.NewUserService(container)
 	assert.Error(t, err, "provide user service should return an error")
 	assert.Equal(t, "could not provide user service: user repository could not be resolved", err.Error())
 	assert.Nil(t, service, "provide user service should return nil")
@@ -231,7 +231,7 @@ func TestProvideUserServiceSucceeds(t *testing.T) {
 	container := &basics.InjectionContainer{}
 	container.UserRepository = &rdbms.UserRepository{}
 
-	service, err := database.ProvideUserService(container)
+	service, err := database.NewUserService(container)
 	assert.NoError(t, err, "provide user service should not return an error")
 	assert.NotNil(t, service, "provide user service should return a service")
 }
@@ -242,7 +242,7 @@ func getUserService(registry *test.Registry, withData bool, isAdmin bool) (*data
 		return nil, err
 	}
 
-	service, err := database.ProvideUserService(container)
+	service, err := database.NewUserService(container)
 	if err != nil {
 		return nil, err
 	}

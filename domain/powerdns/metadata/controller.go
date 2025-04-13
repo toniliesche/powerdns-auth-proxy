@@ -31,9 +31,13 @@ func (c *MetadataController) ConfigureGroupRoutes(router *gin.RouterGroup) {
 	router.DELETE("/v1/servers/:server/zones/:zone/metadata/:metadata", c.deleteMetadata)
 }
 
-func ProvideMetadataController(container *basics.InjectionContainer) (*MetadataController, error) {
+func NewMetadataController(container *basics.InjectionContainer) (*MetadataController, error) {
+	if container == nil {
+		return nil, basics.NewMissingDependencyError("could not provide metadata controller: passed injection container is nil")
+	}
+
 	if container.BaseControllerPowerDNS == nil {
-		return nil, basics.NewMissingDependencyError("metadata controller could not be created: base controller could not be resolved")
+		return nil, basics.NewMissingDependencyError("could not provide metadata controller: base controller could not be resolved")
 	}
 
 	return &MetadataController{container.BaseControllerPowerDNS}, nil
