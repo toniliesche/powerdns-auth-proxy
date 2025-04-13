@@ -33,12 +33,13 @@ func RunApi(context *cli.Context) error {
 
 	logger = container.Logger
 
-	router := gin.Default()
+	router := gin.New()
 	router.Use(container.RequestIDMiddleware.Middleware())
+	router.Use(container.RequestLogMiddleware.Middleware())
 
 	if container.Config.Debug {
-		router.Use(container.RequestLogMiddleware.Middleware())
-		router.Use(container.ResponseLogMiddleware.Middleware())
+		router.Use(container.RequestContentLogMiddleware.Middleware())
+		router.Use(container.ResponseContentLogMiddleware.Middleware())
 	}
 
 	logger.Info().

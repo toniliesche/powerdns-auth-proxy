@@ -16,42 +16,34 @@ package http
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog"
+	"net/http/httputil"
 	"powerdns-auth-proxy/domain/shared/basics"
-	"time"
 )
 
-type RequestLogMiddleware struct {
+type RequestContentLogMiddleware struct {
 	logger *zerolog.Logger
 }
 
-func (m *RequestLogMiddleware) Middleware() gin.HandlerFunc {
+func (m *RequestContentLogMiddleware) Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		start := time.Now()
+		dump, err := httputil.DumpRequest(c.Request, true)
+		if err == nil {
+			m.logger.Trace().
+				Msg("Incoming request")
+			m.logger.Trace().
+				Msg(string(dump))
+		}
 
 		c.Next()
-
-		duration := time.Since(start)
-		status := c.Writer.Status()
-		method := c.Request.Method
-		path := c.Request.URL.Path
-		clientIP := c.ClientIP()
-
-		m.logger.Info().
-			Str("method", method).
-			Str("path", path).
-			Int("status", status).
-			Str("ip", clientIP).
-			Dur("duration", duration).
-			Msg("HTTP request")
 	}
 }
 
-func NewRequestLogMiddleware(container *basics.InjectionContainer) (*RequestLogMiddleware, error) {
+func NewRequestContentLogMiddleware(container *basics.InjectionContainer) (*RequestContentLogMiddleware, error) {
 	if container == nil {
-		return nil, basics.NewMissingDependencyError("could not provide request log middleware: passed injection container is nil")
+		return nil, basics.NewMissingDependencyError("could not provide request content log middleware: passed injection container is nil")
 	}
 
-	return &RequestLogMiddleware{
+	return &RequestContentLogMiddleware{
 		logger: container.Logger,
 	}, nil
 }

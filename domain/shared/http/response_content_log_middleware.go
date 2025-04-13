@@ -21,11 +21,11 @@ import (
 	"powerdns-auth-proxy/domain/shared/basics"
 )
 
-type ResponseLogMiddleware struct {
+type ResponseContentLogMiddleware struct {
 	logger *zerolog.Logger
 }
 
-func (m *ResponseLogMiddleware) Middleware() gin.HandlerFunc {
+func (m *ResponseContentLogMiddleware) Middleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = blw
@@ -48,12 +48,12 @@ func (m *ResponseLogMiddleware) Middleware() gin.HandlerFunc {
 	}
 }
 
-func NewResponseLogMiddleware(container *basics.InjectionContainer) (*ResponseLogMiddleware, error) {
+func NewResponseLogMiddleware(container *basics.InjectionContainer) (*ResponseContentLogMiddleware, error) {
 	if container == nil {
-		return nil, basics.NewMissingDependencyError("could not provide request log middleware: passed injection container is nil")
+		return nil, basics.NewMissingDependencyError("could not provide response content log middleware: passed injection container is nil")
 	}
 
-	return &ResponseLogMiddleware{
+	return &ResponseContentLogMiddleware{
 		logger: container.Logger,
 	}, nil
 }

@@ -413,12 +413,23 @@ func (b *InjectionContainerBuilder) initHttpBasics(container *basics.InjectionCo
 	}
 
 	b.logger.Trace().
-		Msg("initializing response log middleware")
+		Msg("initializing request content log middleware")
 
-	if container.ResponseLogMiddleware, err = http.NewResponseLogMiddleware(container); err != nil {
+	if container.RequestContentLogMiddleware, err = http.NewRequestContentLogMiddleware(container); err != nil {
 		b.logger.Error().
 			Err(err).
-			Msg("could not initialize response log middleware")
+			Msg("could not initialize request content log middleware")
+
+		return err
+	}
+
+	b.logger.Trace().
+		Msg("initializing response content log middleware")
+
+	if container.ResponseContentLogMiddleware, err = http.NewResponseLogMiddleware(container); err != nil {
+		b.logger.Error().
+			Err(err).
+			Msg("could not initialize response content log middleware")
 
 		return err
 	}

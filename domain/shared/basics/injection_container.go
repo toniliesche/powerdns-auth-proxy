@@ -53,9 +53,10 @@ type InjectionContainer struct {
 	Logger                         *zerolog.Logger
 	LoginService                   sharedinterfaces.LoginServiceInterface
 	MetadataController             sharedinterfaces.ControllerInterface
-	RequestLogMiddleware           interfaces.GinMiddleware
+	RequestContentLogMiddleware    interfaces.GinMiddleware
 	RequestIDMiddleware            interfaces.GinMiddleware
-	ResponseLogMiddleware          interfaces.GinMiddleware
+	RequestLogMiddleware           interfaces.GinMiddleware
+	ResponseContentLogMiddleware   interfaces.GinMiddleware
 	ResponseWriterAdminAPI         sharedinterfaces.ResponseWriterInterface
 	ResponseWriterPowerDNS         sharedinterfaces.ResponseWriterInterface
 	RoleRepository                 dbrepointerfaces.RoleRepositoryInterface
