@@ -24,6 +24,11 @@ func (c *ServersController) getServer(context *gin.Context) {
 		return
 	}
 
-	response, _ := c.ForwardRequest(context.Request)
+	response, err := c.ForwardRequest(context.Request)
+	if err != nil {
+		c.HandleError(context, err)
+		return
+	}
+
 	c.WriteResponse(context, response)
 }
