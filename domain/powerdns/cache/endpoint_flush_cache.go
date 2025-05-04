@@ -19,7 +19,14 @@ import (
 )
 
 func (c *CacheController) flushCache(context *gin.Context) {
-	if !c.CheckAccessOnResource(context, auth.Admin, "") {
+
+	zone := context.Query("domain")
+	if zone != "" {
+		if !c.CheckAccessOnResource(context, auth.RecordAdmin, zone) {
+			c.ForbiddenError(context)
+			return
+		}
+	} else if !c.CheckAccessOnResource(context, auth.Admin, "") {
 		c.ForbiddenError(context)
 		return
 	}
